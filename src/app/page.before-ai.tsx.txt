@@ -1,0 +1,840 @@
+﻿
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  Bell, Search, HeartHandshake, FileText, UserRound, Wallet,
+  GraduationCap, MessageSquareWarning, LayoutDashboard, Map, Bot,
+  ChartColumn, Network, Headset, Blocks, ShieldCheck, Activity,
+  Gauge, PlugZap, GitBranch, Server, LockKeyhole,
+  DatabaseBackup, Database, Layers3, BarChart3, Menu,
+  RotateCcw, ArrowRight, CalendarDays, type LucideIcon,
+} from "lucide-react";
+
+import ApplicationsPanel from "../components/ApplicationsPanel";
+import BeneficiariesPanel from "../components/BeneficiariesPanel";
+import PayrollPanel from "../components/PayrollPanel";
+import GrievancesPanel from "../components/GrievancesPanel";
+import TrainingPanel from "../components/TrainingPanel";
+
+import { useDemoStore } from "../lib/demo-store";
+import { useBeneficiaryStore } from "../lib/beneficiary-store";
+import { usePayrollStore } from "../lib/payroll-store";
+import { useGrievanceStore } from "../lib/grievance-store";
+import { useTrainingStore } from "../lib/training-store";
+
+type Lang = "en" | "bn";
+type NavItem = [string, string, string, LucideIcon];
+type NavSection = { en: string; bn: string; items: NavItem[] };
+
+const sections: NavSection[] = [
+  {
+    en: "BENEFICIARY LIFECYCLE",
+    bn: "উপকারভোগী জীবনচক্র",
+    items: [
+      ["/applications", "Applications & enrollment", "আবেদন ও নিবন্ধন", FileText],
+      ["/beneficiaries", "Beneficiary profiles", "উপকারভোগী প্রোফাইল", UserRound],
+      ["/payroll", "Payroll & reconciliation", "পেরোল ও সমন্বয়", Wallet],
+      ["/training", "Training", "প্রশিক্ষণ", GraduationCap],
+      ["/grievances", "Grievance redress", "অভিযোগ প্রতিকার", MessageSquareWarning],
+    ],
+  },
+  {
+    en: "INTELLIGENCE",
+    bn: "ইন্টেলিজেন্স",
+    items: [
+      ["/dashboard", "Executive dashboard", "নির্বাহী ড্যাশবোর্ড", LayoutDashboard],
+      ["/gis", "GIS intelligence", "জিআইএস ইন্টেলিজেন্স", Map],
+      ["/ai", "AI assistant & agents", "এআই সহকারী ও এজেন্ট", Bot],
+      ["/self-service", "Self-service MIS", "সেলফ-সার্ভিস এমআইএস", ChartColumn],
+    ],
+  },
+  {
+    en: "PLATFORM",
+    bn: "প্ল্যাটফর্ম",
+    items: [
+      ["/data-hub", "Data Hub / API Bank", "ডেটা হাব / এপিআই ব্যাংক", Network],
+      ["/helpdesk", "Helpdesk & referrals", "হেল্পডেস্ক ও রেফারেল", Headset],
+      ["/schemes", "Module & scheme builder", "মডিউল ও স্কিম বিল্ডার", Blocks],
+      ["/access", "Users & access", "ব্যবহারকারী ও অ্যাক্সেস", ShieldCheck],
+    ],
+  },
+  {
+    en: "PLATFORM OPERATIONS",
+    bn: "প্ল্যাটফর্ম অপারেশন",
+    items: [
+      ["/observability", "Observability", "অবজারভেবিলিটি", Activity],
+      ["/capacity", "Capacity & autoscaling", "ক্যাপাসিটি ও অটোস্কেলিং", Gauge],
+      ["/gateway", "API gateway", "এপিআই গেটওয়ে", PlugZap],
+      ["/xroad", "X-Road exchange", "এক্স-রোড এক্সচেঞ্জ", Network],
+      ["/cicd", "CI/CD pipelines", "সিআই/সিডি পাইপলাইন", GitBranch],
+      ["/releases", "Environments & releases", "এনভায়রনমেন্ট ও রিলিজ", Server],
+    ],
+  },
+  {
+    en: "ASSURANCE",
+    bn: "অ্যাসিওরেন্স",
+    items: [
+      ["/security", "Security centre", "সিকিউরিটি সেন্টার", LockKeyhole],
+      ["/backup", "Backup & DR", "ব্যাকআপ ও ডিআর", DatabaseBackup],
+      ["/datagov", "Data governance", "ডেটা গভর্নেন্স", Database],
+      ["/aigov", "AI governance", "এআই গভর্নেন্স", Layers3],
+    ],
+  },
+  {
+    en: "WORKLOADS",
+    bn: "ওয়ার্কলোড",
+    items: [
+      ["/payroll-monitor", "Payroll batch monitor", "পেরোল ব্যাচ মনিটর", Wallet],
+      ["/gis-layers", "GIS layer catalogue", "জিআইএস লেয়ার ক্যাটালগ", Map],
+      ["/performance", "Performance tests", "পারফরম্যান্স টেস্ট", BarChart3],
+    ],
+  },
+];
+
+const roles = [
+  {
+    id: "uwao",
+    en: "Upazila Women Affairs Officer",
+    bn: "উপজেলা মহিলা বিষয়ক কর্মকর্তা",
+    geo: "Kaunia · Rangpur",
+    initials: "NS",
+  },
+  {
+    id: "union_maker",
+    en: "Union Application Maker",
+    bn: "ইউনিয়ন আবেদন প্রস্তুতকারী",
+    geo: "Kaunia · Rangpur",
+    initials: "UM",
+  },
+  {
+    id: "field",
+    en: "Field Verifier",
+    bn: "মাঠ যাচাইকারী",
+    geo: "Kaunia",
+    initials: "FV",
+  },
+  {
+    id: "trainer",
+    en: "Community Trainer",
+    bn: "কমিউনিটি প্রশিক্ষক",
+    geo: "Kaunia · Rangpur",
+    initials: "CT",
+  },
+  {
+    id: "finance",
+    en: "Finance Maker",
+    bn: "অর্থ মেকার",
+    geo: "Central finance",
+    initials: "FM",
+  },
+  {
+    id: "finance_checker",
+    en: "Finance Checker",
+    bn: "অর্থ যাচাইকারী",
+    geo: "Central finance",
+    initials: "FC",
+  },
+  {
+    id: "grm",
+    en: "Grievance Redress Officer",
+    bn: "অভিযোগ প্রতিকার কর্মকর্তা",
+    geo: "Kaunia · Rangpur",
+    initials: "GO",
+  },
+  {
+    id: "executive",
+    en: "Programme Executive / PD",
+    bn: "প্রোগ্রাম নির্বাহী / পিডি",
+    geo: "National scope",
+    initials: "PD",
+  },
+  {
+    id: "admin",
+    en: "System Administrator",
+    bn: "সিস্টেম প্রশাসক",
+    geo: "National scope",
+    initials: "SA",
+  },
+];
+
+const statusNames: Record<string, [string, string]> = {
+  draft: ["Draft", "খসড়া"],
+  submitted: ["Submitted", "জমা হয়েছে"],
+  identity_pending: ["Identity pending", "পরিচয় যাচাই বাকি"],
+  identity_verified: ["Identity verified", "পরিচয় যাচাইকৃত"],
+  eligibility_passed: ["Eligible", "যোগ্য"],
+  eligibility_failed: ["Ineligible", "অযোগ্য"],
+  field_pending: ["Field verification pending", "মাঠ যাচাই বাকি"],
+  field_completed: ["Field verified", "মাঠ যাচাইকৃত"],
+  selection_prepared: ["Selection prepared", "নির্বাচন প্রস্তুত"],
+  approval_pending: ["Approval pending", "অনুমোদন বাকি"],
+  approved: ["Approved", "অনুমোদিত"],
+  rejected: ["Rejected", "বাতিল"],
+  returned: ["Returned", "ফেরত"],
+  enrolled: ["Enrolled", "নিবন্ধিত"],
+};
+
+const nationalRoles = ["executive", "admin"];
+
+export default function Home() {
+  const [lang, setLang] = useState<Lang>("en");
+  const [roleId, setRoleId] = useState("uwao");
+  const [path, setPath] = useState("/dashboard");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [toast, setToast] = useState("");
+
+  const applications = useDemoStore((s) => s.applications);
+  const resetApplications = useDemoStore((s) => s.resetDemo);
+
+  const resetProfiles = useBeneficiaryStore((s) => s.resetProfiles);
+  const profileChanges = useBeneficiaryStore((s) => s.changes);
+
+  const payrollPayments = usePayrollStore((s) => s.payments);
+  const payrollCycles = usePayrollStore((s) => s.cycles);
+  const resetPayroll = usePayrollStore((s) => s.resetPayroll);
+
+  const grievanceCases = useGrievanceStore((s) => s.cases);
+  const resetGrievances = useGrievanceStore((s) => s.resetGrievances);
+
+  const trainingParticipants = useTrainingStore((s) => s.participants);
+  const resetTraining = useTrainingStore((s) => s.resetTraining);
+
+  useEffect(() => {
+    const savedRole = localStorage.getItem("mcbp-role");
+    const savedLang = localStorage.getItem("mcbp-lang");
+
+    if (savedRole && roles.some((r) => r.id === savedRole)) {
+      setRoleId(savedRole);
+    }
+
+    if (savedLang === "en" || savedLang === "bn") {
+      setLang(savedLang);
+    }
+  }, []);
+
+  const t = (en: string, bn: string) =>
+    lang === "bn" ? bn : en;
+
+  const role = roles.find((r) => r.id === roleId) ?? roles[0];
+  const isNationalRole = nationalRoles.includes(roleId);
+  const canViewGis = isNationalRole || roleId === "uwao";
+
+  const pendingApproval = applications.filter(
+    (a) => a.status === "approval_pending"
+  ).length;
+
+  const pendingField = applications.filter(
+    (a) => a.status === "field_pending"
+  ).length;
+
+  const openGrievances = grievanceCases.filter(
+    (c) =>
+      c.queue === "programme" &&
+      !["resolved", "closed"].includes(c.status)
+  ).length;
+
+  const bounced = payrollPayments.filter(
+    (p) => p.status === "bounced"
+  ).length;
+
+  const pendingReviews = profileChanges.filter(
+    (c) => c.state === "pending"
+  ).length;
+
+  const trainingCompleted = trainingParticipants.filter(
+    (p) => p.attended
+  ).length;
+
+  const trainingCertificates = trainingParticipants.filter(
+    (p) => Boolean(p.certificateId)
+  ).length;
+
+  const currentMenu = sections
+    .flatMap((section) => section.items)
+    .find((item) => item[0] === path);
+
+  const title =
+    path === "/dashboard"
+      ? isNationalRole
+        ? t("Programme operations overview", "কর্মসূচির কার্যক্রম")
+        : t(
+            "Good morning, Nasrin. Here is your upazila today.",
+            "শুভ সকাল, নাসরিন। আজকের উপজেলার চিত্র দেখুন।"
+          )
+      : currentMenu
+        ? t(currentMenu[1], currentMenu[2])
+        : "Dashboard";
+
+  const cards = [
+    [
+      "Applications awaiting my decision",
+      "আমার সিদ্ধান্তের অপেক্ষায় আবেদন",
+      String(46 + pendingApproval),
+      "12 older than 5 days",
+      "৫ দিনের বেশি পুরোনো ১২টি",
+      "magenta",
+      FileText,
+    ],
+    [
+      "Field verifications pending",
+      "মাঠ যাচাই অপেক্ষমাণ",
+      String(117 + pendingField),
+      "83% within SLA",
+      "৮৩% নির্ধারিত সময়ে",
+      "amber",
+      Map,
+    ],
+    [
+      "Paid this cycle",
+      "এই চক্রে পরিশোধিত",
+      "14,208",
+      `${
+        payrollPayments.filter((p) =>
+          ["paid", "repaid"].includes(p.status)
+        ).length
+      } mock transactions`,
+      "ডেমো পেমেন্ট সিমুলেশন",
+      "green",
+      Wallet,
+    ],
+    [
+      "Open grievances",
+      "চলমান অভিযোগ",
+      String(19 + openGrievances),
+      `${openGrievances} current demo records`,
+      `${openGrievances}টি চলমান ডেমো অভিযোগ`,
+      "blue",
+      MessageSquareWarning,
+    ],
+    [
+      "Training completions",
+      "প্রশিক্ষণ সম্পন্ন",
+      String(trainingCompleted),
+      `${trainingCertificates} certificates`,
+      `${trainingCertificates}টি সনদ`,
+      "green",
+      GraduationCap,
+    ],
+  ] as const;
+
+  function notify(message: string) {
+    setToast(message);
+    window.setTimeout(() => setToast(""), 2500);
+  }
+
+  function updateRole(nextRole: string) {
+    setRoleId(nextRole);
+    localStorage.setItem("mcbp-role", nextRole);
+    setPath("/dashboard");
+    setMobileOpen(false);
+  }
+
+  function updateLanguage(nextLang: Lang) {
+    setLang(nextLang);
+    localStorage.setItem("mcbp-lang", nextLang);
+  }
+
+  function navigate(next: string) {
+    setMobileOpen(false);
+
+    if (next === "/dashboard" && isNationalRole) {
+      window.location.assign("/executive");
+      return;
+    }
+
+    if (next === "/gis") {
+      if (!canViewGis) {
+        notify(t(
+          "GIS access is not available for this demo role.",
+          "এই ডেমো রোলে জিআইএস দেখা যাবে না।"
+        ));
+        return;
+      }
+
+      window.location.assign("/gis");
+      return;
+    }
+
+    if (next === "/data-hub") {
+      if (!isNationalRole) {
+        notify(t(
+          "Select Programme Executive or System Administrator.",
+          "প্রোগ্রাম নির্বাহী বা সিস্টেম প্রশাসক নির্বাচন করুন।"
+        ));
+        return;
+      }
+
+      window.location.assign("/data-hub");
+      return;
+    }
+
+    setPath(next);
+  }
+
+  function resetDemo() {
+    resetApplications();
+    resetProfiles();
+    resetPayroll();
+    resetGrievances();
+    resetTraining();
+
+    localStorage.removeItem("mcbp-lang");
+    localStorage.removeItem("mcbp-role");
+
+    setLang("en");
+    setRoleId("uwao");
+    setPath("/dashboard");
+
+    notify("Demo reset");
+  }
+
+  const visibleSections = sections
+    .filter((section) => {
+      if (
+        ["field", "trainer", "finance", "finance_checker", "grm"]
+          .includes(roleId)
+      ) {
+        return [
+          "BENEFICIARY LIFECYCLE",
+          "INTELLIGENCE",
+        ].includes(section.en);
+      }
+
+      return true;
+    })
+    .map((section) => ({
+      ...section,
+      items: section.items.filter(([href]) => {
+        if (href === "/data-hub" && !isNationalRole) {
+          return false;
+        }
+
+        if (href === "/gis" && !canViewGis) {
+          return false;
+        }
+
+        return true;
+      }),
+    }))
+    .filter((section) => section.items.length > 0);
+
+  return (
+    <div className={lang === "bn" ? "app bn" : "app"}>
+      <header className="top">
+        <button
+          className="btn mobile-menu"
+          aria-label="Toggle menu"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          <Menu size={19} />
+        </button>
+
+        <div className="logo">
+          <HeartHandshake size={22} />
+        </div>
+
+        <div className="brand">
+          <b>MCBP-MIS</b>
+          <span>
+            {t(
+              "Mother & Child Benefit Programme",
+              "মা ও শিশু ভাতা কর্মসূচি"
+            )}
+          </span>
+        </div>
+
+        <div className="search">
+          <Search size={17} />
+          <span>
+            {t(
+              "Search beneficiary ID, NID or mobile number…",
+              "উপকারভোগী আইডি, এনআইডি বা মোবাইল নম্বর খুঁজুন…"
+            )}
+          </span>
+        </div>
+
+        <div className="lang">
+          <button
+            className={lang === "en" ? "on" : ""}
+            onClick={() => updateLanguage("en")}
+          >
+            EN
+          </button>
+          <button
+            className={lang === "bn" ? "on" : ""}
+            onClick={() => updateLanguage("bn")}
+          >
+            বাংলা
+          </button>
+        </div>
+
+        <Bell size={20} />
+
+        <div className="av">{role.initials}</div>
+        <div className="who">
+          <b>{t(role.en, role.bn)}</b>
+          <span>{role.geo}</span>
+        </div>
+      </header>
+
+      <div className="main">
+        <aside className={mobileOpen ? "side open" : "side"}>
+          {visibleSections.map((section) => (
+            <div key={section.en}>
+              <h6>{t(section.en, section.bn)}</h6>
+
+              {section.items.map(([href, en, bn, Icon]) => (
+                <button
+                  key={href}
+                  className={path === href ? "nav on" : "nav"}
+                  onClick={() => navigate(href)}
+                >
+                  <Icon size={17} />
+                  <span>{t(en, bn)}</span>
+                </button>
+              ))}
+            </div>
+          ))}
+        </aside>
+
+        <main className="content">
+          <div className="crumb">
+            {t(
+              "Home / Kaunia Upazila, Rangpur",
+              "হোম / কাউনিয়া উপজেলা, রংপুর"
+            )}
+          </div>
+
+          <div className="hrow">
+            <div>
+              <h1>{title}</h1>
+              <p className="sub">
+                {t(
+                  "Role-aware workspace · fictional data · frontend-only demo",
+                  "ভূমিকা অনুযায়ী ওয়ার্কস্পেস · কাল্পনিক তথ্য · ফ্রন্টএন্ড ডেমো"
+                )}
+              </p>
+            </div>
+
+            <div className="actions">
+              <button className="btn">
+                <CalendarDays size={15} />
+                13 Nov 2026
+              </button>
+
+              <button
+                className="btn primary"
+                onClick={() =>
+                  notify(
+                    t(
+                      "Scenario guide not yet implemented",
+                      "সিনারিও গাইড এখনো তৈরি হয়নি"
+                    )
+                  )
+                }
+              >
+                {t("Scenario guide", "সিনারিও গাইড")}
+                <ArrowRight size={15} />
+              </button>
+            </div>
+          </div>
+
+          {path === "/applications" ? (
+            <ApplicationsPanel lang={lang} roleId={roleId} />
+          ) : path === "/beneficiaries" ? (
+            <BeneficiariesPanel lang={lang} roleId={roleId} />
+          ) : path === "/payroll" ? (
+            <PayrollPanel lang={lang} roleId={roleId} />
+          ) : path === "/grievances" ? (
+            <GrievancesPanel lang={lang} roleId={roleId} />
+          ) : path === "/training" ? (
+            <TrainingPanel lang={lang} roleId={roleId} />
+          ) : path === "/dashboard" ? (
+            <>
+              <div className="grid kpis">
+                {cards.map(
+                  ([en, bn, value, detailEn, detailBn, color, Icon]) => (
+                    <div className="card stat" key={en}>
+                      <div className="stat-head">
+                        <span>{t(en, bn)}</span>
+                        <span className={`stat-icon ${color}`}>
+                          <Icon size={19} />
+                        </span>
+                      </div>
+
+                      <strong>{value}</strong>
+                      <small className={color}>
+                        {t(detailEn, detailBn)}
+                      </small>
+                    </div>
+                  )
+                )}
+              </div>
+
+              <div className="grid two">
+                <section className="card">
+                  <div className="card-title">
+                    <h2>{t("My approval queue", "আমার অনুমোদন তালিকা")}</h2>
+                    <button
+                      className="link"
+                      onClick={() => navigate("/applications")}
+                    >
+                      {t("View all", "সব দেখুন")}
+                    </button>
+                  </div>
+
+                  <div style={{ overflowX: "auto" }}>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>{t("Application", "আবেদন")}</th>
+                          <th>{t("Applicant", "আবেদনকারী")}</th>
+                          <th>{t("Status", "অবস্থা")}</th>
+                          <th>{t("Action", "অ্যাকশন")}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {applications.slice(0, 5).map((a) => (
+                          <tr key={a.id}>
+                            <td className="mono">{a.id}</td>
+                            <td>
+                              {lang === "bn"
+                                ? a.nameBn || a.nameEn
+                                : a.nameEn}
+                            </td>
+                            <td>
+                              <span className={`pill ${
+                                [
+                                  "approved",
+                                  "enrolled",
+                                  "field_completed",
+                                ].includes(a.status)
+                                  ? "g"
+                                  : "a"
+                              }`}>
+                                {t(
+                                  ...(statusNames[a.status] ?? [
+                                    a.status,
+                                    a.status,
+                                  ])
+                                )}
+                              </span>
+                            </td>
+                            <td>
+                              <button
+                                className="link"
+                                onClick={() =>
+                                  navigate(
+                                    a.status === "enrolled"
+                                      ? "/beneficiaries"
+                                      : "/applications"
+                                  )
+                                }
+                              >
+                                {t("Open", "খুলুন")}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+
+                <section className="card">
+                  <div className="card-title">
+                    <h2>
+                      {t(
+                        "Union quota progress",
+                        "ইউনিয়ন কোটা অগ্রগতি"
+                      )}
+                    </h2>
+                    <span className="muted">FY 2026</span>
+                  </div>
+
+                  {[
+                    ["Kaunia", "82%", "246 / 300", "g"],
+                    ["Haragach", "68%", "204 / 300", "m"],
+                    ["Balarhat", "54%", "162 / 300", "a"],
+                  ].map(([name, percent, count, color]) => (
+                    <div className="quota" key={name}>
+                      <div>
+                        <b>{name}</b>
+                        <span>{count}</span>
+                      </div>
+                      <div className="bar">
+                        <i className={color} style={{ width: percent }} />
+                      </div>
+                      <small>{percent}</small>
+                    </div>
+                  ))}
+                </section>
+              </div>
+
+              <div className="grid two">
+                <section className="card">
+                  <div className="card-title">
+                    <h2>
+                      {t(
+                        "Applications · last 8 weeks",
+                        "আবেদন · গত ৮ সপ্তাহ"
+                      )}
+                    </h2>
+                    <span className="muted">
+                      {t("Submitted / approved", "জমা / অনুমোদিত")}
+                    </span>
+                  </div>
+
+                  <div className="chart">
+                    {[42, 55, 49, 66, 58, 74, 62, 81].map(
+                      (height, index) => (
+                        <div className="bar-col" key={index}>
+                          <span style={{ height: `${height}%` }} />
+                          <span
+                            style={{
+                              height: `${Math.max(20, height - 28)}%`,
+                            }}
+                          />
+                          <label>W{index + 1}</label>
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  <div className="legend">
+                    <span>
+                      <i className="lg green" />
+                      {t("Submitted", "জমা")}
+                    </span>
+                    <span>
+                      <i className="lg magenta" />
+                      {t("Approved", "অনুমোদিত")}
+                    </span>
+                  </div>
+                </section>
+
+                <section className="card">
+                  <div className="card-title">
+                    <h2>{t("Today's indicators", "আজকের সূচক")}</h2>
+                    <span className="pill g">{t("Demo", "ডেমো")}</span>
+                  </div>
+
+                  {[
+                    ["Field visits scheduled", "মাঠ পরিদর্শন", "36"],
+                    [
+                      "Profile reviews pending",
+                      "প্রোফাইল রিভিউ",
+                      String(pendingReviews),
+                    ],
+                    [
+                      "Payroll cycles",
+                      "পেরোল চক্র",
+                      String(payrollCycles.length),
+                    ],
+                    [
+                      "Bounced payments",
+                      "ব্যর্থ পেমেন্ট",
+                      String(bounced),
+                    ],
+                    [
+                      "Grievance cases in demo",
+                      "ডেমো অভিযোগ",
+                      String(grievanceCases.length),
+                    ],
+                    [
+                      "Training completions",
+                      "প্রশিক্ষণ সম্পন্ন",
+                      `${trainingCompleted} · ${trainingCertificates} certs`,
+                    ],
+                  ].map(([en, bn, value]) => (
+                    <div className="indicator" key={en}>
+                      <span>{t(en, bn)}</span>
+                      <b>{value}</b>
+                    </div>
+                  ))}
+                </section>
+              </div>
+
+              <section className="advisory">
+                <div className="ai-mark">
+                  <Bot size={20} />
+                </div>
+                <div>
+                  <b>
+                    {t(
+                      "Advisory insight · human review required",
+                      "পরামর্শ · মানব পর্যালোচনা প্রয়োজন"
+                    )}
+                  </b>
+                  <p>
+                    {t(
+                      `${bounced} simulated payment bounce(s) and ${openGrievances} active programme grievance(s) are available for investigation. This is not an AI decision.`,
+                      `${bounced}টি সিমুলেটেড পেমেন্ট ব্যর্থ এবং ${openGrievances}টি চলমান অভিযোগ তদন্তের জন্য রয়েছে। এটি এআই সিদ্ধান্ত নয়।`
+                    )}
+                  </p>
+                </div>
+                <button
+                  className="btn"
+                  onClick={() => navigate("/grievances")}
+                >
+                  {t("Review cases", "অভিযোগ দেখুন")}
+                </button>
+              </section>
+            </>
+          ) : (
+            <section className="card placeholder">
+              <div className="placeholder-icon">
+                <Layers3 size={28} />
+              </div>
+              <h2>
+                {t(
+                  "Module not yet implemented",
+                  "মডিউল এখনো তৈরি হয়নি"
+                )}
+              </h2>
+              <p>
+                {t(
+                  "This module will be added in the next development delivery.",
+                  "এই মডিউল পরবর্তী ডেভেলপমেন্টে যুক্ত হবে।"
+                )}
+              </p>
+              <button
+                className="btn primary"
+                onClick={() => navigate("/dashboard")}
+              >
+                {t("Return to dashboard", "ড্যাশবোর্ডে ফিরুন")}
+              </button>
+            </section>
+          )}
+        </main>
+      </div>
+
+      {toast && <div className="toast">{toast}</div>}
+
+      <footer>
+        {t(
+          "Frontend-only demonstration · Fictional data · Demo-enforced RBAC",
+          "ফ্রন্টএন্ড ডেমো · কাল্পনিক তথ্য · ডেমো অনুমতি"
+        )}
+
+        <button onClick={resetDemo}>
+          <RotateCcw size={13} />
+          {t("Reset demo", "ডেমো রিসেট")}
+        </button>
+
+        <select
+          aria-label="Demo role"
+          value={roleId}
+          onChange={(e) => updateRole(e.target.value)}
+        >
+          {roles.map((item) => (
+            <option value={item.id} key={item.id}>
+              {item.en}
+            </option>
+          ))}
+        </select>
+      </footer>
+    </div>
+  );
+}

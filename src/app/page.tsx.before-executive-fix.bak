@@ -1,0 +1,745 @@
+﻿
+"use client";
+
+import { useState } from "react";
+import {
+  Bell,
+  Search,
+  HeartHandshake,
+  FileText,
+  UserRound,
+  Wallet,
+  GraduationCap,
+  MessageSquareWarning,
+  LayoutDashboard,
+  Map,
+  Bot,
+  ChartColumn,
+  Network,
+  Headset,
+  Blocks,
+  ShieldCheck,
+  Activity,
+  Gauge,
+  PlugZap,
+  GitBranch,
+  Server,
+  LockKeyhole,
+  DatabaseBackup,
+  Database,
+  Layers3,
+  BarChart3,
+  Menu,
+  RotateCcw,
+  ArrowRight,
+  CalendarDays,
+} from "lucide-react";
+import ApplicationsPanel from "../components/ApplicationsPanel";
+import { useDemoStore } from "../lib/demo-store";
+
+type Lang = "en" | "bn";
+
+const tr = (lang: Lang, en: string, bn: string) =>
+  lang === "bn" ? bn : en;
+
+const roles = [
+  {
+    id: "uwao",
+    en: "Upazila Women Affairs Officer",
+    bn: "উপজেলা মহিলা বিষয়ক কর্মকর্তা",
+    geo: "Kaunia · Rangpur",
+    initials: "NS",
+  },
+  {
+    id: "union_maker",
+    en: "Union Application Maker",
+    bn: "ইউনিয়ন আবেদন প্রস্তুতকারী",
+    geo: "Kaunia Union · Rangpur",
+    initials: "UM",
+  },
+    id: "executive",
+    en: "Programme Executive / PD",
+    bn: "প্রোগ্রাম নির্বাহী / পিডি",
+    geo: "National scope",
+    initials: "PD",
+  },
+  {
+    id: "field",
+    en: "Field Verifier",
+    bn: "মাঠ যাচাইকারী",
+    geo: "Kaunia Union",
+    initials: "FV",
+  },
+  {
+    id: "finance",
+    en: "Finance Maker",
+    bn: "অর্থ মেকার",
+    geo: "Central finance",
+    initials: "FM",
+  },
+  {
+    id: "admin",
+    en: "System Administrator",
+    bn: "সিস্টেম প্রশাসক",
+    geo: "National scope",
+    initials: "SA",
+  },
+];
+
+const sections = [
+  {
+    en: "BENEFICIARY LIFECYCLE",
+    bn: "উপকারভোগী জীবনচক্র",
+    items: [
+      ["/applications", "Applications & enrollment", "আবেদন ও নিবন্ধন", FileText],
+      ["/beneficiaries", "Beneficiary profiles", "উপকারভোগী প্রোফাইল", UserRound],
+      ["/payroll", "Payroll & reconciliation", "পেরোল ও সমন্বয়", Wallet],
+      ["/training", "Training", "প্রশিক্ষণ", GraduationCap],
+      ["/grievances", "Grievance redress", "অভিযোগ প্রতিকার", MessageSquareWarning],
+    ],
+  },
+  {
+    en: "INTELLIGENCE",
+    bn: "ইন্টেলিজেন্স",
+    items: [
+      ["/dashboard", "Executive dashboard", "নির্বাহী ড্যাশবোর্ড", LayoutDashboard],
+      ["/gis", "GIS intelligence", "জিআইএস ইন্টেলিজেন্স", Map],
+      ["/ai", "AI assistant & agents", "এআই সহকারী ও এজেন্ট", Bot],
+      ["/self-service", "Self-service MIS", "সেলফ-সার্ভিস এমআইএস", ChartColumn],
+    ],
+  },
+  {
+    en: "PLATFORM",
+    bn: "প্ল্যাটফর্ম",
+    items: [
+      ["/data-hub", "Data Hub / API Bank", "ডেটা হাব / এপিআই ব্যাংক", Network],
+      ["/helpdesk", "Helpdesk & referrals", "হেল্পডেস্ক ও রেফারেল", Headset],
+      ["/schemes", "Module & scheme builder", "মডিউল ও স্কিম বিল্ডার", Blocks],
+      ["/access", "Users & access", "ব্যবহারকারী ও অ্যাক্সেস", ShieldCheck],
+    ],
+  },
+  {
+    en: "PLATFORM OPERATIONS",
+    bn: "প্ল্যাটফর্ম অপারেশন",
+    items: [
+      ["/observability", "Observability", "অবজারভেবিলিটি", Activity],
+      ["/capacity", "Capacity & autoscaling", "ক্যাপাসিটি ও অটোস্কেলিং", Gauge],
+      ["/gateway", "API gateway", "এপিআই গেটওয়ে", PlugZap],
+      ["/xroad", "X-Road exchange", "এক্স-রোড এক্সচেঞ্জ", Network],
+      ["/cicd", "CI/CD pipelines", "সিআই/সিডি পাইপলাইন", GitBranch],
+      ["/releases", "Environments & releases", "এনভায়রনমেন্ট ও রিলিজ", Server],
+    ],
+  },
+  {
+    en: "ASSURANCE",
+    bn: "অ্যাসিওরেন্স",
+    items: [
+      ["/security", "Security centre", "সিকিউরিটি সেন্টার", LockKeyhole],
+      ["/backup", "Backup & DR", "ব্যাকআপ ও ডিআর", DatabaseBackup],
+      ["/datagov", "Data governance", "ডেটা গভর্নেন্স", Database],
+      ["/aigov", "AI governance", "এআই গভর্নেন্স", Layers3],
+    ],
+  },
+  {
+    en: "WORKLOADS",
+    bn: "ওয়ার্কলোড",
+    items: [
+      ["/payroll-monitor", "Payroll batch monitor", "পেরোল ব্যাচ মনিটর", Wallet],
+      ["/gis-layers", "GIS layer catalogue", "জিআইএস লেয়ার ক্যাটালগ", Map],
+      ["/performance", "Performance tests", "পারফরম্যান্স টেস্ট", BarChart3],
+    ],
+  },
+] as const;
+
+const baselineKpis = [
+  {
+    en: "Applications awaiting my decision",
+    bn: "আমার সিদ্ধান্তের অপেক্ষায় আবেদন",
+    value: "46",
+    detailEn: "12 older than 5 days",
+    detailBn: "৫ দিনের বেশি পুরোনো ১২টি",
+    color: "magenta",
+  },
+  {
+    en: "Field verifications pending",
+    bn: "অমীমাংসিত মাঠ যাচাই",
+    value: "118",
+    detailEn: "83% within SLA",
+    detailBn: "৮৩% নির্ধারিত সময়ের মধ্যে",
+    color: "amber",
+  },
+  {
+    en: "Paid this cycle",
+    bn: "এই চক্রে পরিশোধিত",
+    value: "14,208",
+    detailEn: "99.1% success",
+    detailBn: "৯৯.১% সফল",
+    color: "green",
+  },
+  {
+    en: "Open grievances",
+    bn: "খোলা অভিযোগ",
+    value: "23",
+    detailEn: "4 escalated",
+    detailBn: "৪টি এস্কেলেটেড",
+    color: "blue",
+  },
+];
+
+const quotaData = [
+  { name: "Kaunia", progress: "82%", count: "246 / 300", color: "g" },
+  { name: "Haragach", progress: "68%", count: "204 / 300", color: "m" },
+  { name: "Balarhat", progress: "54%", count: "162 / 300", color: "a" },
+];
+
+const statusNames: Record<string, [string, string]> = {
+  draft: ["Draft", "খসড়া"],
+  submitted: ["Submitted", "জমা হয়েছে"],
+  identity_pending: ["Identity pending", "পরিচয় যাচাই বাকি"],
+  identity_verified: ["Identity verified", "পরিচয় যাচাইকৃত"],
+  eligibility_passed: ["Eligible", "যোগ্য"],
+  eligibility_failed: ["Ineligible", "অযোগ্য"],
+  field_pending: ["Field verification pending", "মাঠ যাচাই বাকি"],
+  field_completed: ["Field verified", "মাঠ যাচাইকৃত"],
+  selection_prepared: ["Selection prepared", "নির্বাচন প্রস্তুত"],
+  approval_pending: ["Approval pending", "অনুমোদন বাকি"],
+  approved: ["Approved", "অনুমোদিত"],
+  rejected: ["Rejected", "বাতিল"],
+  returned: ["Returned", "ফেরত"],
+  enrolled: ["Enrolled", "নিবন্ধিত"],
+};
+
+export default function Home() {
+  const [lang, setLang] = useState<Lang>("en");
+  const [roleId, setRoleId] = useState("uwao");
+  const [path, setPath] = useState("/dashboard");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [toast, setToast] = useState("");
+
+  const applications = useDemoStore((state) => state.applications);
+  const resetDemoStore = useDemoStore((state) => state.resetDemo);
+
+  const role = roles.find((item) => item.id === roleId) ?? roles[0];
+  const t = (en: string, bn: string) => tr(lang, en, bn);
+
+  const newlySubmitted = applications.filter(
+    (item) => item.status === "submitted"
+  ).length;
+
+  const approvalCases = applications.filter((item) =>
+    ["selection_prepared", "approval_pending"].includes(item.status)
+  ).length;
+
+  const pendingFieldCases = applications.filter(
+    (item) => item.status === "field_pending"
+  ).length;
+
+  const kpis = baselineKpis.map((item, index) => ({
+    ...item,
+    value:
+      index === 0
+        ? (46 + approvalCases).toLocaleString("en-US")
+        : index === 1
+          ? (117 + pendingFieldCases).toLocaleString("en-US")
+          : item.value,
+  }));
+
+  function notify(message: string) {
+    setToast(message);
+    window.setTimeout(() => setToast(""), 2500);
+  }
+
+  function changeLanguage(next: Lang) {
+    setLang(next);
+    localStorage.setItem("mcbp-lang", next);
+  }
+
+  function changeRole(next: string) {
+    setRoleId(next);
+    localStorage.setItem("mcbp-role", next);
+    notify(tr(lang, "Role updated", "ভূমিকা পরিবর্তন করা হয়েছে"));
+  }
+
+  function navigate(next: string) {
+    setPath(next);
+    setMobileOpen(false);
+  }
+
+  function reset() {
+    resetDemoStore();
+    localStorage.removeItem("mcbp-lang");
+    localStorage.removeItem("mcbp-role");
+    setLang("en");
+    setRoleId("uwao");
+    setPath("/dashboard");
+    notify("Demo reset");
+  }
+
+  const currentLabel =
+    sections.flatMap((section) => [...section.items] as ReadonlyArray<readonly [string, string, string, typeof FileText]>).find(
+      (item) => item[0] === path
+    );
+
+  const title =
+    path === "/dashboard"
+      ? t(
+          "Good morning, Nasrin. Here is your upazila today.",
+          "শুভ সকাল, নাসরিন। আজকের উপজেলার চিত্র দেখুন।"
+        )
+      : currentLabel
+        ? t(currentLabel[1], currentLabel[2])
+        : t("Dashboard", "ড্যাশবোর্ড");
+
+  return (
+    <div className={lang === "bn" ? "app bn" : "app"}>
+      <header className="top">
+        <button
+          className="btn mobile-menu"
+          type="button"
+          aria-label="Toggle navigation"
+          onClick={() => setMobileOpen(!mobileOpen)}
+        >
+          <Menu size={20} />
+        </button>
+
+        <div className="logo">
+          <HeartHandshake size={22} />
+        </div>
+
+        <div className="brand">
+          <b>MCBP-MIS</b>
+          <span>
+            {t(
+              "Mother & Child Benefit Programme",
+              "মা ও শিশু ভাতা কর্মসূচি"
+            )}
+          </span>
+        </div>
+
+        <div className="search">
+          <Search size={17} />
+          <span>
+            {t(
+              "Search beneficiary ID, NID or mobile number…",
+              "উপকারভোগী আইডি, এনআইডি বা মোবাইল নম্বর খুঁজুন…"
+            )}
+          </span>
+        </div>
+
+        <div className="lang">
+          <button
+            type="button"
+            className={lang === "en" ? "on" : ""}
+            onClick={() => changeLanguage("en")}
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            className={lang === "bn" ? "on" : ""}
+            onClick={() => changeLanguage("bn")}
+          >
+            বাংলা
+          </button>
+        </div>
+
+        <Bell size={20} />
+
+        <div className="av">{role.initials}</div>
+
+        <div className="who">
+          <b>{t(role.en, role.bn)}</b>
+          <span>{role.geo}</span>
+        </div>
+      </header>
+
+      <div className="main">
+        <aside className={mobileOpen ? "side open" : "side"}>
+          {sections
+            .filter((section) =>
+              roleId === "field" || roleId === "finance"
+                ? ["BENEFICIARY LIFECYCLE", "INTELLIGENCE"].includes(
+                    section.en
+                  )
+                : true
+            )
+            .map((section) => (
+              <div key={section.en}>
+                <h6>{t(section.en, section.bn)}</h6>
+
+                {section.items.map(([href, en, bn, Icon]) => (
+                  <button
+                    key={href}
+                    type="button"
+                    className={path === href ? "nav on" : "nav"}
+                    onClick={() => navigate(href)}
+                  >
+                    <Icon size={17} />
+                    <span>{t(en, bn)}</span>
+                  </button>
+                ))}
+              </div>
+            ))}
+        </aside>
+
+        <main className="content">
+          <div className="crumb">
+            {t(
+              "Home / Kaunia Upazila, Rangpur",
+              "হোম / কাউনিয়া উপজেলা, রংপুর"
+            )}
+          </div>
+
+          <div className="hrow">
+            <div>
+              <h1>{title}</h1>
+              <p className="sub">
+                {t(
+                  "Role-aware officer workspace · fictional data · demo-enforced permissions",
+                  "ভূমিকা অনুযায়ী অফিসার ওয়ার্কস্পেস · কাল্পনিক তথ্য · ডেমো অনুমতি"
+                )}
+              </p>
+            </div>
+
+            <div className="actions">
+              <button className="btn" type="button">
+                <CalendarDays size={15} />
+                13 Nov 2026
+              </button>
+
+              <button
+                className="btn primary"
+                type="button"
+                onClick={() =>
+                  notify(
+                    t(
+                      "Scenario guide is not yet implemented",
+                      "সিনারিও গাইড এখনো তৈরি হয়নি"
+                    )
+                  )
+                }
+              >
+                {t("Scenario guide", "সিনারিও গাইড")}
+                <ArrowRight size={15} />
+              </button>
+            </div>
+          </div>
+
+          {path === "/applications" ? (
+            <ApplicationsPanel lang={lang} roleId={roleId} />
+          ) : path === "/dashboard" ? (
+            <>
+              <div className="grid kpis">
+                {kpis.map((item) => (
+                  <div className="card stat" key={item.en}>
+                    <div className="stat-head">
+                      <span>{t(item.en, item.bn)}</span>
+                      <span className={`stat-icon ${item.color}`}>
+                        {item.color === "magenta" ? (
+                          <FileText size={19} />
+                        ) : item.color === "amber" ? (
+                          <Map size={19} />
+                        ) : item.color === "green" ? (
+                          <Wallet size={19} />
+                        ) : (
+                          <MessageSquareWarning size={19} />
+                        )}
+                      </span>
+                    </div>
+                    <strong>{item.value}</strong>
+                    <small className={item.color}>
+                      {t(item.detailEn, item.detailBn)}
+                    </small>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid two">
+                <section className="card">
+                  <div className="card-title">
+                    <h2>
+                      {t(
+                        "My approval queue",
+                        "আমার অনুমোদন তালিকা"
+                      )}
+                    </h2>
+
+                    <button
+                      className="link"
+                      type="button"
+                      onClick={() => navigate("/applications")}
+                    >
+                      {t("View all", "সব দেখুন")}
+                    </button>
+                  </div>
+
+                  <div style={{ overflowX: "auto" }}>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>{t("Application", "আবেদন")}</th>
+                          <th>{t("Applicant", "আবেদনকারী")}</th>
+                          <th>{t("Status", "অবস্থা")}</th>
+                          <th>{t("Action", "অ্যাকশন")}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {applications.slice(0, 4).map((item) => (
+                          <tr key={item.id}>
+                            <td className="mono">{item.id}</td>
+                            <td>
+                              {lang === "bn"
+                                ? item.nameBn || item.nameEn
+                                : item.nameEn}
+                            </td>
+                            <td>
+                              <span
+                                className={`pill ${
+                                  [
+                                    "approved",
+                                    "enrolled",
+                                    "field_completed",
+                                  ].includes(item.status)
+                                    ? "g"
+                                    : "a"
+                                }`}
+                              >
+                                {t(
+                                  ...(statusNames[item.status] ?? [
+                                    item.status,
+                                    item.status,
+                                  ])
+                                )}
+                              </span>
+                            </td>
+                            <td>
+                              <button
+                                className="link"
+                                type="button"
+                                onClick={() =>
+                                  navigate("/applications")
+                                }
+                              >
+                                {t("View", "দেখুন")}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <p className="muted" style={{ marginTop: 12 }}>
+                    {t(
+                      `${newlySubmitted} newly submitted demo applications awaiting verification.`,
+                      `${newlySubmitted}টি নতুন আবেদন যাচাইয়ের অপেক্ষায়।`
+                    )}
+                  </p>
+                </section>
+
+                <section className="card">
+                  <div className="card-title">
+                    <h2>
+                      {t(
+                        "Union quota progress",
+                        "ইউনিয়ন কোটা অগ্রগতি"
+                      )}
+                    </h2>
+                    <span className="muted">FY 2026</span>
+                  </div>
+
+                  {quotaData.map((item) => (
+                    <div className="quota" key={item.name}>
+                      <div>
+                        <b>{item.name}</b>
+                        <span>{item.count}</span>
+                      </div>
+                      <div className="bar">
+                        <i
+                          className={item.color}
+                          style={{ width: item.progress }}
+                        />
+                      </div>
+                      <small>{item.progress}</small>
+                    </div>
+                  ))}
+                </section>
+              </div>
+
+              <div className="grid two">
+                <section className="card">
+                  <div className="card-title">
+                    <h2>
+                      {t(
+                        "Applications · last 8 weeks",
+                        "আবেদন · গত ৮ সপ্তাহ"
+                      )}
+                    </h2>
+                    <span className="muted">
+                      {t(
+                        "Submitted / approved",
+                        "জমা / অনুমোদিত"
+                      )}
+                    </span>
+                  </div>
+
+                  <div className="chart">
+                    {[42, 55, 49, 66, 58, 74, 62, 81].map(
+                      (height, index) => (
+                        <div className="bar-col" key={index}>
+                          <span style={{ height: `${height}%` }} />
+                          <span
+                            style={{
+                              height: `${Math.max(
+                                20,
+                                height - 28
+                              )}%`,
+                            }}
+                          />
+                          <label>W{index + 1}</label>
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  <div className="legend">
+                    <span>
+                      <i className="lg green" />{" "}
+                      {t("Submitted", "জমা")}
+                    </span>
+                    <span>
+                      <i className="lg magenta" />{" "}
+                      {t("Approved", "অনুমোদিত")}
+                    </span>
+                  </div>
+                </section>
+
+                <section className="card">
+                  <div className="card-title">
+                    <h2>
+                      {t(
+                        "Today's indicators",
+                        "আজকের সূচক"
+                      )}
+                    </h2>
+                    <span className="pill g">
+                      {t("Live demo", "লাইভ ডেমো")}
+                    </span>
+                  </div>
+
+                  {[
+                    ["Field visits scheduled", "মাঠ পরিদর্শন নির্ধারিত", "36"],
+                    ["Verifications completed", "যাচাই সম্পন্ন", "29"],
+                    ["SMS notifications sent", "এসএমএস পাঠানো", "184"],
+                    ["Escalations due today", "আজকের এস্কেলেশন", "4"],
+                  ].map(([en, bn, value]) => (
+                    <div className="indicator" key={en}>
+                      <span>{t(en, bn)}</span>
+                      <b>{value}</b>
+                    </div>
+                  ))}
+                </section>
+              </div>
+
+              <section className="advisory">
+                <div className="ai-mark">
+                  <Bot size={20} />
+                </div>
+
+                <div>
+                  <b>
+                    {t(
+                      "Advisory AI insight · human review required",
+                      "এআই পরামর্শ · মানব পর্যালোচনা প্রয়োজন"
+                    )}
+                  </b>
+                  <p>
+                    {t(
+                      "Three applications in Kaunia are approaching the five-day SLA. Consider assigning one additional checker before 15:00. This is a simulated advisory and cannot approve or reject cases.",
+                      "কাউনিয়ায় তিনটি আবেদন পাঁচ দিনের সময়সীমার কাছাকাছি। একজন অতিরিক্ত যাচাইকারী নিয়োগ বিবেচনা করুন। এটি একটি ডেমো পরামর্শ; কোনো আবেদন অনুমোদন বা বাতিল করতে পারে না।"
+                    )}
+                  </p>
+                </div>
+
+                <button
+                  className="btn"
+                  type="button"
+                  onClick={() =>
+                    notify(
+                      t(
+                        "Insight acknowledged",
+                        "পরামর্শ গ্রহণ করা হয়েছে"
+                      )
+                    )
+                  }
+                >
+                  {t("Acknowledge", "গ্রহণ করুন")}
+                </button>
+              </section>
+            </>
+          ) : (
+            <section className="card placeholder">
+              <div className="placeholder-icon">
+                <Layers3 size={28} />
+              </div>
+
+              <h2>
+                {t(
+                  "Module not yet implemented",
+                  "মডিউল এখনো তৈরি হয়নি"
+                )}
+              </h2>
+
+              <p>
+                {t(
+                  "This module is planned for the next implementation steps. Existing navigation and design are preserved.",
+                  "এই মডিউল পরবর্তী ধাপে তৈরি হবে। বর্তমান নেভিগেশন ও ডিজাইন সংরক্ষিত আছে।"
+                )}
+              </p>
+
+              <button
+                className="btn primary"
+                type="button"
+                onClick={() => navigate("/dashboard")}
+              >
+                {t(
+                  "Return to dashboard",
+                  "ড্যাশবোর্ডে ফিরুন"
+                )}
+              </button>
+            </section>
+          )}
+        </main>
+      </div>
+
+      {toast && <div className="toast">{toast}</div>}
+
+      <footer>
+        {t(
+          "Frontend-only demonstration · Fictional data · Demo-enforced RBAC",
+          "শুধু ফ্রন্টএন্ড ডেমো · কাল্পনিক তথ্য · ডেমো অনুমতি"
+        )}
+
+        <button type="button" onClick={reset}>
+          <RotateCcw size={13} />
+          {t("Reset demo", "ডেমো রিসেট")}
+        </button>
+
+        <select
+          value={roleId}
+          aria-label="Demo role"
+          onChange={(event) => changeRole(event.target.value)}
+        >
+          {roles.map((item) => (
+            <option value={item.id} key={item.id}>
+              {item.en}
+            </option>
+          ))}
+        </select>
+      </footer>
+    </div>
+  );
+}
+
+
+

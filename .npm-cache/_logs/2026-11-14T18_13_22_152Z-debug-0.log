@@ -1,0 +1,26 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.17.0
+2 info using node@v24.19.0
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:E:\mis\.npmrc
+5 silly config load:file:C:\Users\Riseup Labs\.npmrc
+6 silly config load:file:C:\Users\Riseup Labs\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install next@16.4.6 react@19.2.4 react-dom@19.2.4 eslint-config-next@16.4.6 typescript@5.9.3
+8 verbose argv "install" "next@16.4.6" "react@19.2.4" "react-dom@19.2.4" "eslint-config-next@16.4.6" "typescript@5.9.3" "--save-exact" "--no-audit" "--no-fund"
+9 verbose logfile logs-max:10 dir:E:\mis\.npm-cache\_logs\2026-11-14T18_13_22_152Z-
+10 verbose logfile E:\mis\.npm-cache\_logs\2026-11-14T18_13_22_152Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 http fetch GET https://registry.npmjs.org/npm attempt 1 failed with EACCES
+14 silly idealTree buildDeps
+15 silly fetch manifest next@16.4.6
+16 silly packumentCache full:https://registry.npmjs.org/next cache-miss
+17 http fetch GET https://registry.npmjs.org/next attempt 1 failed with EACCES
+18 http fetch GET https://registry.npmjs.org/npm attempt 2 failed with EACCES
+19 http fetch GET https://registry.npmjs.org/next attempt 2 failed with EACCES
+20 http fetch GET https://registry.npmjs.org/npm attempt 3 failed with EACCES
+21 http fetch GET https://registry.npmjs.org/next attempt 3 failed with EACCES
+22 silly fetch manifest react@19.2.4
+23 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+24 http fetch GET https://registry.npmjs.org/react attempt 1 failed with EACCES
+25 http fetch GET https://registry.npmjs.org/react attempt 2 failed with EACCES
