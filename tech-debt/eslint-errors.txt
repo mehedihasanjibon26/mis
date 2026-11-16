@@ -1,0 +1,280 @@
+﻿
+E:\mis\src\app\access\page.tsx
+  211:31  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\app\access\page.tsx:211:31
+  209 |       const savedEvents = localStorage.getItem("mcbp-access-events");
+  210 |
+> 211 |       if (savedLang === "bn") setLang("bn");
+      |                               ^^^^^^^ Avoid calling setState() directly within an effect
+  212 |       if (savedRole && roles.includes(savedRole as Role)) {
+  213 |         setActor(savedRole as Role);
+  214 |       }  react-hooks/set-state-in-effect
+
+E:\mis\src\app\ai\page.tsx
+  191:22  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\app\ai\page.tsx:191:22
+  189 |       const stored = localStorage.getItem("mcbp-ai-proposals");
+  190 |
+> 191 |       if (roleValue) setRole(roleValue);
+      |                      ^^^^^^^ Avoid calling setState() directly within an effect
+  192 |       if (langValue === "en" || langValue === "bn") setLang(langValue);
+  193 |       if (stored) {
+  194 |         const parsed: unknown = JSON.parse(stored);  react-hooks/set-state-in-effect
+  330:17  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+E:\mis\src\app\ai\page.tsx:330:17
+  328 |
+  329 |     const item: Proposal = {
+> 330 |       id: `AI-${Date.now()}`,
+      |                 ^^^^^^^^^^ Cannot call impure function
+  331 |       agent,
+  332 |       title: label,
+  333 |       output: details[agent],                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-hooks/purity
+
+E:\mis\src\app\helpdesk\page.tsx
+  223:26  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\app\helpdesk\page.tsx:223:26
+  221 |       const savedCases = localStorage.getItem("mcbp-helpdesk-cases");
+  222 |       const savedReferrals = localStorage.getItem("mcbp-helpdesk-referrals");
+> 223 |       if (lang === "bn") setLanguage("bn");
+      |                          ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  224 |       if (savedRole) setRole(savedRole);
+  225 |       if (savedCases) {
+  226 |         const data: unknown = JSON.parse(savedCases);  react-hooks/set-state-in-effect
+
+E:\mis\src\app\mobile\page.tsx
+  89:35  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\app\mobile\page.tsx:89:35
+  87 |       const savedRecords = localStorage.getItem("mcbp-mobile-demo");
+  88 |
+> 89 |       if (savedLanguage === "bn") setLang("bn");
+     |                                   ^^^^^^^ Avoid calling setState() directly within an effect
+  90 |       if (savedRole) setRole(savedRole);
+  91 |
+  92 |       if (savedRecords) {  react-hooks/set-state-in-effect
+
+E:\mis\src\app\page.tsx
+  220:7  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\app\page.tsx:220:7
+  218 |
+  219 |     if (savedRole && roles.some((r) => r.id === savedRole)) {
+> 220 |       setRoleId(savedRole);
+      |       ^^^^^^^^^ Avoid calling setState() directly within an effect
+  221 |     }
+  222 |
+  223 |     if (savedLang === "en" || savedLang === "bn") {  react-hooks/set-state-in-effect
+  511:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+  521:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+  531:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+  537:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+  543:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+  550:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+  565:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+  583:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+  598:7  warning  Do not use `window.location.assign()` to navigate to internal Next.js pages. Use `redirect()` in the render phase, or `useRouter().push()` in Client Components' event handlers instead. See: https://nextjs.org/docs/messages/no-location-assign-relative-destination                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           @next/next/no-location-assign-relative-destination
+
+E:\mis\src\app\schemes\page.tsx
+  155:30  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\app\schemes\page.tsx:155:30
+  153 |       const imported = localStorage.getItem("mcbp-ss13-batch");
+  154 |       const flow = localStorage.getItem("mcbp-ss13-workflow");
+> 155 |       if (language === "bn") setLang("bn");
+      |                              ^^^^^^^ Avoid calling setState() directly within an effect
+  156 |       if (actor) setRole(actor);
+  157 |       if (saved) setConfig(JSON.parse(saved) as Config);
+  158 |       if (live) setPublished(JSON.parse(live) as Config);  react-hooks/set-state-in-effect
+
+E:\mis\src\components\BackupDRPanel.tsx
+  117:36  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\components\BackupDRPanel.tsx:117:36
+  115 |       if (storedJobs) {
+  116 |         const parsed: unknown = JSON.parse(storedJobs);
+> 117 |         if (Array.isArray(parsed)) setJobs(parsed as Job[]);
+      |                                    ^^^^^^^ Avoid calling setState() directly within an effect
+  118 |       }
+  119 |       if (storedDrills) {
+  120 |         const parsed: unknown = JSON.parse(storedDrills);  react-hooks/set-state-in-effect
+
+E:\mis\src\components\CICDPanel.tsx
+  152:11  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\components\CICDPanel.tsx:152:11
+  150 |         if (Array.isArray(parsed)) {
+  151 |           const restored = parsed as Run[];
+> 152 |           setRuns(restored);
+      |           ^^^^^^^ Avoid calling setState() directly within an effect
+  153 |           if (restored.length) setSelected(restored[0].id);
+  154 |         }
+  155 |       }  react-hooks/set-state-in-effect
+
+E:\mis\src\components\DataHubPanel.tsx
+   524:15  error  Missing "key" prop for element in array  react/jsx-key
+   526:15  error  Missing "key" prop for element in array  react/jsx-key
+   804:15  error  Missing "key" prop for element in array  react/jsx-key
+   806:15  error  Missing "key" prop for element in array  react/jsx-key
+   937:17  error  Missing "key" prop for element in array  react/jsx-key
+  1026:15  error  Missing "key" prop for element in array  react/jsx-key
+  1027:15  error  Missing "key" prop for element in array  react/jsx-key
+  1119:17  error  Missing "key" prop for element in array  react/jsx-key
+
+E:\mis\src\components\GatewayPanel.tsx
+  102:36  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\components\GatewayPanel.tsx:102:36
+  100 |       if (savedRoutes) {
+  101 |         const parsed: unknown = JSON.parse(savedRoutes);
+> 102 |         if (Array.isArray(parsed)) setRoutes(parsed as Route[]);
+      |                                    ^^^^^^^^^ Avoid calling setState() directly within an effect
+  103 |       }
+  104 |       if (savedTrials) {
+  105 |         const parsed: unknown = JSON.parse(savedTrials);  react-hooks/set-state-in-effect
+
+E:\mis\src\components\MultiSchemePanel.tsx
+  173:11  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\components\MultiSchemePanel.tsx:173:11
+  171 |             (s) => s.id !== "MCBP"
+  172 |           );
+> 173 |           setSchemes([core, ...custom]);
+      |           ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  174 |         }
+  175 |       }
+  176 |       if (active) setActiveScheme(active);  react-hooks/set-state-in-effect
+
+E:\mis\src\components\ObservabilityPanel.tsx
+  159:36  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\components\ObservabilityPanel.tsx:159:36
+  157 |       if (savedServices) {
+  158 |         const parsed: unknown = JSON.parse(savedServices);
+> 159 |         if (Array.isArray(parsed)) setServices(parsed as Service[]);
+      |                                    ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  160 |       }
+  161 |       if (savedIncidents) {
+  162 |         const parsed: unknown = JSON.parse(savedIncidents);  react-hooks/set-state-in-effect
+
+E:\mis\src\components\SecurityCenterPanel.tsx
+  120:36  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\components\SecurityCenterPanel.tsx:120:36
+  118 |       if (a) {
+  119 |         const parsed: unknown = JSON.parse(a);
+> 120 |         if (Array.isArray(parsed)) setAlerts(parsed as Alert[]);
+      |                                    ^^^^^^^^^ Avoid calling setState() directly within an effect
+  121 |       }
+  122 |       if (e) {
+  123 |         const parsed: unknown = JSON.parse(e);  react-hooks/set-state-in-effect
+
+E:\mis\src\components\XRoadPanel.tsx
+  148:34  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+E:\mis\src\components\XRoadPanel.tsx:148:34
+  146 |       if (savedPartners) {
+  147 |         const data: unknown = JSON.parse(savedPartners);
+> 148 |         if (Array.isArray(data)) setPartners(data as Partner[]);
+      |                                  ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  149 |       }
+  150 |       if (savedQueue) {
+  151 |         const data: unknown = JSON.parse(savedQueue);  react-hooks/set-state-in-effect
+  173:18  error  Error: Cannot call impure function during render
+
+`Date.now` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+E:\mis\src\components\XRoadPanel.tsx:173:18
+  171 |   function addLog(partner: string, event: string, status: string) {
+  172 |     const item: LogItem = {
+> 173 |       id: `MSG-${Date.now()}`,
+      |                  ^^^^^^^^^^ Cannot call impure function
+  174 |       timestamp: new Date().toISOString(),
+  175 |       partner, event, status, actor: roleId,
+  176 |     };                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/purity
+
+Γ£û 32 problems (23 errors, 9 warnings)
+

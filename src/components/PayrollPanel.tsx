@@ -1,7 +1,9 @@
 
 "use client";
+import { digits } from "../lib/ui-l10n";
 
 import { useState } from "react";
+import { formatNumber, formatMoney } from "../lib/number-l10n";
 import {
   Wallet, CheckCircle2, AlertTriangle, RotateCcw,
   Download, Search, ShieldCheck, FileText,
@@ -17,8 +19,7 @@ import {
 type Lang = "en" | "bn";
 type Props = { lang: Lang; roleId: string };
 
-const currency = (amount: number) =>
-  `৳${amount.toLocaleString("en-BD")}`;
+const currency = (amount: number, lang: Lang) => formatMoney(amount, lang);
 
 function downloadCsv(name: string, rows: string[][]) {
   const content = rows
@@ -233,10 +234,10 @@ export default function PayrollPanel({ lang, roleId }: Props) {
 
       <div className="grid kpis">
         {[
-          [t("Cycle amount", "মোট পেরোল"), currency(total), Wallet, "green"],
-          [t("Paid / repaid", "পরিশোধিত"), currency(settled), CheckCircle2, "green"],
-          [t("Bounced", "ব্যর্থ পেমেন্ট"), String(bounced.length), AlertTriangle, "magenta"],
-          [t("Outstanding", "অমীমাংসিত"), String(outstanding.length), RotateCcw, "amber"],
+          [t("Cycle amount", "মোট পেরোল"), currency(total, lang), Wallet, "green"],
+          [t("Paid / repaid", "পরিশোধিত"), currency(settled, lang), CheckCircle2, "green"],
+          [t("Bounced", "ব্যর্থ পেমেন্ট"), formatNumber(bounced.length, lang), AlertTriangle, "magenta"],
+          [t("Outstanding", "অমীমাংসিত"), formatNumber(outstanding.length, lang), RotateCcw, "amber"],
         ].map(([label, value, Icon, color], i) => {
           const Glyph = Icon as typeof Wallet;
           return (
@@ -403,7 +404,7 @@ export default function PayrollPanel({ lang, roleId }: Props) {
                         <div className="muted">{p.reference}</div>
                       </td>
                       <td>{p.name}<div className="muted">{p.beneficiaryId}</div></td>
-                      <td>{currency(p.amount)}</td>
+                      <td>{currency(p.amount, lang)}</td>
                       <td>
                         <span className={`pill ${
                           ["paid", "repaid"].includes(p.status)
@@ -505,7 +506,7 @@ export default function PayrollPanel({ lang, roleId }: Props) {
                       <td>{l.action.replaceAll("_", " ")}</td>
                       <td>{l.actor}</td>
                       <td className="mono">{l.paymentId ?? "—"}</td>
-                      <td>{new Date(l.time).toLocaleString()}</td>
+                      <td>{new Date(l.time).toLocaleString((lang === "bn") ? "bn-BD" : "en-GB")}</td>
                     </tr>
                   ))}
                   {!cycleLogs.length && (
@@ -528,11 +529,11 @@ export default function PayrollPanel({ lang, roleId }: Props) {
         }}>
           <div className="stat">
             <span className="muted">{t("Eligible beneficiaries", "যোগ্য উপকারভোগী")}</span>
-            <strong>1,895,010</strong>
+            <strong>{digits(lang, "1,895,010")}</strong>
           </div>
           <div className="stat">
             <span className="muted">{t("Processed records", "প্রক্রিয়াকৃত রেকর্ড")}</span>
-            <strong>1,777,870</strong>
+            <strong>{digits(lang, "1,777,870")}</strong>
           </div>
           <div className="stat">
             <span className="muted">{t("Default monthly benefit", "নমুনা মাসিক ভাতা")}</span>

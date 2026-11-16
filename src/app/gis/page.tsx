@@ -1,8 +1,10 @@
 
 "use client";
+import { ui } from "../../lib/ui-l10n";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import BangladeshLiveMap from "../../components/BangladeshLiveMap";
 import {
   ArrowLeft, ArrowRight, CheckCircle2, ChevronRight,
   Download, Filter, Layers3, MapPin, MapPinned,
@@ -123,6 +125,14 @@ function downloadCsv(rows: string[][]) {
 
 export default function GisPage() {
   const [lang, setLang] = useState<Lang>("en");
+  // MCBP_SHELL_LANGUAGE_SYNC_V1
+  useEffect(() => {
+    const saved = window.localStorage.getItem("mcbp-lang");
+    if (saved === "en" || saved === "bn") {
+      setLang(saved);
+    }
+  }, []);
+
   const [role, setRole] = useState("executive");
   const [layer, setLayer] = useState<Layer>("coverage");
   const [division, setDivision] = useState("");
@@ -284,8 +294,8 @@ export default function GisPage() {
               selectRangpurDemo();
             }
           }}>
-            <option value="executive">Programme Executive / PD</option>
-            <option value="admin">System Administrator</option>
+            <option value="executive">{ui(lang, "Programme Executive / PD")}</option>
+            <option value="admin">{ui(lang, "System Administrator")}</option>
             <option value="uwao">UWAO — Kaunia</option>
           </select>
           <button style={action} onClick={() =>
@@ -369,7 +379,7 @@ export default function GisPage() {
                 <Layers3 size={17} style={{ verticalAlign: "middle", marginRight: 7 }} />
                 {t("Programme coverage map", "কর্মসূচির কভারেজ ম্যাপ")}
               </h2>
-              <div style={muted}>Bangladesh divisions · simplified schematic geometry</div>
+              <div style={muted}>{t("Bangladesh divisions · interactive geographic boundaries", "বাংলাদেশের বিভাগসমূহ · ইন্টারঅ্যাকটিভ ভৌগোলিক সীমানা")}</div>
             </div>
             <div style={{ display: "flex", gap: 6 }}>
               <button style={action} title="Zoom in"
@@ -409,96 +419,9 @@ export default function GisPage() {
             </select>
           </div>
 
+          {/* MCBP_LIVE_GIS_MAP_V1 */}
           <div className="gis-map">
-            <svg viewBox="0 0 440 455" role="img"
-              aria-label="Schematic interactive Bangladesh division coverage map"
-              style={{ display: "block", width: "100%", maxHeight: 540 }}>
-              <defs>
-                <pattern id="mapdots" width="17" height="17"
-                  patternUnits="userSpaceOnUse">
-                  <circle cx="1" cy="1" r="1" fill="#DCE9DF" />
-                </pattern>
-              </defs>
-              <rect width="440" height="455" fill="url(#mapdots)" />
-
-              <g transform={`translate(${220 * (1 - zoom)},${220 * (1 - zoom)}) scale(${zoom})`}>
-                {regions.map((region) => {
-                  const dimmed =
-                    Boolean(query) && !filteredRegions.some((r) => r.id === region.id);
-                  const selectedRegion = division === region.id;
-
-                  return (
-                    <g key={region.id}>
-                      <polygon
-                        className="gis-region"
-                        points={region.shape}
-                        fill={layerColor(region, layer)}
-                        opacity={dimmed ? .25 : selectedRegion ? 1 : .89}
-                        stroke={selectedRegion ? "#064F39" : "#fff"}
-                        strokeWidth={selectedRegion ? 5 : 3}
-                        onClick={() => {
-                          if (isNational || region.id === "Rangpur") {
-                            chooseDivision(region.id);
-                          }
-                        }}
-                      >
-                        <title>{region.en}: coverage index {region.coverage}</title>
-                      </polygon>
-                      <text x={region.x} y={region.y}
-                        textAnchor="middle"
-                        fill={region.coverage >= 85 && layer === "coverage" ? "#fff" : "#153F31"}
-                        fontSize={region.en.length > 9 ? 11 : 13}
-                        fontWeight="700"
-                        pointerEvents="none">
-                        {lang === "bn" ? region.bn : region.en}
-                      </text>
-                      <text x={region.x} y={region.y + 17}
-                        textAnchor="middle"
-                        fill="#235C49" fontSize="11"
-                        fontWeight="700" pointerEvents="none">
-                        {layer === "coverage" ? `${region.coverage}%` : ""}
-                      </text>
-                    </g>
-                  );
-                })}
-
-                {showPins && (layer === "grievances" ||
-                  layer === "field" || layer === "facilities") && (
-                  <>
-                    {[
-                      { x: 126, y: 105, label: "Kaunia · demo point" },
-                      { x: 232, y: 222, label: "Dhaka · demo point" },
-                      { x: 339, y: 276, label: "Chattogram · demo point" },
-                    ].map((pin) => (
-                      <g key={pin.label} onClick={() => setSelectedPin(pin.label)}
-                        style={{ cursor: "pointer" }}>
-                        <circle cx={pin.x} cy={pin.y} r="14"
-                          fill="#C72D70" opacity=".18" />
-                        <circle cx={pin.x} cy={pin.y} r="6"
-                          fill="#C72D70" stroke="white" strokeWidth="2" />
-                      </g>
-                    ))}
-                  </>
-                )}
-
-                {selectionMode === "radius" && (
-                  <circle cx="125" cy="107" r="67"
-                    fill="#C72D70" fillOpacity=".10"
-                    stroke="#C72D70" strokeDasharray="6 4"
-                    strokeWidth="2" pointerEvents="none" />
-                )}
-
-                {selectionMode === "polygon" && (
-                  <polygon points="66,65 160,55 180,175 87,213"
-                    fill="#006A4E" fillOpacity=".10"
-                    stroke="#006A4E" strokeWidth="2"
-                    strokeDasharray="6 4" pointerEvents="none" />
-                )}
-              </g>
-              <text x="17" y="439" fontSize="10" fill="#667D70">
-                DEMO MAP · Not survey-accurate boundaries
-              </text>
-            </svg>
+            <BangladeshLiveMap lang={lang} layer={layer} query={query} selected={division} zoom={zoom} allowAllDivisions={isNational} showPins={showPins} selectionMode={selectionMode} onPinSelect={setSelectedPin} onSelect={(id) => { if (isNational || id === "Rangpur") chooseDivision(id); }} />
           </div>
 
           <div style={{
@@ -564,7 +487,7 @@ export default function GisPage() {
               display: "flex", alignItems: "center",
               gap: 6, flexWrap: "wrap", ...muted, marginBottom: 14,
             }}>
-              <button style={action} onClick={resetSelection}>Bangladesh</button>
+              <button style={action} onClick={resetSelection}>{ui(lang, "Bangladesh")}</button>
               {division && <><ChevronRight size={13} /> {division}</>}
               {district && <><ChevronRight size={13} /> {district}</>}
               {upazila && <><ChevronRight size={13} /> {upazila}</>}

@@ -1,0 +1,916 @@
+﻿========== SIDEBAR CONFIGURATION ==========
+    1: 
+    2: "use client";
+    3: import dynamic from "next/dynamic";
+    4: 
+    5: import { useEffect, useState } from "react";
+    6: import {
+    7:   Bell, Search, HeartHandshake, FileText, UserRound, Wallet,
+    8:   GraduationCap, MessageSquareWarning, LayoutDashboard, Map, Bot,
+    9:   ChartColumn, Network, Headset, Blocks, ShieldCheck, Activity,
+   10:   Gauge, PlugZap, GitBranch, Server, LockKeyhole,
+   11:   DatabaseBackup, Database, Layers3, BarChart3, Menu,
+   12:   RotateCcw, ArrowRight, CalendarDays, Smartphone, type LucideIcon,
+   13: } from "lucide-react";
+   14: 
+   15: import ApplicationsPanel from "../components/ApplicationsPanel";
+   16: import BeneficiariesPanel from "../components/BeneficiariesPanel";
+   17: import PayrollPanel from "../components/PayrollPanel";
+   18: import GrievancesPanel from "../components/GrievancesPanel";
+   19: import TrainingPanel from "../components/TrainingPanel";
+   20: import MultiSchemePanel from "../components/MultiSchemePanel";
+   21: import GatewayPanel from "../components/GatewayPanel";
+   22: import XRoadPanel from "../components/XRoadPanel";
+   23: import ObservabilityPanel from "../components/ObservabilityPanel";
+   24: import CICDPanel from "../components/CICDPanel";
+   25: import SecurityCenterPanel from "../components/SecurityCenterPanel";
+   26: import BackupDRPanel from "../components/BackupDRPanel";
+   27: import DataGovernancePanel from "../components/DataGovernancePanel";
+   28: import PayrollMonitorPanel from "../components/PayrollMonitorPanel";
+   29: import AIGovernancePanel from "../components/AIGovernancePanel";
+   30: import GISGovernancePanel from "../components/GISGovernancePanel";
+   31: import CapacityPanel from "../components/CapacityPanel";
+   32: import ReleaseManagementPanel from "../components/ReleaseManagementPanel";
+   33: import PerformanceTestPanel from "../components/PerformanceTestPanel";
+   34: 
+   35: import { useDemoStore } from "../lib/demo-store";
+   36: import { useBeneficiaryStore } from "../lib/beneficiary-store";
+   37: import { usePayrollStore } from "../lib/payroll-store";
+   38: import { useGrievanceStore } from "../lib/grievance-store";
+   39: import { useTrainingStore } from "../lib/training-store";
+   40: 
+   41: type Lang = "en" | "bn";
+   42: type NavItem = [string, string, string, LucideIcon];
+   43: type NavSection = {
+   44:   en: string;
+   45:   bn: string;
+   46:   items: NavItem[];
+   47: };
+   48: 
+   49: const sections: NavSection[] = [
+   50:   {
+   51:     en: "BENEFICIARY LIFECYCLE",
+   52:     bn: "à¦‰à¦ªà¦•à¦¾à¦°à¦­à§‹à¦—à§€ à¦œà§€à¦¬à¦¨à¦šà¦•à§à¦°",
+   53:     items: [
+   54:       ["/applications", "Applications & enrollment", "à¦†à¦¬à§‡à¦¦à¦¨ à¦“ à¦¨à¦¿à¦¬à¦¨à§à¦§à¦¨", FileText],
+   55:       ["/beneficiaries", "Beneficiary profiles", "à¦‰à¦ªà¦•à¦¾à¦°à¦­à§‹à¦—à§€ à¦ªà§à¦°à§‹à¦«à¦¾à¦‡à¦²", UserRound],
+   56:       ["/payroll", "Payroll & reconciliation", "à¦ªà§‡à¦°à§‹à¦² à¦“ à¦¸à¦®à¦¨à§à¦¬à¦¯à¦¼", Wallet],
+   57:       ["/training", "Training", "à¦ªà§à¦°à¦¶à¦¿à¦•à§à¦·à¦£", GraduationCap],
+   58:       ["/mobile", "Mobile & field operations", "à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦“ à¦®à¦¾à¦  à¦•à¦¾à¦°à§à¦¯à¦•à§à¦°à¦®", Smartphone],
+   59:       ["/grievances", "Grievance redress", "à¦…à¦­à¦¿à¦¯à§‹à¦— à¦ªà§à¦°à¦¤à¦¿à¦•à¦¾à¦°", MessageSquareWarning],
+   60:     ],
+   61:   },
+   62:   {
+   63:     en: "INTELLIGENCE",
+   64:     bn: "à¦‡à¦¨à§à¦Ÿà§‡à¦²à¦¿à¦œà§‡à¦¨à§à¦¸",
+   65:     items: [
+   66:       ["/dashboard", "Executive dashboard", "à¦¨à¦¿à¦°à§à¦¬à¦¾à¦¹à§€ à¦¡à§à¦¯à¦¾à¦¶à¦¬à§‹à¦°à§à¦¡", LayoutDashboard],
+   67:       ["/gis", "GIS intelligence", "à¦œà¦¿à¦†à¦‡à¦à¦¸ à¦‡à¦¨à§à¦Ÿà§‡à¦²à¦¿à¦œà§‡à¦¨à§à¦¸", Map],
+   68:       ["/ai", "AI assistant & agents", "à¦à¦†à¦‡ à¦¸à¦¹à¦•à¦¾à¦°à§€ à¦“ à¦à¦œà§‡à¦¨à§à¦Ÿ", Bot],
+   69:       ["/self-service", "Self-service MIS", "à¦¸à§‡à¦²à¦«-à¦¸à¦¾à¦°à§à¦­à¦¿à¦¸ à¦à¦®à¦†à¦‡à¦à¦¸", ChartColumn],
+   70:     ],
+   71:   },
+   72:   {
+   73:     en: "PLATFORM",
+   74:     bn: "à¦ªà§à¦²à§à¦¯à¦¾à¦Ÿà¦«à¦°à§à¦®",
+   75:     items: [
+   76:       ["/data-hub", "Data Hub / API Bank", "à¦¡à§‡à¦Ÿà¦¾ à¦¹à¦¾à¦¬ / à¦à¦ªà¦¿à¦†à¦‡ à¦¬à§à¦¯à¦¾à¦‚à¦•", Network],
+   77:       ["/helpdesk", "Helpdesk & referrals", "à¦¹à§‡à¦²à§à¦ªà¦¡à§‡à¦¸à§à¦• à¦“ à¦°à§‡à¦«à¦¾à¦°à§‡à¦²", Headset],
+   78:       ["/schemes", "Module & scheme builder", "à¦®à¦¡à¦¿à¦‰à¦² à¦“ à¦¸à§à¦•à¦¿à¦® à¦¬à¦¿à¦²à§à¦¡à¦¾à¦°", Blocks],
+   79:       ["/multi-scheme", "Multi-scheme management", "à¦®à¦¾à¦²à§à¦Ÿà¦¿-à¦¸à§à¦•à¦¿à¦® à¦¬à§à¦¯à¦¬à¦¸à§à¦¥à¦¾à¦ªà¦¨à¦¾", Layers3],
+   80:       ["/access", "Users & access", "à¦¬à§à¦¯à¦¬à¦¹à¦¾à¦°à¦•à¦¾à¦°à§€ à¦“ à¦…à§à¦¯à¦¾à¦•à§à¦¸à§‡à¦¸", ShieldCheck],
+   81:     ],
+   82:   },
+   83:   {
+   84:     en: "PLATFORM OPERATIONS",
+   85:     bn: "à¦ªà§à¦²à§à¦¯à¦¾à¦Ÿà¦«à¦°à§à¦® à¦…à¦ªà¦¾à¦°à§‡à¦¶à¦¨",
+   86:     items: [
+   87:       ["/observability", "Observability", "à¦…à¦¬à¦œà¦¾à¦°à¦­à§‡à¦¬à¦¿à¦²à¦¿à¦Ÿà¦¿", Activity],
+   88:       ["/capacity", "Capacity & autoscaling", "à¦•à§à¦¯à¦¾à¦ªà¦¾à¦¸à¦¿à¦Ÿà¦¿ à¦“ à¦…à¦Ÿà§‹à¦¸à§à¦•à§‡à¦²à¦¿à¦‚", Gauge],
+   89:       ["/release-management", "Release management", "à¦°à¦¿à¦²à¦¿à¦œ à¦®à§à¦¯à¦¾à¦¨à§‡à¦œà¦®à§‡à¦¨à§à¦Ÿ", ShieldCheck],
+   90:       ["/performance-tests", "Load & performance tests", "à¦²à§‹à¦¡ à¦“ à¦ªà¦¾à¦°à¦«à¦°à¦®à§à¦¯à¦¾à¦¨à§à¦¸ à¦Ÿà§‡à¦¸à§à¦Ÿ", ShieldCheck],
+   91:       ["/gateway", "API gateway", "à¦à¦ªà¦¿à¦†à¦‡ à¦—à§‡à¦Ÿà¦“à¦¯à¦¼à§‡", PlugZap],
+   92:       ["/xroad", "X-Road exchange", "à¦à¦•à§à¦¸-à¦°à§‹à¦¡ à¦à¦•à§à¦¸à¦šà§‡à¦žà§à¦œ", Network],
+   93:       ["/cicd", "CI/CD pipelines", "à¦¸à¦¿à¦†à¦‡/à¦¸à¦¿à¦¡à¦¿ à¦ªà¦¾à¦‡à¦ªà¦²à¦¾à¦‡à¦¨", GitBranch],
+   94:       ["/security-center", "Security Centre & SIEM", "à¦¨à¦¿à¦°à¦¾à¦ªà¦¤à§à¦¤à¦¾ à¦•à§‡à¦¨à§à¦¦à§à¦°", ShieldCheck],
+   95:       ["/backup-dr", "Backup & disaster recovery", "à¦¬à§à¦¯à¦¾à¦•à¦†à¦ª à¦“ à¦¦à§à¦°à§à¦¯à§‹à¦— à¦ªà§à¦¨à¦°à§à¦¦à§à¦§à¦¾à¦°", ShieldCheck],
+   96:       ["/data-governance", "Data governance", "à¦¡à§‡à¦Ÿà¦¾ à¦—à¦­à¦°à§à¦¨à§‡à¦¨à§à¦¸", ShieldCheck],
+   97:       ["/releases", "Environments & releases", "à¦à¦¨à¦­à¦¾à¦¯à¦¼à¦°à¦¨à¦®à§‡à¦¨à§à¦Ÿ à¦“ à¦°à¦¿à¦²à¦¿à¦œ", Server],
+   98:     ],
+   99:   },
+  100:   {
+  101:     en: "ASSURANCE",
+  102:     bn: "à¦…à§à¦¯à¦¾à¦¸à¦¿à¦“à¦°à§‡à¦¨à§à¦¸",
+  103:     items: [
+  104:       ["/security", "Security centre", "à¦¸à¦¿à¦•à¦¿à¦‰à¦°à¦¿à¦Ÿà¦¿ à¦¸à§‡à¦¨à§à¦Ÿà¦¾à¦°", LockKeyhole],
+  105:       ["/backup", "Backup & DR", "à¦¬à§à¦¯à¦¾à¦•à¦†à¦ª à¦“ à¦¡à¦¿à¦†à¦°", DatabaseBackup],
+  106:       ["/datagov", "Data governance", "à¦¡à§‡à¦Ÿà¦¾ à¦—à¦­à¦°à§à¦¨à§‡à¦¨à§à¦¸", Database],
+  107:       ["/aigov", "AI governance", "à¦à¦†à¦‡ à¦—à¦­à¦°à§à¦¨à§‡à¦¨à§à¦¸", Layers3],
+  108:     ],
+  109:   },
+  110:   {
+  111:     en: "WORKLOADS",
+  112:     bn: "à¦“à¦¯à¦¼à¦¾à¦°à§à¦•à¦²à§‹à¦¡",
+  113:     items: [
+  114:       ["/payroll-monitor", "Payroll batch monitor", "à¦ªà§‡à¦°à§‹à¦² à¦¬à§à¦¯à¦¾à¦š à¦®à¦¨à¦¿à¦Ÿà¦°", Wallet],
+  115:       ["/ai-governance", "AI governance", "à¦à¦†à¦‡ à¦—à¦­à¦°à§à¦¨à§‡à¦¨à§à¦¸", ShieldCheck],
+  116:       ["/gis-governance", "GIS layer governance", "à¦œà¦¿à¦†à¦‡à¦à¦¸ à¦²à§‡à¦¯à¦¼à¦¾à¦° à¦—à¦­à¦°à§à¦¨à§‡à¦¨à§à¦¸", ShieldCheck],
+  117:       ["/gis-layers", "GIS layer catalogue", "à¦œà¦¿à¦†à¦‡à¦à¦¸ à¦²à§‡à¦¯à¦¼à¦¾à¦° à¦•à§à¦¯à¦¾à¦Ÿà¦¾à¦²à¦—", Map],
+  118:       ["/performance", "Performance tests", "à¦ªà¦¾à¦°à¦«à¦°à¦®à§à¦¯à¦¾à¦¨à§à¦¸ à¦Ÿà§‡à¦¸à§à¦Ÿ", BarChart3],
+  119:     ],
+  120:   },
+  121: ];
+  122: 
+  123: const roles = [
+  124:   {
+  125:     id: "uwao", en: "Upazila Women Affairs Officer",
+  126:     bn: "à¦‰à¦ªà¦œà§‡à¦²à¦¾ à¦®à¦¹à¦¿à¦²à¦¾ à¦¬à¦¿à¦·à¦¯à¦¼à¦• à¦•à¦°à§à¦®à¦•à¦°à§à¦¤à¦¾",
+  127:     geo: "Kaunia Â· Rangpur", initials: "NS",
+  128:   },
+  129:   {
+  130:     id: "union_maker", en: "Union Application Maker",
+  131:     bn: "à¦‡à¦‰à¦¨à¦¿à¦¯à¦¼à¦¨ à¦†à¦¬à§‡à¦¦à¦¨ à¦ªà§à¦°à¦¸à§à¦¤à§à¦¤à¦•à¦¾à¦°à§€",
+  132:     geo: "Kaunia Â· Rangpur", initials: "UM",
+  133:   },
+  134:   {
+  135:     id: "field", en: "Field Verifier",
+  136:     bn: "à¦®à¦¾à¦  à¦¯à¦¾à¦šà¦¾à¦‡à¦•à¦¾à¦°à§€",
+  137:     geo: "Kaunia", initials: "FV",
+  138:   },
+  139:   {
+  140:     id: "trainer", en: "Community Trainer",
+  141:     bn: "à¦•à¦®à¦¿à¦‰à¦¨à¦¿à¦Ÿà¦¿ à¦ªà§à¦°à¦¶à¦¿à¦•à§à¦·à¦•",
+  142:     geo: "Kaunia Â· Rangpur", initials: "CT",
+  143:   },
+  144:   {
+  145:     id: "finance", en: "Finance Maker",
+  146:     bn: "à¦…à¦°à§à¦¥ à¦®à§‡à¦•à¦¾à¦°",
+  147:     geo: "Central finance", initials: "FM",
+  148:   },
+  149:   {
+  150:     id: "finance_checker", en: "Finance Checker",
+  151:     bn: "à¦…à¦°à§à¦¥ à¦¯à¦¾à¦šà¦¾à¦‡à¦•à¦¾à¦°à§€",
+  152:     geo: "Central finance", initials: "FC",
+  153:   },
+  154:   {
+  155:     id: "grm", en: "Grievance Redress Officer",
+  156:     bn: "à¦…à¦­à¦¿à¦¯à§‹à¦— à¦ªà§à¦°à¦¤à¦¿à¦•à¦¾à¦° à¦•à¦°à§à¦®à¦•à¦°à§à¦¤à¦¾",
+  157:     geo: "Kaunia Â· Rangpur", initials: "GO",
+  158:   },
+  159:   {
+  160:     id: "executive", en: "Programme Executive / PD",
+  161:     bn: "à¦ªà§à¦°à§‹à¦—à§à¦°à¦¾à¦® à¦¨à¦¿à¦°à§à¦¬à¦¾à¦¹à§€ / à¦ªà¦¿à¦¡à¦¿",
+  162:     geo: "National scope", initials: "PD",
+  163:   },
+  164:   {
+  165:     id: "admin", en: "System Administrator",
+  166:     bn: "à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦® à¦ªà§à¦°à¦¶à¦¾à¦¸à¦•",
+  167:     geo: "National scope", initials: "SA",
+  168:   },
+  169: ];
+  170: 
+  171: const statusNames: Record<string, [string, string]> = {
+  172:   draft: ["Draft", "à¦–à¦¸à¦¡à¦¼à¦¾"],
+  173:   submitted: ["Submitted", "à¦œà¦®à¦¾ à¦¹à¦¯à¦¼à§‡à¦›à§‡"],
+  174:   identity_pending: ["Identity pending", "à¦ªà¦°à¦¿à¦šà¦¯à¦¼ à¦¯à¦¾à¦šà¦¾à¦‡ à¦¬à¦¾à¦•à¦¿"],
+  175:   identity_verified: ["Identity verified", "à¦ªà¦°à¦¿à¦šà¦¯à¦¼ à¦¯à¦¾à¦šà¦¾à¦‡à¦•à§ƒà¦¤"],
+  176:   eligibility_passed: ["Eligible", "à¦¯à§‹à¦—à§à¦¯"],
+  177:   eligibility_failed: ["Ineligible", "à¦…à¦¯à§‹à¦—à§à¦¯"],
+  178:   field_pending: ["Field verification pending", "à¦®à¦¾à¦  à¦¯à¦¾à¦šà¦¾à¦‡ à¦¬à¦¾à¦•à¦¿"],
+  179:   field_completed: ["Field verified", "à¦®à¦¾à¦  à¦¯à¦¾à¦šà¦¾à¦‡à¦•à§ƒà¦¤"],
+  180:   selection_prepared: ["Selection prepared", "à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¨ à¦ªà§à¦°à¦¸à§à¦¤à§à¦¤"],
+  181:   approval_pending: ["Approval pending", "à¦…à¦¨à§à¦®à§‹à¦¦à¦¨ à¦¬à¦¾à¦•à¦¿"],
+  182:   approved: ["Approved", "à¦…à¦¨à§à¦®à§‹à¦¦à¦¿à¦¤"],
+  183:   rejected: ["Rejected", "à¦¬à¦¾à¦¤à¦¿à¦²"],
+  184:   returned: ["Returned", "à¦«à§‡à¦°à¦¤"],
+  185:   enrolled: ["Enrolled", "à¦¨à¦¿à¦¬à¦¨à§à¦§à¦¿à¦¤"],
+
+========== ROLE AND NAVIGATION ==========
+  300:       "12 older than 5 days",
+  301:       "à§« à¦¦à¦¿à¦¨à§‡à¦° à¦¬à§‡à¦¶à¦¿ à¦ªà§à¦°à§‹à¦¨à§‹ à§§à§¨à¦Ÿà¦¿",
+  302:       "magenta",
+  303:       FileText,
+  304:     ],
+  305:     [
+  306:       "Field verifications pending",
+  307:       "à¦®à¦¾à¦  à¦¯à¦¾à¦šà¦¾à¦‡ à¦…à¦ªà§‡à¦•à§à¦·à¦®à¦¾à¦£",
+  308:       String(117 + pendingField),
+  309:       "83% within SLA",
+  310:       "à§®à§©% à¦¨à¦¿à¦°à§à¦§à¦¾à¦°à¦¿à¦¤ à¦¸à¦®à¦¯à¦¼à§‡",
+  311:       "amber",
+  312:       Map,
+  313:     ],
+  314:     [
+  315:       "Paid this cycle",
+  316:       "à¦à¦‡ à¦šà¦•à§à¦°à§‡ à¦ªà¦°à¦¿à¦¶à§‹à¦§à¦¿à¦¤",
+  317:       "14,208",
+  318:       `${
+  319:         payrollPayments.filter((p) =>
+  320:           ["paid", "repaid"].includes(p.status)
+  321:         ).length
+  322:       } mock transactions`,
+  323:       "à¦¡à§‡à¦®à§‹ à¦ªà§‡à¦®à§‡à¦¨à§à¦Ÿ à¦¸à¦¿à¦®à§à¦²à§‡à¦¶à¦¨",
+  324:       "green",
+  325:       Wallet,
+  326:     ],
+  327:     [
+  328:       "Open grievances",
+  329:       "à¦šà¦²à¦®à¦¾à¦¨ à¦…à¦­à¦¿à¦¯à§‹à¦—",
+  330:       String(19 + openGrievances),
+  331:       `${openGrievances} current demo records`,
+  332:       `${openGrievances}à¦Ÿà¦¿ à¦šà¦²à¦®à¦¾à¦¨ à¦¡à§‡à¦®à§‹ à¦…à¦­à¦¿à¦¯à§‹à¦—`,
+  333:       "blue",
+  334:       MessageSquareWarning,
+  335:     ],
+  336:     [
+  337:       "Training completions",
+  338:       "à¦ªà§à¦°à¦¶à¦¿à¦•à§à¦·à¦£ à¦¸à¦®à§à¦ªà¦¨à§à¦¨",
+  339:       String(trainingCompleted),
+  340:       `${trainingCertificates} certificates`,
+  341:       `${trainingCertificates}à¦Ÿà¦¿ à¦¸à¦¨à¦¦`,
+  342:       "green",
+  343:       GraduationCap,
+  344:     ],
+  345:   ] as const;
+  346: 
+  347:   function notify(message: string) {
+  348:     setToast(message);
+  349:     window.setTimeout(() => setToast(""), 2500);
+  350:   }
+  351: 
+  352:   function updateRole(nextRole: string) {
+  353:     setRoleId(nextRole);
+  354:     localStorage.setItem("mcbp-role", nextRole);
+  355:     setPath("/dashboard");
+  356:     setMobileOpen(false);
+  357:   }
+  358: 
+  359:   function updateLanguage(nextLang: Lang) {
+  360:     setLang(nextLang);
+  361:     localStorage.setItem("mcbp-lang", nextLang);
+  362:   }
+  363: 
+  364:   function navigate(next: string) {
+  365:     // MCBP_PERFORMANCE_D22_V1
+  366:     if (next === "/performance-tests") {
+  367:       if (!["admin", "executive"].includes(roleId)) {
+  368:         notify("Performance tests require a national demo role.");
+  369:         return;
+  370:       }
+  371:       setPath("/performance-tests");
+  372:       setMobileOpen(false);
+  373:       return;
+  374:     }
+  375:     // MCBP_RELEASE_D21_V1
+  376:     if (next === "/release-management") {
+  377:       if (!["admin", "executive"].includes(roleId)) {
+  378:         notify("Release Management requires a national demo role.");
+  379:         return;
+  380:       }
+  381:       setPath("/release-management");
+  382:       setMobileOpen(false);
+  383:       return;
+  384:     }
+  385:     // MCBP_CAPACITY_D20_V1
+  386:     if (next === "/capacity") {
+  387:       if (!["admin", "executive"].includes(roleId)) {
+  388:         notify("Capacity console requires a national demo role.");
+  389:         return;
+  390:       }
+  391:       setPath("/capacity");
+  392:       setMobileOpen(false);
+  393:       return;
+  394:     }
+  395:     // MCBP_GIS_GOVERNANCE_D19_V1
+  396:     if (next === "/gis-governance") {
+  397:       if (!["admin", "executive"].includes(roleId)) {
+  398:         notify("GIS Governance requires a national demo role.");
+  399:         return;
+  400:       }
+  401: 
+  402:       setPath("/gis-governance");
+  403:       setMobileOpen(false);
+  404:       return;
+  405:     }
+  406:     // MCBP_AI_GOVERNANCE_D18_V1
+  407:     if (next === "/ai-governance") {
+  408:       if (!["admin", "executive"].includes(roleId)) {
+  409:         notify("AI Governance requires a national demo role.");
+  410:         return;
+  411:       }
+  412:       setPath("/ai-governance");
+  413:       setMobileOpen(false);
+  414:       return;
+  415:     }
+  416:     // MCBP_PAYROLL_D17_UNIFIED_V1
+  417:     if (next === "/payroll-monitor") {
+  418:       if (!["admin", "executive"].includes(roleId)) {
+  419:         notify("Payroll Monitor requires a national demo role.");
+  420:         return;
+  421:       }
+  422: 
+  423:       setPath("/payroll-monitor");
+  424:       setMobileOpen(false);
+  425:       return;
+  426:     }
+  427:     // MCBP_DATAGOV_D16_UNIFIED_V1
+  428:     if (next === "/data-governance") {
+  429:       if (!["admin", "executive"].includes(roleId)) {
+  430:         notify("Data Governance requires a national demo role.");
+  431:         return;
+  432:       }
+  433:       setPath("/data-governance");
+  434:       setMobileOpen(false);
+  435:       return;
+  436:     }
+  437:     // MCBP_BACKUP_D15_UNIFIED_V1
+  438:     if (next === "/backup-dr") {
+  439:       if (!["admin", "executive"].includes(roleId)) {
+  440:         notify("Backup & DR requires a national demo role.");
+  441:         return;
+  442:       }
+  443:       setPath("/backup-dr");
+  444:       setMobileOpen(false);
+  445:       return;
+  446:     }
+  447:     // MCBP_SECURITY_D14_UNIFIED_V1
+  448:     if (next === "/security-center") {
+  449:       if (!["admin", "executive"].includes(roleId)) {
+  450:         notify("Security Centre requires a national demo role.");
+  451:         return;
+  452:       }
+  453: 
+  454:       setPath("/security-center");
+  455:       setMobileOpen(false);
+  456:       return;
+  457:     }
+  458:     // MCBP_CICD_UNIFIED_V1
+  459:     if (next === "/cicd") {
+  460:       if (!["admin", "executive"].includes(roleId)) {
+  461:         notify("CI/CD requires a national demo role.");
+  462:         return;
+  463:       }
+  464:       setPath("/cicd");
+  465:       setMobileOpen(false);
+  466:       return;
+  467:     }
+  468:     // MCBP_OBSERVABILITY_UNIFIED_V1
+  469:     if (next === "/observability") {
+  470:       if (!["admin", "executive"].includes(roleId)) {
+  471:         notify("Observability requires a national demo role.");
+  472:         return;
+  473:       }
+  474: 
+  475:       setPath("/observability");
+  476:       setMobileOpen(false);
+  477:       return;
+  478:     }
+  479:     // MCBP_XROAD_UNIFIED_V1
+  480:     if (next === "/xroad") {
+  481:       if (!["admin", "executive"].includes(roleId)) {
+  482:         notify("X-Road console requires a national demo role.");
+  483:         return;
+  484:       }
+  485:       setPath("/xroad");
+  486:       setMobileOpen(false);
+  487:       return;
+  488:     }
+  489:     // MCBP_GATEWAY_UNIFIED_V1
+  490:     if (next === "/gateway") {
+  491:       if (!["admin", "executive"].includes(roleId)) {
+  492:         notify("API Gateway requires a national demo role.");
+  493:         return;
+  494:       }
+  495:       setPath("/gateway");
+  496:       setMobileOpen(false);
+  497:       return;
+  498:     }
+  499:     // MCBP_SS14_UNIFIED_V1
+  500:     if (next === "/multi-scheme") {
+  501:       if (!["admin", "executive", "uwao"].includes(roleId)) {
+  502:         notify("Multi-scheme management requires a configuration role.");
+  503:         return;
+  504:       }
+  505: 
+  506:       localStorage.setItem("mcbp-role", roleId);
+  507:       localStorage.setItem("mcbp-lang", lang);
+  508:       setPath("/multi-scheme");
+  509:       setMobileOpen(false);
+  510:       return;
+  511:     }
+  512:     const unifiedModules = [
+  513:       "/executive",
+  514:       "/data-hub",
+  515:       "/gis",
+  516:       "/ai",
+  517:       "/mobile",
+  518:       "/access",
+  519:       "/helpdesk",
+  520:       "/schemes",
+  521:     ];
+  522: 
+  523:     if (next === "/dashboard" && isNationalRole) {
+  524:       setPath("/executive");
+  525:       setMobileOpen(false);
+  526:       return;
+  527:     }
+  528: 
+  529:     if (unifiedModules.includes(next)) {
+  530:       if (next === "/data-hub" && !isNationalRole) {
+  531:         notify("Data Hub requires a national role.");
+  532:         return;
+  533:       }
+  534: 
+  535:       if (next === "/gis" && !canViewGis) {
+  536:         notify("GIS is unavailable for this role.");
+  537:         return;
+  538:       }
+  539: 
+  540:       if (next === "/ai" && !canViewAi) {
+  541:         notify("AI Assistant is unavailable for this role.");
+  542:         return;
+  543:       }
+  544: 
+  545:       if (
+  546:         next === "/access" &&
+  547:         !["admin", "executive"].includes(roleId)
+  548:       ) {
+  549:         notify("Users & Access requires a national role.");
+  550:         return;
+  551:       }
+  552: 
+  553:       if (
+  554:         next === "/helpdesk" &&
+  555:         !["admin", "executive", "uwao", "grm"].includes(roleId)
+  556:       ) {
+  557:         notify("Helpdesk is unavailable for this role.");
+  558:         return;
+  559:       }
+  560: 
+  561:       if (
+  562:         next === "/schemes" &&
+  563:         !["admin", "executive", "uwao"].includes(roleId)
+  564:       ) {
+  565:         notify("Module Builder is unavailable for this role.");
+  566:         return;
+  567:       }
+  568: 
+  569:       localStorage.setItem("mcbp-role", roleId);
+  570:       localStorage.setItem("mcbp-lang", lang);
+  571: 
+  572:       setPath(next);
+  573:       setMobileOpen(false);
+  574:       return;
+  575:     }
+  576:     if (next === "/schemes") {
+  577:       if (!["admin", "executive", "uwao"].includes(roleId)) {
+  578:         notify("Module Builder is available to configuration roles only.");
+  579:         return;
+  580:       }
+  581:       localStorage.setItem("mcbp-role", roleId);
+  582:       localStorage.setItem("mcbp-lang", lang);
+  583:       window.location.assign("/schemes");
+  584:       return;
+  585:     }
+  586:     if (next === "/helpdesk") {
+  587:       if (!["admin", "executive", "uwao", "grm"].includes(roleId)) {
+  588:         notify("Helpdesk demo requires a support or supervisory role.");
+  589:         return;
+  590:       }
+  591:       localStorage.setItem("mcbp-role", roleId);
+  592:       localStorage.setItem("mcbp-lang", lang);
+  593:       window.location.assign("/helpdesk");
+  594:       return;
+  595:     }
+  596:     if (next === "/access") {
+  597:       if (roleId !== "admin" && roleId !== "executive") {
+  598:         notify("Users & Access requires Administrator or Programme Executive demo role.");
+  599:         return;
+  600:       }
+  601:       localStorage.setItem("mcbp-role", roleId);
+  602:       localStorage.setItem("mcbp-lang", lang);
+  603:       window.location.assign("/access");
+  604:       return;
+  605:     }
+  606:     if (next === "/mobile") {
+  607:       localStorage.setItem("mcbp-role", roleId);
+  608:       localStorage.setItem("mcbp-lang", lang);
+  609:       window.location.assign("/mobile");
+  610:       return;
+  611:     }
+  612:     if (next === "/ai") {
+  613:       localStorage.setItem("mcbp-role", roleId);
+  614:       localStorage.setItem("mcbp-lang", lang);
+  615:       window.location.assign("/ai");
+  616:       return;
+  617:     }
+  618:     setMobileOpen(false);
+  619: 
+  620:     // All standalone modules are reached from the main sidebar.
+  621:     if (next === "/dashboard" && isNationalRole) {
+  622:       window.location.assign("/executive");
+  623:       return;
+  624:     }
+  625: 
+  626:     if (next === "/gis") {
+  627:       if (!canViewGis) {
+  628:         notify(
+  629:           t(
+  630:             "GIS is not available for this demo role.",
+  631:             "à¦à¦‡ à¦¡à§‡à¦®à§‹ à¦°à§‹à¦²à§‡ à¦œà¦¿à¦†à¦‡à¦à¦¸ à¦¦à§‡à¦–à¦¾ à¦¯à¦¾à¦¬à§‡ à¦¨à¦¾à¥¤"
+  632:           )
+  633:         );
+  634:         return;
+  635:       }
+  636: 
+  637:       window.location.assign("/gis");
+  638:       return;
+  639:     }
+  640: 
+  641:     if (next === "/ai") {
+  642:       if (!canViewAi) {
+  643:         notify(
+  644:           t(
+  645:             "AI Assistant is available to UWAO, Programme Executive and Administrator.",
+  646:             "à¦à¦†à¦‡ à¦¸à¦¹à¦•à¦¾à¦°à§€ à¦¶à§à¦§à§ à¦‰à¦ªà¦œà§‡à¦²à¦¾ à¦•à¦°à§à¦®à¦•à¦°à§à¦¤à¦¾, à¦ªà§à¦°à§‹à¦—à§à¦°à¦¾à¦® à¦¨à¦¿à¦°à§à¦¬à¦¾à¦¹à§€ à¦“ à¦ªà§à¦°à¦¶à¦¾à¦¸à¦•à§‡à¦° à¦œà¦¨à§à¦¯à¥¤"
+  647:           )
+  648:         );
+  649:         return;
+  650:       }
+  651: 
+  652:       // Store the active role and language before opening AI.
+  653:       localStorage.setItem("mcbp-role", roleId);
+  654:       localStorage.setItem("mcbp-lang", lang);
+  655:       window.location.assign("/ai");
+  656:       return;
+  657:     }
+  658: 
+  659:     if (next === "/data-hub") {
+  660:       if (!isNationalRole) {
+  661:         notify(
+  662:           t(
+  663:             "Select Programme Executive or System Administrator.",
+  664:             "à¦ªà§à¦°à§‹à¦—à§à¦°à¦¾à¦® à¦¨à¦¿à¦°à§à¦¬à¦¾à¦¹à§€ à¦¬à¦¾ à¦¸à¦¿à¦¸à§à¦Ÿà§‡à¦® à¦ªà§à¦°à¦¶à¦¾à¦¸à¦• à¦¨à¦¿à¦°à§à¦¬à¦¾à¦šà¦¨ à¦•à¦°à§à¦¨à¥¤"
+  665:           )
+  666:         );
+  667:         return;
+  668:       }
+  669: 
+  670:       window.location.assign("/data-hub");
+  671:       return;
+  672:     }
+  673: 
+  674:     if (standaloneRoutes.includes(next)) {
+  675:       window.location.assign(next);
+  676:       return;
+  677:     }
+  678: 
+  679:     setPath(next);
+  680:   }
+  681: 
+  682:   function resetDemo() {
+  683:     resetApplications();
+  684:     resetProfiles();
+  685:     resetPayroll();
+  686:     resetGrievances();
+  687:     resetTraining();
+  688: 
+  689:     localStorage.removeItem("mcbp-lang");
+  690:     localStorage.removeItem("mcbp-role");
+  691:     localStorage.removeItem("mcbp-ai-proposals");
+  692: 
+  693:     setLang("en");
+  694:     setRoleId("uwao");
+  695:     setPath("/dashboard");
+  696: 
+  697:     notify("Demo reset");
+  698:   }
+  699: 
+  700:   const visibleSections = sections
+  701:     .filter((section) => {
+  702:       if (
+  703:         ["field", "trainer", "finance", "finance_checker", "grm"]
+  704:           .includes(roleId)
+  705:       ) {
+  706:         return [
+  707:           "BENEFICIARY LIFECYCLE",
+  708:           "INTELLIGENCE",
+  709:         ].includes(section.en);
+  710:       }
+
+========== SIDEBAR RENDERING ==========
+  710:       }
+  711: 
+  712:       return true;
+  713:     })
+  714:     .map((section) => ({
+  715:       ...section,
+  716:       items: section.items.filter(([href]) => {
+  717:         if (href === "/data-hub" && !isNationalRole) {
+  718:           return false;
+  719:         }
+  720: 
+  721:         if (href === "/gis" && !canViewGis) {
+  722:           return false;
+  723:         }
+  724: 
+  725:         if (href === "/ai" && !canViewAi) {
+  726:           return false;
+  727:         }
+  728: 
+  729:         return true;
+  730:       }),
+  731:     }))
+  732:     .filter((section) => section.items.length > 0);
+  733: 
+  734:   return (
+  735:     <div className={lang === "bn" ? "app bn" : "app"}>
+  736:       <header className="top">
+  737:         <button
+  738:           className="btn mobile-menu"
+  739:           aria-label="Toggle menu"
+  740:           onClick={() => setMobileOpen(!mobileOpen)}
+  741:         >
+  742:           <Menu size={19} />
+  743:         </button>
+  744: 
+  745:         <div className="logo">
+  746:           <HeartHandshake size={22} />
+  747:         </div>
+  748: 
+  749:         <div className="brand">
+  750:           <b>MCBP-MIS</b>
+  751:           <span>
+  752:             {t(
+  753:               "Mother & Child Benefit Programme",
+  754:               "à¦®à¦¾ à¦“ à¦¶à¦¿à¦¶à§ à¦­à¦¾à¦¤à¦¾ à¦•à¦°à§à¦®à¦¸à§‚à¦šà¦¿"
+  755:             )}
+  756:           </span>
+  757:         </div>
+  758: 
+  759:         <div className="search">
+  760:           <Search size={17} />
+  761:           <span>
+  762:             {t(
+  763:               "Search beneficiary ID, NID or mobile numberâ€¦",
+  764:               "à¦‰à¦ªà¦•à¦¾à¦°à¦­à§‹à¦—à§€ à¦†à¦‡à¦¡à¦¿, à¦à¦¨à¦†à¦‡à¦¡à¦¿ à¦¬à¦¾ à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦¨à¦®à§à¦¬à¦° à¦–à§à¦à¦œà§à¦¨â€¦"
+  765:             )}
+  766:           </span>
+  767:         </div>
+  768: 
+  769:         <div className="lang">
+  770:           <button
+  771:             className={lang === "en" ? "on" : ""}
+  772:             onClick={() => updateLanguage("en")}
+  773:           >
+  774:             EN
+  775:           </button>
+  776: 
+  777:           <button
+  778:             className={lang === "bn" ? "on" : ""}
+  779:             onClick={() => updateLanguage("bn")}
+  780:           >
+  781:             à¦¬à¦¾à¦‚à¦²à¦¾
+  782:           </button>
+  783:         </div>
+  784: 
+  785:         <Bell size={20} />
+  786: 
+  787:         <div className="av">{role.initials}</div>
+  788: 
+  789:         <div className="who">
+  790:           <b>{t(role.en, role.bn)}</b>
+  791:           <span>{role.geo}</span>
+  792:         </div>
+  793:       </header>
+  794: 
+  795:       <div className="main">
+  796:         <aside className={mobileOpen ? "side open" : "side"}>
+  797:           {visibleSections.map((section) => (
+  798:             <div key={section.en}>
+  799:               <h6>{t(section.en, section.bn)}</h6>
+  800: 
+  801:               {section.items.map(([href, en, bn, Icon]) => (
+  802:                 <button
+  803:                   key={href}
+  804:                   className={path === href ? "nav on" : "nav"}
+  805:                   onClick={() => navigate(href)}
+  806:                 >
+  807:                   <Icon size={17} />
+  808:                   <span>{t(en, bn)}</span>
+  809:                 </button>
+  810:               ))}
+  811:             </div>
+  812:           ))}
+  813:         </aside>
+  814: 
+  815:         <main className="content">
+  816:           <div className="crumb">
+  817:             {t(
+  818:               "Home / Kaunia Upazila, Rangpur",
+  819:               "à¦¹à§‹à¦® / à¦•à¦¾à¦‰à¦¨à¦¿à¦¯à¦¼à¦¾ à¦‰à¦ªà¦œà§‡à¦²à¦¾, à¦°à¦‚à¦ªà§à¦°"
+  820:             )}
+  821:           </div>
+  822: 
+  823:           <div className="hrow">
+  824:             <div>
+  825:               <h1>{title}</h1>
+  826:               <p className="sub">
+  827:                 {t(
+  828:                   "Role-aware workspace Â· fictional data Â· frontend-only demo",
+  829:                   "à¦­à§‚à¦®à¦¿à¦•à¦¾ à¦…à¦¨à§à¦¯à¦¾à¦¯à¦¼à§€ à¦“à¦¯à¦¼à¦¾à¦°à§à¦•à¦¸à§à¦ªà§‡à¦¸ Â· à¦•à¦¾à¦²à§à¦ªà¦¨à¦¿à¦• à¦¤à¦¥à§à¦¯ Â· à¦«à§à¦°à¦¨à§à¦Ÿà¦à¦¨à§à¦¡ à¦¡à§‡à¦®à§‹"
+  830:                 )}
+  831:               </p>
+  832:             </div>
+  833: 
+  834:             <div className="actions">
+  835:               <button className="btn">
+  836:                 <CalendarDays size={15} />
+  837:                 13 Nov 2026
+  838:               </button>
+  839: 
+  840:               <button
+  841:                 className="btn primary"
+  842:                 onClick={() =>
+  843:                   notify(
+  844:                     t(
+  845:                       "Scenario guide not yet implemented",
+  846:                       "à¦¸à¦¿à¦¨à¦¾à¦°à¦¿à¦“ à¦—à¦¾à¦‡à¦¡ à¦à¦–à¦¨à§‹ à¦¤à§ˆà¦°à¦¿ à¦¹à¦¯à¦¼à¦¨à¦¿"
+  847:                     )
+  848:                   )
+  849:                 }
+  850:               >
+
+========== MODULE CONTENT RENDERING ==========
+  850:               >
+  851:                 {t("Scenario guide", "à¦¸à¦¿à¦¨à¦¾à¦°à¦¿à¦“ à¦—à¦¾à¦‡à¦¡")}
+  852:                 <ArrowRight size={15} />
+  853:               </button>
+  854:             </div>
+  855:           </div>
+  856: 
+  857:           {[
+  858:             "/executive",
+  859:             "/data-hub",
+  860:             "/gis",
+  861:             "/ai",
+  862:             "/mobile",
+  863:             "/access",
+  864:             "/helpdesk",
+  865:             "/schemes",
+  866:             "/multi-scheme",
+  867:             "/gateway",
+  868:             "/xroad",
+  869:             "/observability",
+  870:             "/cicd",
+  871:             "/security-center",
+  872:             "/backup-dr",
+  873:             "/data-governance",
+  874:             "/payroll-monitor",
+  875:             "/ai-governance",
+  876:             "/gis-governance",
+  877:             "/capacity",
+  878:             "/release-management",
+  879:             "/performance-tests",
+  880:           ].includes(path) ? (
+  881:             <div
+  882:               key={`${path}-${roleId}-${lang}`}
+  883:               className="mcbp-embedded-module"
+  884:             >
+  885:               <style>{`
+  886:                 .mcbp-embedded-module {
+  887:                   width: 100%;
+  888:                   min-width: 0;
+  889:                 }
+  890: 
+  891:                 .mcbp-embedded-module > div > header,
+  892:                 .mcbp-embedded-module > main > header,
+  893:                 .mcbp-embedded-module .ai-top,
+  894:                 .mcbp-embedded-module .mobile-top,
+  895:                 .mcbp-embedded-module .access-top,
+  896:                 .mcbp-embedded-module .hd-top,
+  897:                 .mcbp-embedded-module .s13-top {
+  898:                   display: none !important;
+  899:                 }
+  900: 
+  901:                 .mcbp-embedded-module .ai-root,
+  902:                 .mcbp-embedded-module .mobile-demo,
+  903:                 .mcbp-embedded-module .access-page,
+  904:                 .mcbp-embedded-module .hd-root,
+  905:                 .mcbp-embedded-module .ss13 {
+  906:                   padding: 0 !important;
+  907:                   min-height: 0 !important;
+  908:                   background: transparent !important;
+  909:                 }
+  910: 
+  911:                 .mcbp-embedded-module > div {
+  912:                   min-width: 0;
+  913:                   max-width: 100%;
+  914:                 }
+  915:               `}</style>
+  916: 
+  917:               {path === "/executive" ? (
+  918:                 <UnifiedExecutive />
+  919:               ) : path === "/data-hub" ? (
+  920:                 <UnifiedDataHub />
+  921:               ) : path === "/gis" ? (
+  922:                 <UnifiedGIS />
+  923:               ) : path === "/ai" ? (
+  924:                 <UnifiedAI />
+  925:               ) : path === "/mobile" ? (
+  926:                 <UnifiedMobile />
+  927:               ) : path === "/access" ? (
+  928:                 <UnifiedAccess />
+  929:               ) : path === "/helpdesk" ? (
+  930:                 <UnifiedHelpdesk />
+  931:               ) : path === "/schemes" ? (
+  932:                 <UnifiedBuilder />
+  933:               ) : path === "/multi-scheme" ? (
+  934:                 <MultiSchemePanel lang={lang} roleId={roleId} />
+  935:               ) : path === "/gateway" ? (
+  936:                 <GatewayPanel lang={lang} roleId={roleId} />
+  937:               ) : path === "/xroad" ? (
+  938:                 <XRoadPanel lang={lang} roleId={roleId} />
+  939:               ) : path === "/observability" ? (
+  940:                 <ObservabilityPanel lang={lang} roleId={roleId} />
+  941:               ) : path === "/cicd" ? (
+  942:                 <CICDPanel lang={lang} roleId={roleId} />
+  943:               ) : path === "/security-center" ? (
+  944:                 <SecurityCenterPanel lang={lang} roleId={roleId} />
+  945:               ) : path === "/backup-dr" ? (
+  946:                 <BackupDRPanel lang={lang} roleId={roleId} />
+  947:               ) : path === "/data-governance" ? (
+  948:                 <DataGovernancePanel lang={lang} roleId={roleId} />
+  949:               ) : path === "/payroll-monitor" ? (
+  950:                 <PayrollMonitorPanel lang={lang} roleId={roleId} />
+  951:               ) : path === "/ai-governance" ? (
+  952:                 <AIGovernancePanel lang={lang} roleId={roleId} />
+  953:               ) : path === "/gis-governance" ? (
+  954:                 <GISGovernancePanel lang={lang} roleId={roleId} />
+  955:               ) : path === "/capacity" ? (
+  956:                 <CapacityPanel lang={lang} roleId={roleId} />
+  957:               ) : path === "/release-management" ? (
+  958:                 <ReleaseManagementPanel lang={lang} roleId={roleId} />
+  959:               ) : (
+  960:                 <PerformanceTestPanel lang={lang} roleId={roleId} />
+  961:               )}
+  962:             </div>
+  963:           ) : path === "/applications" ? (
+  964:             <ApplicationsPanel lang={lang} roleId={roleId} />
+  965:           ) : path === "/beneficiaries" ? (
+  966:             <BeneficiariesPanel lang={lang} roleId={roleId} />
+  967:           ) : path === "/payroll" ? (
+  968:             <PayrollPanel lang={lang} roleId={roleId} />
+  969:           ) : path === "/grievances" ? (
+  970:             <GrievancesPanel lang={lang} roleId={roleId} />
+  971:           ) : path === "/training" ? (
+  972:             <TrainingPanel lang={lang} roleId={roleId} />
+  973:           ) : path === "/dashboard" ? (
+  974:             <>
+  975:               <div className="grid kpis">
+  976:                 {cards.map(
+  977:                   ([en, bn, value, detailEn, detailBn, color, Icon]) => (
+  978:                     <div className="card stat" key={en}>
+  979:                       <div className="stat-head">
+  980:                         <span>{t(en, bn)}</span>
+  981:                         <span className={`stat-icon ${color}`}>
+  982:                           <Icon size={19} />
+  983:                         </span>
+  984:                       </div>
+  985: 
+  986:                       <strong>{value}</strong>
+  987: 
+  988:                       <small className={color}>
+  989:                         {t(detailEn, detailBn)}
+  990:                       </small>
+  991:                     </div>
+  992:                   )
+  993:                 )}
+  994:               </div>
+  995: 
+  996:               <div className="grid two">
+  997:                 <section className="card">
+  998:                   <div className="card-title">
+  999:                     <h2>
+ 1000:                       {t(
+ 1001:                         "My approval queue",
+ 1002:                         "à¦†à¦®à¦¾à¦° à¦…à¦¨à§à¦®à§‹à¦¦à¦¨ à¦¤à¦¾à¦²à¦¿à¦•à¦¾"
+ 1003:                       )}
+ 1004:                     </h2>
+ 1005: 
+ 1006:                     <button
+ 1007:                       className="link"
+ 1008:                       onClick={() => navigate("/applications")}
+ 1009:                     >
+ 1010:                       {t("View all", "à¦¸à¦¬ à¦¦à§‡à¦–à§à¦¨")}
+ 1011:                     </button>
+ 1012:                   </div>
+ 1013: 
+ 1014:                   <div style={{ overflowX: "auto" }}>
+ 1015:                     <table>
+ 1016:                       <thead>
+ 1017:                         <tr>
+ 1018:                           <th>{t("Application", "à¦†à¦¬à§‡à¦¦à¦¨")}</th>
+ 1019:                           <th>{t("Applicant", "à¦†à¦¬à§‡à¦¦à¦¨à¦•à¦¾à¦°à§€")}</th>
+ 1020:                           <th>{t("Status", "à¦…à¦¬à¦¸à§à¦¥à¦¾")}</th>
+

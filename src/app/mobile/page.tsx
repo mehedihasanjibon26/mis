@@ -1,5 +1,6 @@
 
 "use client";
+import { ui } from "../../lib/ui-l10n";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -838,7 +839,7 @@ export default function MobileOperationsPage() {
               <span className="mobile-status good">
                 <ShieldCheck size={12} /> Demo permissions
               </span>
-              <span className="mobile-status">Local queue</span>
+              <span className="mobile-status">{ui(lang, "Local queue")}</span>
               <span className="mobile-status">EN / BN</span>
             </div>
           </section>
@@ -861,10 +862,10 @@ export default function MobileOperationsPage() {
                   localStorage.setItem("mcbp-role", e.target.value);
                 }}
               >
-                <option value="field">Field Verifier</option>
-                <option value="uwao">UWAO</option>
+                <option value="field">{ui(lang, "Field Verifier")}</option>
+                <option value="uwao">{ui(lang, "UWAO")}</option>
                 <option value="executive">Supervisor / Programme Executive</option>
-                <option value="admin">System Administrator</option>
+                <option value="admin">{ui(lang, "System Administrator")}</option>
               </select>
             </label>
             <button

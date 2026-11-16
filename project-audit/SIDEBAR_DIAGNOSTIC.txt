@@ -1,0 +1,550 @@
+﻿========== const sections ==========
+
+  src\app\page.tsx:41:type Lang = "en" | "bn";
+  src\app\page.tsx:42:type NavItem = [string, string, string, LucideIcon];
+  src\app\page.tsx:43:type NavSection = {
+  src\app\page.tsx:44:  en: string;
+  src\app\page.tsx:45:  bn: string;
+  src\app\page.tsx:46:  items: NavItem[];
+  src\app\page.tsx:47:};
+  src\app\page.tsx:48:
+> src\app\page.tsx:49:const sections: NavSection[] = [
+  src\app\page.tsx:50:  {
+  src\app\page.tsx:51:    en: "BENEFICIARY LIFECYCLE",
+  src\app\page.tsx:52:    bn: "উপকারভোগী জীবনচক্র",
+  src\app\page.tsx:53:    items: [
+  src\app\page.tsx:54:      ["/applications", "Applications & enrollment", "আবেদন ও নিবন্ধন", FileText],
+  src\app\page.tsx:55:      ["/beneficiaries", "Beneficiary profiles", "উপকারভোগী প্রোফাইল", UserRound],
+  src\app\page.tsx:56:      ["/payroll", "Payroll & reconciliation", "পেরোল ও সমন্বয়", Wallet],
+  src\app\page.tsx:57:      ["/training", "Training", "প্রশিক্ষণ", GraduationCap],
+  src\app\page.tsx:58:      ["/mobile", "Mobile & field operations", "মোবাইল ও মাঠ কার্যক্রম", Smartphone],
+  src\app\page.tsx:59:      ["/grievances", "Grievance redress", "অভিযোগ প্রতিকার", MessageSquareWarning],
+  src\app\page.tsx:60:    ],
+  src\app\page.tsx:61:  },
+
+========== function navigate ==========
+  src\app\page.tsx:356:    setMobileOpen(false);
+  src\app\page.tsx:357:  }
+  src\app\page.tsx:358:
+  src\app\page.tsx:359:  function updateLanguage(nextLang: Lang) {
+  src\app\page.tsx:360:    setLang(nextLang);
+  src\app\page.tsx:361:    localStorage.setItem("mcbp-lang", nextLang);
+  src\app\page.tsx:362:  }
+  src\app\page.tsx:363:
+> src\app\page.tsx:364:  function navigate(next: string) {
+  src\app\page.tsx:365:    // MCBP_PERFORMANCE_D22_V1
+  src\app\page.tsx:366:    if (next === "/performance-tests") {
+  src\app\page.tsx:367:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:368:        notify("Performance tests require a national demo role.");
+  src\app\page.tsx:369:        return;
+  src\app\page.tsx:370:      }
+  src\app\page.tsx:371:      setPath("/performance-tests");
+  src\app\page.tsx:372:      setMobileOpen(false);
+  src\app\page.tsx:373:      return;
+  src\app\page.tsx:374:    }
+  src\app\page.tsx:375:    // MCBP_RELEASE_D21_V1
+  src\app\page.tsx:376:    if (next === "/release-management") {
+
+========== setPath ==========
+  src\app\page.tsx:197:const UnifiedAccess = dynamic(() => import("./access/page"), { ssr: false });
+  src\app\page.tsx:198:const UnifiedHelpdesk = dynamic(() => import("./helpdesk/page"), { ssr: false });
+  src\app\page.tsx:199:const UnifiedBuilder = dynamic(() => import("./schemes/page"), { ssr: false });
+  src\app\page.tsx:200:
+  src\app\page.tsx:201:// MCBP_UNIFIED_MODULE_RENDER_V1
+  src\app\page.tsx:202:export default function Home() {
+  src\app\page.tsx:203:  const [lang, setLang] = useState<Lang>("en");
+  src\app\page.tsx:204:  const [roleId, setRoleId] = useState("uwao");
+> src\app\page.tsx:205:  const [path, setPath] = useState("/dashboard");
+  src\app\page.tsx:206:  const [mobileOpen, setMobileOpen] = useState(false);
+  src\app\page.tsx:207:  const [toast, setToast] = useState("");
+  src\app\page.tsx:208:
+  src\app\page.tsx:209:  const applications = useDemoStore((s) => s.applications);
+  src\app\page.tsx:210:  const resetApplications = useDemoStore((s) => s.resetDemo);
+  src\app\page.tsx:211:
+  src\app\page.tsx:212:  const resetProfiles = useBeneficiaryStore((s) => s.resetProfiles);
+  src\app\page.tsx:213:  const profileChanges = useBeneficiaryStore((s) => s.changes);
+  src\app\page.tsx:214:
+  src\app\page.tsx:215:  const payrollPayments = usePayrollStore((s) => s.payments);
+  src\app\page.tsx:216:  const payrollCycles = usePayrollStore((s) => s.cycles);
+  src\app\page.tsx:217:  const resetPayroll = usePayrollStore((s) => s.resetPayroll);
+  src\app\page.tsx:347:  function notify(message: string) {
+  src\app\page.tsx:348:    setToast(message);
+  src\app\page.tsx:349:    window.setTimeout(() => setToast(""), 2500);
+  src\app\page.tsx:350:  }
+  src\app\page.tsx:351:
+  src\app\page.tsx:352:  function updateRole(nextRole: string) {
+  src\app\page.tsx:353:    setRoleId(nextRole);
+  src\app\page.tsx:354:    localStorage.setItem("mcbp-role", nextRole);
+> src\app\page.tsx:355:    setPath("/dashboard");
+  src\app\page.tsx:356:    setMobileOpen(false);
+  src\app\page.tsx:357:  }
+  src\app\page.tsx:358:
+  src\app\page.tsx:359:  function updateLanguage(nextLang: Lang) {
+  src\app\page.tsx:360:    setLang(nextLang);
+  src\app\page.tsx:361:    localStorage.setItem("mcbp-lang", nextLang);
+  src\app\page.tsx:362:  }
+  src\app\page.tsx:363:
+  src\app\page.tsx:364:  function navigate(next: string) {
+  src\app\page.tsx:365:    // MCBP_PERFORMANCE_D22_V1
+  src\app\page.tsx:366:    if (next === "/performance-tests") {
+  src\app\page.tsx:367:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:368:        notify("Performance tests require a national demo role.");
+  src\app\page.tsx:369:        return;
+  src\app\page.tsx:370:      }
+> src\app\page.tsx:371:      setPath("/performance-tests");
+  src\app\page.tsx:372:      setMobileOpen(false);
+  src\app\page.tsx:373:      return;
+  src\app\page.tsx:374:    }
+  src\app\page.tsx:375:    // MCBP_RELEASE_D21_V1
+  src\app\page.tsx:376:    if (next === "/release-management") {
+  src\app\page.tsx:377:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:378:        notify("Release Management requires a national demo role.");
+  src\app\page.tsx:379:        return;
+  src\app\page.tsx:380:      }
+> src\app\page.tsx:381:      setPath("/release-management");
+  src\app\page.tsx:382:      setMobileOpen(false);
+  src\app\page.tsx:383:      return;
+  src\app\page.tsx:384:    }
+  src\app\page.tsx:385:    // MCBP_CAPACITY_D20_V1
+  src\app\page.tsx:386:    if (next === "/capacity") {
+  src\app\page.tsx:387:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:388:        notify("Capacity console requires a national demo role.");
+  src\app\page.tsx:389:        return;
+  src\app\page.tsx:390:      }
+> src\app\page.tsx:391:      setPath("/capacity");
+  src\app\page.tsx:392:      setMobileOpen(false);
+  src\app\page.tsx:393:      return;
+  src\app\page.tsx:394:    }
+  src\app\page.tsx:395:    // MCBP_GIS_GOVERNANCE_D19_V1
+  src\app\page.tsx:396:    if (next === "/gis-governance") {
+  src\app\page.tsx:397:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:398:        notify("GIS Governance requires a national demo role.");
+  src\app\page.tsx:399:        return;
+  src\app\page.tsx:400:      }
+  src\app\page.tsx:401:
+> src\app\page.tsx:402:      setPath("/gis-governance");
+  src\app\page.tsx:403:      setMobileOpen(false);
+  src\app\page.tsx:404:      return;
+  src\app\page.tsx:405:    }
+  src\app\page.tsx:406:    // MCBP_AI_GOVERNANCE_D18_V1
+  src\app\page.tsx:407:    if (next === "/ai-governance") {
+  src\app\page.tsx:408:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:409:        notify("AI Governance requires a national demo role.");
+  src\app\page.tsx:410:        return;
+  src\app\page.tsx:411:      }
+> src\app\page.tsx:412:      setPath("/ai-governance");
+  src\app\page.tsx:413:      setMobileOpen(false);
+  src\app\page.tsx:414:      return;
+  src\app\page.tsx:415:    }
+  src\app\page.tsx:416:    // MCBP_PAYROLL_D17_UNIFIED_V1
+  src\app\page.tsx:417:    if (next === "/payroll-monitor") {
+  src\app\page.tsx:418:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:419:        notify("Payroll Monitor requires a national demo role.");
+  src\app\page.tsx:420:        return;
+  src\app\page.tsx:421:      }
+  src\app\page.tsx:422:
+> src\app\page.tsx:423:      setPath("/payroll-monitor");
+  src\app\page.tsx:424:      setMobileOpen(false);
+  src\app\page.tsx:425:      return;
+  src\app\page.tsx:426:    }
+  src\app\page.tsx:427:    // MCBP_DATAGOV_D16_UNIFIED_V1
+  src\app\page.tsx:428:    if (next === "/data-governance") {
+  src\app\page.tsx:429:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:430:        notify("Data Governance requires a national demo role.");
+  src\app\page.tsx:431:        return;
+  src\app\page.tsx:432:      }
+> src\app\page.tsx:433:      setPath("/data-governance");
+  src\app\page.tsx:434:      setMobileOpen(false);
+  src\app\page.tsx:435:      return;
+  src\app\page.tsx:436:    }
+  src\app\page.tsx:437:    // MCBP_BACKUP_D15_UNIFIED_V1
+  src\app\page.tsx:438:    if (next === "/backup-dr") {
+  src\app\page.tsx:439:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:440:        notify("Backup & DR requires a national demo role.");
+  src\app\page.tsx:441:        return;
+  src\app\page.tsx:442:      }
+> src\app\page.tsx:443:      setPath("/backup-dr");
+  src\app\page.tsx:444:      setMobileOpen(false);
+  src\app\page.tsx:445:      return;
+  src\app\page.tsx:446:    }
+  src\app\page.tsx:447:    // MCBP_SECURITY_D14_UNIFIED_V1
+  src\app\page.tsx:448:    if (next === "/security-center") {
+  src\app\page.tsx:449:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:450:        notify("Security Centre requires a national demo role.");
+  src\app\page.tsx:451:        return;
+  src\app\page.tsx:452:      }
+  src\app\page.tsx:453:
+> src\app\page.tsx:454:      setPath("/security-center");
+  src\app\page.tsx:455:      setMobileOpen(false);
+  src\app\page.tsx:456:      return;
+  src\app\page.tsx:457:    }
+  src\app\page.tsx:458:    // MCBP_CICD_UNIFIED_V1
+  src\app\page.tsx:459:    if (next === "/cicd") {
+  src\app\page.tsx:460:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:461:        notify("CI/CD requires a national demo role.");
+  src\app\page.tsx:462:        return;
+  src\app\page.tsx:463:      }
+> src\app\page.tsx:464:      setPath("/cicd");
+  src\app\page.tsx:465:      setMobileOpen(false);
+  src\app\page.tsx:466:      return;
+  src\app\page.tsx:467:    }
+  src\app\page.tsx:468:    // MCBP_OBSERVABILITY_UNIFIED_V1
+  src\app\page.tsx:469:    if (next === "/observability") {
+  src\app\page.tsx:470:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:471:        notify("Observability requires a national demo role.");
+  src\app\page.tsx:472:        return;
+  src\app\page.tsx:473:      }
+  src\app\page.tsx:474:
+> src\app\page.tsx:475:      setPath("/observability");
+  src\app\page.tsx:476:      setMobileOpen(false);
+  src\app\page.tsx:477:      return;
+  src\app\page.tsx:478:    }
+  src\app\page.tsx:479:    // MCBP_XROAD_UNIFIED_V1
+  src\app\page.tsx:480:    if (next === "/xroad") {
+  src\app\page.tsx:481:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:482:        notify("X-Road console requires a national demo role.");
+  src\app\page.tsx:483:        return;
+  src\app\page.tsx:484:      }
+> src\app\page.tsx:485:      setPath("/xroad");
+  src\app\page.tsx:486:      setMobileOpen(false);
+  src\app\page.tsx:487:      return;
+  src\app\page.tsx:488:    }
+  src\app\page.tsx:489:    // MCBP_GATEWAY_UNIFIED_V1
+  src\app\page.tsx:490:    if (next === "/gateway") {
+  src\app\page.tsx:491:      if (!["admin", "executive"].includes(roleId)) {
+  src\app\page.tsx:492:        notify("API Gateway requires a national demo role.");
+  src\app\page.tsx:493:        return;
+  src\app\page.tsx:494:      }
+> src\app\page.tsx:495:      setPath("/gateway");
+  src\app\page.tsx:496:      setMobileOpen(false);
+  src\app\page.tsx:497:      return;
+  src\app\page.tsx:498:    }
+  src\app\page.tsx:499:    // MCBP_SS14_UNIFIED_V1
+  src\app\page.tsx:500:    if (next === "/multi-scheme") {
+  src\app\page.tsx:501:      if (!["admin", "executive", "uwao"].includes(roleId)) {
+  src\app\page.tsx:502:        notify("Multi-scheme management requires a configuration role.");
+  src\app\page.tsx:503:        return;
+  src\app\page.tsx:504:      }
+  src\app\page.tsx:505:
+  src\app\page.tsx:506:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:507:      localStorage.setItem("mcbp-lang", lang);
+> src\app\page.tsx:508:      setPath("/multi-scheme");
+  src\app\page.tsx:509:      setMobileOpen(false);
+  src\app\page.tsx:510:      return;
+  src\app\page.tsx:511:    }
+  src\app\page.tsx:512:    const unifiedModules = [
+  src\app\page.tsx:513:      "/executive",
+  src\app\page.tsx:514:      "/data-hub",
+  src\app\page.tsx:515:      "/gis",
+  src\app\page.tsx:516:      "/ai",
+  src\app\page.tsx:517:      "/mobile",
+  src\app\page.tsx:518:      "/access",
+  src\app\page.tsx:519:      "/helpdesk",
+  src\app\page.tsx:520:      "/schemes",
+  src\app\page.tsx:521:    ];
+  src\app\page.tsx:522:
+  src\app\page.tsx:523:    if (next === "/dashboard" && isNationalRole) {
+> src\app\page.tsx:524:      setPath("/executive");
+  src\app\page.tsx:525:      setMobileOpen(false);
+  src\app\page.tsx:526:      return;
+  src\app\page.tsx:527:    }
+  src\app\page.tsx:528:
+  src\app\page.tsx:529:    if (unifiedModules.includes(next)) {
+  src\app\page.tsx:530:      if (next === "/data-hub" && !isNationalRole) {
+  src\app\page.tsx:531:        notify("Data Hub requires a national role.");
+  src\app\page.tsx:532:        return;
+  src\app\page.tsx:533:      }
+  src\app\page.tsx:534:
+  src\app\page.tsx:535:      if (next === "/gis" && !canViewGis) {
+  src\app\page.tsx:536:        notify("GIS is unavailable for this role.");
+  src\app\page.tsx:564:      ) {
+  src\app\page.tsx:565:        notify("Module Builder is unavailable for this role.");
+  src\app\page.tsx:566:        return;
+  src\app\page.tsx:567:      }
+  src\app\page.tsx:568:
+  src\app\page.tsx:569:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:570:      localStorage.setItem("mcbp-lang", lang);
+  src\app\page.tsx:571:
+> src\app\page.tsx:572:      setPath(next);
+  src\app\page.tsx:573:      setMobileOpen(false);
+  src\app\page.tsx:574:      return;
+  src\app\page.tsx:575:    }
+  src\app\page.tsx:576:    if (next === "/schemes") {
+  src\app\page.tsx:577:      if (!["admin", "executive", "uwao"].includes(roleId)) {
+  src\app\page.tsx:578:        notify("Module Builder is available to configuration roles only.");
+  src\app\page.tsx:579:        return;
+  src\app\page.tsx:580:      }
+  src\app\page.tsx:581:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:582:      localStorage.setItem("mcbp-lang", lang);
+  src\app\page.tsx:583:      window.location.assign("/schemes");
+  src\app\page.tsx:584:      return;
+  src\app\page.tsx:671:      return;
+  src\app\page.tsx:672:    }
+  src\app\page.tsx:673:
+  src\app\page.tsx:674:    if (standaloneRoutes.includes(next)) {
+  src\app\page.tsx:675:      window.location.assign(next);
+  src\app\page.tsx:676:      return;
+  src\app\page.tsx:677:    }
+  src\app\page.tsx:678:
+> src\app\page.tsx:679:    setPath(next);
+  src\app\page.tsx:680:  }
+  src\app\page.tsx:681:
+  src\app\page.tsx:682:  function resetDemo() {
+  src\app\page.tsx:683:    resetApplications();
+  src\app\page.tsx:684:    resetProfiles();
+  src\app\page.tsx:685:    resetPayroll();
+  src\app\page.tsx:686:    resetGrievances();
+  src\app\page.tsx:687:    resetTraining();
+  src\app\page.tsx:688:
+  src\app\page.tsx:689:    localStorage.removeItem("mcbp-lang");
+  src\app\page.tsx:690:    localStorage.removeItem("mcbp-role");
+  src\app\page.tsx:691:    localStorage.removeItem("mcbp-ai-proposals");
+  src\app\page.tsx:692:
+  src\app\page.tsx:693:    setLang("en");
+  src\app\page.tsx:694:    setRoleId("uwao");
+> src\app\page.tsx:695:    setPath("/dashboard");
+  src\app\page.tsx:696:
+  src\app\page.tsx:697:    notify("Demo reset");
+  src\app\page.tsx:698:  }
+  src\app\page.tsx:699:
+  src\app\page.tsx:700:  const visibleSections = sections
+  src\app\page.tsx:701:    .filter((section) => {
+  src\app\page.tsx:702:      if (
+  src\app\page.tsx:703:        ["field", "trainer", "finance", "finance_checker", "grm"]
+  src\app\page.tsx:704:          .includes(roleId)
+  src\app\page.tsx:705:      ) {
+  src\app\page.tsx:706:        return [
+  src\app\page.tsx:707:          "BENEFICIARY LIFECYCLE",
+
+========== .includes(path) ==========
+  src\app\page.tsx:872:            "/backup-dr",
+  src\app\page.tsx:873:            "/data-governance",
+  src\app\page.tsx:874:            "/payroll-monitor",
+  src\app\page.tsx:875:            "/ai-governance",
+  src\app\page.tsx:876:            "/gis-governance",
+  src\app\page.tsx:877:            "/capacity",
+  src\app\page.tsx:878:            "/release-management",
+  src\app\page.tsx:879:            "/performance-tests",
+> src\app\page.tsx:880:          ].includes(path) ? (
+  src\app\page.tsx:881:            <div
+  src\app\page.tsx:882:              key={`${path}-${roleId}-${lang}`}
+  src\app\page.tsx:883:              className="mcbp-embedded-module"
+  src\app\page.tsx:884:            >
+  src\app\page.tsx:885:              <style>{`
+  src\app\page.tsx:886:                .mcbp-embedded-module {
+  src\app\page.tsx:887:                  width: 100%;
+  src\app\page.tsx:888:                  min-width: 0;
+  src\app\page.tsx:889:                }
+  src\app\page.tsx:890:
+  src\app\page.tsx:891:                .mcbp-embedded-module > div > header,
+  src\app\page.tsx:892:                .mcbp-embedded-module > main > header,
+
+========== Panel lang= ==========
+  src\app\page.tsx:926:                <UnifiedMobile />
+  src\app\page.tsx:927:              ) : path === "/access" ? (
+  src\app\page.tsx:928:                <UnifiedAccess />
+  src\app\page.tsx:929:              ) : path === "/helpdesk" ? (
+  src\app\page.tsx:930:                <UnifiedHelpdesk />
+  src\app\page.tsx:931:              ) : path === "/schemes" ? (
+  src\app\page.tsx:932:                <UnifiedBuilder />
+  src\app\page.tsx:933:              ) : path === "/multi-scheme" ? (
+> src\app\page.tsx:934:                <MultiSchemePanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:935:              ) : path === "/gateway" ? (
+> src\app\page.tsx:936:                <GatewayPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:937:              ) : path === "/xroad" ? (
+> src\app\page.tsx:938:                <XRoadPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:939:              ) : path === "/observability" ? (
+> src\app\page.tsx:940:                <ObservabilityPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:941:              ) : path === "/cicd" ? (
+> src\app\page.tsx:942:                <CICDPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:943:              ) : path === "/security-center" ? (
+> src\app\page.tsx:944:                <SecurityCenterPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:945:              ) : path === "/backup-dr" ? (
+> src\app\page.tsx:946:                <BackupDRPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:947:              ) : path === "/data-governance" ? (
+> src\app\page.tsx:948:                <DataGovernancePanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:949:              ) : path === "/payroll-monitor" ? (
+> src\app\page.tsx:950:                <PayrollMonitorPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:951:              ) : path === "/ai-governance" ? (
+> src\app\page.tsx:952:                <AIGovernancePanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:953:              ) : path === "/gis-governance" ? (
+> src\app\page.tsx:954:                <GISGovernancePanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:955:              ) : path === "/capacity" ? (
+> src\app\page.tsx:956:                <CapacityPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:957:              ) : path === "/release-management" ? (
+> src\app\page.tsx:958:                <ReleaseManagementPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:959:              ) : (
+> src\app\page.tsx:960:                <PerformanceTestPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:961:              )}
+  src\app\page.tsx:962:            </div>
+  src\app\page.tsx:963:          ) : path === "/applications" ? (
+> src\app\page.tsx:964:            <ApplicationsPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:965:          ) : path === "/beneficiaries" ? (
+> src\app\page.tsx:966:            <BeneficiariesPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:967:          ) : path === "/payroll" ? (
+> src\app\page.tsx:968:            <PayrollPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:969:          ) : path === "/grievances" ? (
+> src\app\page.tsx:970:            <GrievancesPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:971:          ) : path === "/training" ? (
+> src\app\page.tsx:972:            <TrainingPanel lang={lang} roleId={roleId} />
+  src\app\page.tsx:973:          ) : path === "/dashboard" ? (
+  src\app\page.tsx:974:            <>
+  src\app\page.tsx:975:              <div className="grid kpis">
+  src\app\page.tsx:976:                {cards.map(
+  src\app\page.tsx:977:                  ([en, bn, value, detailEn, detailBn, color, Icon]) => (
+  src\app\page.tsx:978:                    <div className="card stat" key={en}>
+  src\app\page.tsx:979:                      <div className="stat-head">
+  src\app\page.tsx:980:                        <span>{t(en, bn)}</span>
+  src\app\page.tsx:981:                        <span className={`stat-icon ${color}`}>
+  src\app\page.tsx:982:                          <Icon size={19} />
+  src\app\page.tsx:983:                        </span>
+  src\app\page.tsx:984:                      </div>
+
+========== dynamic( ==========
+  src\app\page.tsx:184:  returned: ["Returned", "ফেরত"],
+  src\app\page.tsx:185:  enrolled: ["Enrolled", "নিবন্ধিত"],
+  src\app\page.tsx:186:};
+  src\app\page.tsx:187:
+  src\app\page.tsx:188:const nationalRoles = ["executive", "admin"];
+  src\app\page.tsx:189:const aiRoles = ["executive", "admin", "uwao"];
+  src\app\page.tsx:190:const standaloneRoutes = ["/executive", "/gis", "/ai", "/data-hub"];
+  src\app\page.tsx:191:
+> src\app\page.tsx:192:const UnifiedExecutive = dynamic(() => import("./executive/page"), { ssr: false });
+> src\app\page.tsx:193:const UnifiedDataHub = dynamic(() => import("./data-hub/page"), { ssr: false });
+> src\app\page.tsx:194:const UnifiedGIS = dynamic(() => import("./gis/page"), { ssr: false });
+> src\app\page.tsx:195:const UnifiedAI = dynamic(() => import("./ai/page"), { ssr: false });
+> src\app\page.tsx:196:const UnifiedMobile = dynamic(() => import("./mobile/page"), { ssr: false });
+> src\app\page.tsx:197:const UnifiedAccess = dynamic(() => import("./access/page"), { ssr: false });
+> src\app\page.tsx:198:const UnifiedHelpdesk = dynamic(() => import("./helpdesk/page"), { ssr: false });
+> src\app\page.tsx:199:const UnifiedBuilder = dynamic(() => import("./schemes/page"), { ssr: false });
+  src\app\page.tsx:200:
+  src\app\page.tsx:201:// MCBP_UNIFIED_MODULE_RENDER_V1
+  src\app\page.tsx:202:export default function Home() {
+  src\app\page.tsx:203:  const [lang, setLang] = useState<Lang>("en");
+  src\app\page.tsx:204:  const [roleId, setRoleId] = useState("uwao");
+  src\app\page.tsx:205:  const [path, setPath] = useState("/dashboard");
+  src\app\page.tsx:206:  const [mobileOpen, setMobileOpen] = useState(false);
+  src\app\page.tsx:207:  const [toast, setToast] = useState("");
+  src\app\page.tsx:208:
+  src\app\page.tsx:209:  const applications = useDemoStore((s) => s.applications);
+  src\app\page.tsx:210:  const resetApplications = useDemoStore((s) => s.resetDemo);
+  src\app\page.tsx:211:
+
+========== window.location.assign ==========
+  src\app\page.tsx:575:    }
+  src\app\page.tsx:576:    if (next === "/schemes") {
+  src\app\page.tsx:577:      if (!["admin", "executive", "uwao"].includes(roleId)) {
+  src\app\page.tsx:578:        notify("Module Builder is available to configuration roles only.");
+  src\app\page.tsx:579:        return;
+  src\app\page.tsx:580:      }
+  src\app\page.tsx:581:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:582:      localStorage.setItem("mcbp-lang", lang);
+> src\app\page.tsx:583:      window.location.assign("/schemes");
+  src\app\page.tsx:584:      return;
+  src\app\page.tsx:585:    }
+  src\app\page.tsx:586:    if (next === "/helpdesk") {
+  src\app\page.tsx:587:      if (!["admin", "executive", "uwao", "grm"].includes(roleId)) {
+  src\app\page.tsx:588:        notify("Helpdesk demo requires a support or supervisory role.");
+  src\app\page.tsx:589:        return;
+  src\app\page.tsx:590:      }
+  src\app\page.tsx:591:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:592:      localStorage.setItem("mcbp-lang", lang);
+> src\app\page.tsx:593:      window.location.assign("/helpdesk");
+  src\app\page.tsx:594:      return;
+  src\app\page.tsx:595:    }
+  src\app\page.tsx:596:    if (next === "/access") {
+  src\app\page.tsx:597:      if (roleId !== "admin" && roleId !== "executive") {
+  src\app\page.tsx:598:        notify("Users & Access requires Administrator or Programme Executive demo role.");
+  src\app\page.tsx:599:        return;
+  src\app\page.tsx:600:      }
+  src\app\page.tsx:601:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:602:      localStorage.setItem("mcbp-lang", lang);
+> src\app\page.tsx:603:      window.location.assign("/access");
+  src\app\page.tsx:604:      return;
+  src\app\page.tsx:605:    }
+  src\app\page.tsx:606:    if (next === "/mobile") {
+  src\app\page.tsx:607:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:608:      localStorage.setItem("mcbp-lang", lang);
+> src\app\page.tsx:609:      window.location.assign("/mobile");
+  src\app\page.tsx:610:      return;
+  src\app\page.tsx:611:    }
+  src\app\page.tsx:612:    if (next === "/ai") {
+  src\app\page.tsx:613:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:614:      localStorage.setItem("mcbp-lang", lang);
+> src\app\page.tsx:615:      window.location.assign("/ai");
+  src\app\page.tsx:616:      return;
+  src\app\page.tsx:617:    }
+  src\app\page.tsx:618:    setMobileOpen(false);
+  src\app\page.tsx:619:
+  src\app\page.tsx:620:    // All standalone modules are reached from the main sidebar.
+  src\app\page.tsx:621:    if (next === "/dashboard" && isNationalRole) {
+> src\app\page.tsx:622:      window.location.assign("/executive");
+  src\app\page.tsx:623:      return;
+  src\app\page.tsx:624:    }
+  src\app\page.tsx:625:
+  src\app\page.tsx:626:    if (next === "/gis") {
+  src\app\page.tsx:627:      if (!canViewGis) {
+  src\app\page.tsx:628:        notify(
+  src\app\page.tsx:629:          t(
+  src\app\page.tsx:630:            "GIS is not available for this demo role.",
+  src\app\page.tsx:631:            "এই ডেমো রোলে জিআইএস দেখা যাবে না।"
+  src\app\page.tsx:632:          )
+  src\app\page.tsx:633:        );
+  src\app\page.tsx:634:        return;
+  src\app\page.tsx:635:      }
+  src\app\page.tsx:636:
+> src\app\page.tsx:637:      window.location.assign("/gis");
+  src\app\page.tsx:638:      return;
+  src\app\page.tsx:639:    }
+  src\app\page.tsx:640:
+  src\app\page.tsx:641:    if (next === "/ai") {
+  src\app\page.tsx:642:      if (!canViewAi) {
+  src\app\page.tsx:643:        notify(
+  src\app\page.tsx:644:          t(
+  src\app\page.tsx:645:            "AI Assistant is available to UWAO, Programme Executive and Administrator.",
+  src\app\page.tsx:646:            "এআই সহকারী শুধু উপজেলা কর্মকর্তা, প্রোগ্রাম নির্বাহী ও প্রশাসকের জন্য।"
+  src\app\page.tsx:647:          )
+  src\app\page.tsx:648:        );
+  src\app\page.tsx:649:        return;
+  src\app\page.tsx:650:      }
+  src\app\page.tsx:651:
+  src\app\page.tsx:652:      // Store the active role and language before opening AI.
+  src\app\page.tsx:653:      localStorage.setItem("mcbp-role", roleId);
+  src\app\page.tsx:654:      localStorage.setItem("mcbp-lang", lang);
+> src\app\page.tsx:655:      window.location.assign("/ai");
+  src\app\page.tsx:656:      return;
+  src\app\page.tsx:657:    }
+  src\app\page.tsx:658:
+  src\app\page.tsx:659:    if (next === "/data-hub") {
+  src\app\page.tsx:660:      if (!isNationalRole) {
+  src\app\page.tsx:661:        notify(
+  src\app\page.tsx:662:          t(
+  src\app\page.tsx:663:            "Select Programme Executive or System Administrator.",
+  src\app\page.tsx:664:            "প্রোগ্রাম নির্বাহী বা সিস্টেম প্রশাসক নির্বাচন করুন।"
+  src\app\page.tsx:665:          )
+  src\app\page.tsx:666:        );
+  src\app\page.tsx:667:        return;
+  src\app\page.tsx:668:      }
+  src\app\page.tsx:669:
+> src\app\page.tsx:670:      window.location.assign("/data-hub");
+  src\app\page.tsx:671:      return;
+  src\app\page.tsx:672:    }
+  src\app\page.tsx:673:
+  src\app\page.tsx:674:    if (standaloneRoutes.includes(next)) {
+> src\app\page.tsx:675:      window.location.assign(next);
+  src\app\page.tsx:676:      return;
+  src\app\page.tsx:677:    }
+  src\app\page.tsx:678:
+  src\app\page.tsx:679:    setPath(next);
+  src\app\page.tsx:680:  }
+  src\app\page.tsx:681:
+  src\app\page.tsx:682:  function resetDemo() {
+  src\app\page.tsx:683:    resetApplications();
+  src\app\page.tsx:684:    resetProfiles();
+  src\app\page.tsx:685:    resetPayroll();
+  src\app\page.tsx:686:    resetGrievances();
+  src\app\page.tsx:687:    resetTraining();
+
+
+
+

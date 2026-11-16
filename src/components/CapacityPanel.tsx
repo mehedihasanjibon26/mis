@@ -1,0 +1,498 @@
+
+"use client";
+import { ui, digits } from "../lib/ui-l10n";
+
+import { useState } from "react";
+import {
+  Activity, BarChart3, CheckCircle2, Database,
+  Download, HardDrive, RotateCcw, Server,
+  ShieldCheck, SlidersHorizontal, Zap,
+} from "lucide-react";
+
+type Tab = "overview" | "pools" | "scaling" | "storage" | "audit";
+type ScaleEvent = {
+  id: string;
+  time: string;
+  workload: string;
+  from: number;
+  to: number;
+  signal: string;
+};
+type AuditEvent = {
+  id: string;
+  time: string;
+  actor: string;
+  action: string;
+};
+type State = {
+  pods: number;
+  cpu: number;
+  autoscaling: boolean;
+  events: ScaleEvent[];
+  audit: AuditEvent[];
+};
+
+const KEY = "mcbp-d20-capacity-v1";
+const MIN_PODS = 72;
+const MAX_PODS = 180;
+
+const referenceEvents: ScaleEvent[] = [
+  { id: "AS-01", time: "Reference", workload: "payroll-worker", from: 12, to: 24, signal: "Batch queue pressure" },
+  { id: "AS-02", time: "Reference", workload: "application-svc", from: 14, to: 18, signal: "CPU threshold" },
+  { id: "AS-03", time: "Reference", workload: "notification-worker", from: 8, to: 12, signal: "Queue depth" },
+  { id: "AS-04", time: "Reference", workload: "geoserver", from: 6, to: 8, signal: "Tile request load" },
+];
+
+const nodePools = [
+  { name: "Application pool", nodes: "8", cpu: 58, memory: 62, status: "Healthy" },
+  { name: "Batch processing pool", nodes: "3", cpu: 12, memory: 18, status: "Healthy" },
+  { name: "API Gateway pool", nodes: "3", cpu: 34, memory: 41, status: "Healthy" },
+];
+
+const infrastructure = [
+  ["PostgreSQL", "Primary and replicas", "Reference healthy"],
+  ["ClickHouse", "Analytical database", "Reference healthy"],
+  ["GPU nodes", "AI inference infrastructure", "Reference available"],
+];
+
+const storageVolumes = [
+  ["PostgreSQL data", "Reference capacity monitoring"],
+  ["Object storage", "Reference capacity monitoring"],
+  ["Backup repository", "Reference retention monitoring"],
+  ["Logs and metrics", "Reference observability storage"],
+];
+
+const fresh = (): State => ({
+  pods: 96,
+  cpu: 51,
+  autoscaling: true,
+  events: referenceEvents,
+  audit: [],
+});
+
+function loadSaved(): State {
+  if (typeof window === "undefined") return fresh();
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) {
+      const data = JSON.parse(raw) as State;
+      if (
+        typeof data.pods === "number" &&
+        typeof data.cpu === "number" &&
+        typeof data.autoscaling === "boolean" &&
+        Array.isArray(data.events) &&
+        Array.isArray(data.audit)
+      ) return data;
+    }
+  } catch {
+    // Return the fictional reference state.
+  }
+  return fresh();
+}
+
+const card: React.CSSProperties = {
+  padding: 19,
+  borderRadius: 16,
+  border: "1px solid #dfeae3",
+  background: "#fff",
+};
+const button: React.CSSProperties = {
+  border: "1px solid #d6e5db",
+  background: "#fff",
+  color: "#15513a",
+  padding: "10px 13px",
+  borderRadius: 9,
+  fontSize: 12,
+  fontWeight: 700,
+  cursor: "pointer",
+};
+const primary: React.CSSProperties = {
+  ...button,
+  background: "#006a4e",
+  borderColor: "#006a4e",
+  color: "#fff",
+};
+const muted: React.CSSProperties = {
+  fontSize: 11,
+  color: "#738679",
+  lineHeight: 1.7,
+};
+
+function downloadCSV(events: AuditEvent[]) {
+  const rows = [
+    ["Timestamp", "Actor", "Action"],
+    ...events.map((e) => [e.time, e.actor, e.action]),
+  ];
+  const csv = rows.map((r) =>
+    r.map((s) => `"${s.replaceAll('"', '""')}"`).join(",")
+  ).join("\r\n");
+  const url = URL.createObjectURL(
+    new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" })
+  );
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "MCBP-D20-Capacity-Audit.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function Meter({ value }: { value: number }) {
+  return (
+    <div style={{
+      height: 8, background: "#e6eee8",
+      borderRadius: 10, overflow: "hidden", marginTop: 8,
+    }}>
+      <div style={{
+        height: "100%",
+        width: `${Math.max(0, Math.min(value, 100))}%`,
+        borderRadius: 10,
+        background: value >= 80 ? "#e3a34b" : "#07845b",
+      }}/>
+    </div>
+  );
+}
+
+export default function CapacityPanel({
+  lang = "en",
+  roleId = "admin",
+}: {
+  lang?: "en" | "bn";
+  roleId?: string;
+}) {
+  const [tab, setTab] = useState<Tab>("overview");
+  const [state, setState] = useState<State>(loadSaved);
+  const [workload, setWorkload] = useState("application-svc");
+  const [scenario, setScenario] = useState<"normal" | "spike">("spike");
+  const [message, setMessage] = useState("");
+
+  const t = (en: string, bn: string) => lang === "bn" ? bn : en;
+  const canOperate = roleId === "admin";
+  const triggerMet = state.cpu >= 75;
+  const scaleRecommended = triggerMet && state.autoscaling &&
+    state.pods < MAX_PODS;
+
+  function update(changes: Partial<State>, action: string) {
+    const event: AuditEvent = {
+      id: crypto.randomUUID(),
+      time: new Date().toISOString(),
+      actor: roleId,
+      action,
+    };
+    const next: State = {
+      ...state,
+      ...changes,
+      audit: [event, ...state.audit],
+    };
+    setState(next);
+    localStorage.setItem(KEY, JSON.stringify(next));
+    setMessage(action);
+  }
+
+  function simulateLoad() {
+    if (!canOperate) return;
+    const cpu = scenario === "spike" ? 83 : 51;
+    update(
+      { cpu },
+      `Simulated ${scenario} load: CPU ${cpu}%`
+    );
+  }
+
+  function scale() {
+    if (!canOperate || !scaleRecommended) {
+      setMessage("Scale-up requires a simulated CPU threshold breach and enabled HPA.");
+      return;
+    }
+    const from = state.pods;
+    const to = Math.min(MAX_PODS, from + 16);
+    const e: ScaleEvent = {
+      id: crypto.randomUUID(),
+      time: new Date().toISOString(),
+      workload,
+      from,
+      to,
+      signal: `Simulated CPU ${state.cpu}% above 75% trigger`,
+    };
+    update({
+      pods: to,
+      cpu: 60,
+      events: [e, ...state.events],
+    }, `Demo autoscaled ${workload}: ${from} → ${to} pods`);
+  }
+
+  function reset() {
+    if (!canOperate) return;
+    const next = fresh();
+    setState(next);
+    localStorage.setItem(KEY, JSON.stringify(next));
+    setMessage("Reference capacity scenario restored.");
+  }
+
+  return (
+    <div className="cap20">
+      <style>{`
+        .cap20{font-family:Arial,Helvetica,sans-serif;color:#193f2d;min-width:0}
+        .cap20-hero{background:linear-gradient(112deg,#063b31,#007657);
+          border-radius:18px;padding:26px;color:white}
+        .cap20-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0}
+        .cap20-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+        .cap20-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:15px}
+        .cap20-row{display:flex;justify-content:space-between;align-items:center;gap:10px;
+          padding:13px 0;border-bottom:1px solid #e8f0ea;font-size:12px}
+        .cap20-table{border-collapse:collapse;width:100%;font-size:12px}
+        .cap20-table th,.cap20-table td{padding:12px 9px;text-align:left;border-bottom:1px solid #e8f0ea}
+        .cap20-table th{font-size:11px;color:#74877a}
+        .cap20-pill{padding:6px 9px;border-radius:25px;background:#e7f5eb;color:#08754f;font-size:10px;font-weight:800}
+        @media(max-width:950px){.cap20-grid{grid-template-columns:1fr}}
+        @media(max-width:680px){.cap20-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+      `}</style>
+
+      <section className="cap20-hero">
+        <div style={{fontSize:11,color:"#bce8d3",letterSpacing:1.3}}>
+          PLATFORM OPERATIONS · D20
+        </div>
+        <h2 style={{fontSize:"clamp(24px,3vw,34px)",margin:"11px 0"}}>
+          {t("Capacity & Autoscaling", "ক্যাপাসিটি ও অটোস্কেলিং")}
+        </h2>
+        <p style={{fontSize:13,lineHeight:1.7,color:"#d4ebe0"}}>
+          {t(
+            "Monitor capacity, inspect infrastructure pools, and demonstrate autoscaling under simulated traffic pressure.",
+            "সিস্টেম ক্যাপাসিটি, সার্ভার পুল ও সিমুলেটেড লোডে অটোস্কেলিং দেখুন।"
+          )}
+        </p>
+        <div style={{fontSize:10,color:"#bde8d4"}}>
+          SIMULATED INFRASTRUCTURE · NO LIVE CLUSTER OR SCALING ACTIONS
+        </div>
+      </section>
+
+      <div className="cap20-kpis">
+        {([
+          ["Production CPU", `${state.cpu}%`, Activity, "212 / 418 vCPU reference"],
+          ["Memory", "55%", HardDrive, "884 / 1,616 GB reference"],
+          ["Running pods", String(state.pods), Server, "HPA range 72–180"],
+          ["DB connections", "214 / 400", Database, "7,812 pooled sessions"],
+        ] as const).map(([label, value, Icon, sub]) => (
+          <section key={label} style={card}>
+            <div style={{display:"flex",justifyContent:"space-between"}}>
+              <span style={muted}>{ui(lang, label)}</span><Icon color="#007653" size={18}/>
+            </div>
+            <div style={{fontSize:26,fontWeight:850,margin:"13px 0 5px"}}>{digits(lang, value)}</div>
+            <div style={muted}>{ui(lang, sub)}</div>
+          </section>
+        ))}
+      </div>
+
+      <div className="cap20-tabs">
+        {([
+          ["overview","Overview","ওভারভিউ"],
+          ["pools","Node Pools","নোড পুল"],
+          ["scaling","Autoscaling","অটোস্কেলিং"],
+          ["storage","Storage","স্টোরেজ"],
+          ["audit","Audit","অডিট"],
+        ] as const).map(([id,en,bn]) => (
+          <button key={id} style={tab===id?primary:button}
+            onClick={()=>setTab(id)}>{t(en,bn)}</button>
+        ))}
+      </div>
+
+      {message && <div style={{...card,background:"#eaf7ee",fontSize:12,marginBottom:14}}>
+        {message}
+        <button onClick={()=>setMessage("")}
+          style={{...button,float:"right",padding:"3px 8px"}}>×</button>
+      </div>}
+
+      {tab==="overview" && <div className="cap20-grid">
+        <section style={card}>
+          <h3 style={{fontSize:16,marginTop:0}}>{ui(lang, "Production Capacity")}</h3>
+          {[
+            ["CPU utilisation",state.cpu],
+            ["Memory utilisation",55],
+            ["Database connections",53.5],
+            ["Pod range utilisation",Math.round(state.pods/MAX_PODS*100)],
+          ].map(([name,value]) => (
+            <div key={String(name)} style={{marginBottom:19}}>
+              <div style={{display:"flex",justifyContent:"space-between",fontSize:12}}>
+                <span>{ui(lang, String(name))}</span><b>{value}%</b>
+              </div>
+              <Meter value={Number(value)}/>
+            </div>
+          ))}
+          <div style={{background:"#f0f8f3",padding:13,borderRadius:10,fontSize:12}}>
+            <CheckCircle2 size={15} color="#087b54" style={{verticalAlign:"middle"}}/>
+            {" "}{triggerMet ? "Simulated scale-up threshold reached." :
+              "Scale-up trigger not met (reference baseline)."}
+          </div>
+        </section>
+        <section style={card}>
+          <h3 style={{fontSize:16,marginTop:0}}>{ui(lang, "Platform Readiness")}</h3>
+          {[
+            ["Running pods",String(state.pods)],
+            ["Minimum HPA pods",String(MIN_PODS)],
+            ["Maximum HPA pods",String(MAX_PODS)],
+            ["Autoscaling",state.autoscaling?"Enabled (demo)":"Disabled (demo)"],
+            ["Pooled sessions","7,812"],
+            ["Scale-up trigger",triggerMet?"Met (simulated)":"Not met"],
+          ].map(([label,value])=>(
+            <div className="cap20-row" key={label}>
+              <span>{ui(lang, label)}</span><b>{digits(lang, value)}</b>
+            </div>
+          ))}
+        </section>
+      </div>}
+
+      {tab==="pools" && <div className="cap20-grid">
+        <section style={card}>
+          <h3 style={{fontSize:16,marginTop:0}}>{ui(lang, "Compute Node Pools")}</h3>
+          {nodePools.map((pool)=>(
+            <div key={pool.name} style={{marginBottom:21}}>
+              <div className="cap20-row">
+                <b>{pool.name}</b>
+                <span className="cap20-pill">{pool.nodes} nodes · {pool.status}</span>
+              </div>
+              <div style={{fontSize:11,marginTop:10}}>CPU {pool.cpu}%</div>
+              <Meter value={pool.cpu}/>
+              <div style={{fontSize:11,marginTop:10}}>Memory {pool.memory}%</div>
+              <Meter value={pool.memory}/>
+            </div>
+          ))}
+        </section>
+        <section style={card}>
+          <h3 style={{fontSize:16,marginTop:0}}>{ui(lang, "Specialised Infrastructure")}</h3>
+          {infrastructure.map(([name,role,status])=>(
+            <div className="cap20-row" key={name}>
+              <div><b>{ui(lang, String(name))}</b><div style={muted}>{role}</div></div>
+              <span className="cap20-pill">{status}</span>
+            </div>
+          ))}
+        </section>
+      </div>}
+
+      {tab==="scaling" && <div className="cap20-grid">
+        <section style={card}>
+          <h3 style={{fontSize:16,marginTop:0}}>
+            <SlidersHorizontal size={17} style={{verticalAlign:"middle"}}/>
+            {" "}Autoscaling Simulator
+          </h3>
+          <p style={muted}>
+            Administrator can simulate traffic pressure. Scaling occurs only
+            in the local demonstration state.
+          </p>
+          <div className="cap20-row">
+            <span>{ui(lang, "HPA enabled")}</span>
+            <input type="checkbox" checked={state.autoscaling}
+              disabled={!canOperate}
+              onChange={(e)=>update(
+                {autoscaling:e.target.checked},
+                `Simulated HPA ${e.target.checked?"enabled":"disabled"}`
+              )}/>
+          </div>
+          <label style={{...muted,display:"block",marginTop:14}}>
+            Workload
+            <select style={{...button,display:"block",width:"100%",marginTop:7}}
+              value={workload} onChange={(e)=>setWorkload(e.target.value)}>
+              <option value="application-svc">{ui(lang, "Application service")}</option>
+              <option value="payroll-worker">{ui(lang, "Payroll worker")}</option>
+              <option value="notification-worker">{ui(lang, "Notification worker")}</option>
+              <option value="geoserver">{ui(lang, "Geoserver")}</option>
+            </select>
+          </label>
+          <label style={{...muted,display:"block",marginTop:14}}>
+            Load scenario
+            <select style={{...button,display:"block",width:"100%",marginTop:7}}
+              value={scenario}
+              onChange={(e)=>setScenario(e.target.value as "normal"|"spike")}>
+              <option value="normal">{ui(lang, "Normal · CPU 51%")}</option>
+              <option value="spike">{ui(lang, "Traffic spike · CPU 83%")}</option>
+            </select>
+          </label>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:17}}>
+            <button style={primary} disabled={!canOperate} onClick={simulateLoad}>
+              <Zap size={14} style={{verticalAlign:"middle"}}/> Simulate load
+            </button>
+            <button style={button} disabled={!canOperate || !scaleRecommended}
+              onClick={scale}>{ui(lang, "Run demo scale-up")}</button>
+          </div>
+          <div style={{...muted,marginTop:15}}>
+            Trigger: CPU ≥ 75% (demo-only assumption);
+            scaling cap: {MAX_PODS} pods.
+          </div>
+        </section>
+        <section style={card}>
+          <h3 style={{fontSize:16,marginTop:0}}>{ui(lang, "Scaling History")}</h3>
+          {state.events.map((e)=>(
+            <div key={e.id} className="cap20-row">
+              <div>
+                <b>{e.workload} · {e.from} → {e.to}</b>
+                <div style={muted}>{e.signal}</div>
+                <div style={muted}>{e.time==="Reference"?e.time:new Date(e.time).toLocaleString((lang === "bn") ? "bn-BD" : "en-GB")}</div>
+              </div>
+              <BarChart3 size={16} color="#087d55"/>
+            </div>
+          ))}
+        </section>
+      </div>}
+
+      {tab==="storage" && <section style={card}>
+        <h3 style={{fontSize:16,marginTop:0}}>{ui(lang, "Storage Capacity Register")}</h3>
+        <p style={muted}>
+          Master PRD specifies the volume categories and columns but not
+          numerical storage usage or forecast figures. Those values remain
+          unreported rather than fabricated.
+        </p>
+        <div style={{overflowX:"auto"}}>
+          <table className="cap20-table">
+            <thead>
+              <tr><th>{ui(lang, "Volume")}</th><th>{ui(lang, "Used")}</th><th>{ui(lang, "Capacity")}</th><th>{ui(lang, "Forecast full")}</th><th>{ui(lang, "Purpose")}</th></tr>
+            </thead>
+            <tbody>
+              {storageVolumes.map(([name,purpose])=>(
+                <tr key={name}>
+                  <td><b>{ui(lang, String(name))}</b></td>
+                  <td>{ui(lang, "Not provided")}</td>
+                  <td>{ui(lang, "Not provided")}</td>
+                  <td>{ui(lang, "Not provided")}</td>
+                  <td>{purpose}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>}
+
+      {tab==="audit" && <div className="cap20-grid">
+        <section style={card}>
+          <div style={{display:"flex",justifyContent:"space-between",gap:8,flexWrap:"wrap"}}>
+            <h3 style={{fontSize:16,margin:0}}>{ui(lang, "Capacity Action Log")}</h3>
+            <button style={button} onClick={()=>downloadCSV(state.audit)}>
+              <Download size={14} style={{verticalAlign:"middle"}}/> Export CSV
+            </button>
+          </div>
+          {!state.audit.length&&<p style={muted}>{ui(lang, "No simulation actions recorded yet.")}</p>}
+          {state.audit.map((e)=>(
+            <div className="cap20-row" key={e.id}>
+              <div><b>{e.action}</b>
+                <div style={muted}>{e.actor} · {new Date(e.time).toLocaleString((lang === "bn") ? "bn-BD" : "en-GB")}</div>
+              </div>
+              <ShieldCheck size={16} color="#078254"/>
+            </div>
+          ))}
+        </section>
+        <section style={card}>
+          <h3 style={{fontSize:16,marginTop:0}}>{ui(lang, "Simulator Controls")}</h3>
+          <p style={muted}>
+            This module does not access Kubernetes, cloud APIs,
+            infrastructure credentials or live monitoring.
+          </p>
+          <button style={button} disabled={!canOperate} onClick={reset}>
+            <RotateCcw size={14} style={{verticalAlign:"middle"}}/>
+            {" "}Reset demo scenario
+          </button>
+        </section>
+      </div>}
+
+      <footer style={{...muted,textAlign:"center",marginTop:21}}>
+        <ShieldCheck size={13} style={{verticalAlign:"middle"}}/>
+        {" "}D20 · Fictional capacity and autoscaling operations
+      </footer>
+    </div>
+  );
+}

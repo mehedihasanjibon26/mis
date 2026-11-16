@@ -1,7 +1,8 @@
 
 "use client";
+import { ui,digits } from "../../lib/ui-l10n";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Activity, ArrowLeft, ArrowUpRight, Baby, CalendarDays,
@@ -48,6 +49,14 @@ const visualTrend = [45, 56, 53, 66, 60, 71, 74, 83, 78, 89, 86, 96];
 
 export default function ExecutiveDashboardPage() {
   const [lang, setLang] = useState<Language>("en");
+  // MCBP_SHELL_LANGUAGE_SYNC_V1
+  useEffect(() => {
+    const saved = window.localStorage.getItem("mcbp-lang");
+    if (saved === "en" || saved === "bn") {
+      setLang(saved);
+    }
+  }, []);
+
   const [period, setPeriod] = useState<Period>("month");
   const [area, setArea] = useState("all");
   const [topic, setTopic] = useState<Topic>("applications");
@@ -399,22 +408,22 @@ export default function ExecutiveDashboardPage() {
                 )}
               </div>
             </div>
-            <button className="ex-btn" onClick={() => setShowBaseline(false)}>Hide <ChevronDown size={14} /></button>
+            <button className="ex-btn" onClick={() => setShowBaseline(false)}>{ui(lang, "Hide")} <ChevronDown size={14} /></button>
           </div>
           <div style={{ display: "flex", gap: 32, flexWrap: "wrap", marginTop: 17 }}>
             <div>
-              <div className="ex-small">ELIGIBLE BASELINE</div>
-              <strong style={{ fontSize: 24 }}>1,895,010</strong>
+              <div className="ex-small">{ui(lang, "ELIGIBLE BASELINE")}</div>
+              <strong style={{ fontSize: 24 }}>{digits(lang, "1,895,010")}</strong>
             </div>
             <div>
-              <div className="ex-small">PROCESSED BASELINE</div>
-              <strong style={{ fontSize: 24 }}>1,777,870</strong>
+              <div className="ex-small">{ui(lang, "PROCESSED BASELINE")}</div>
+              <strong style={{ fontSize: 24 }}>{digits(lang, "1,777,870")}</strong>
             </div>
           </div>
         </section>
       )}
       {!showBaseline && <button className="ex-btn" style={{ marginTop: 15 }}
-        onClick={() => setShowBaseline(true)}>Show national reference baseline</button>}
+        onClick={() => setShowBaseline(true)}>{ui(lang, "Show national reference baseline")}</button>}
 
       <div className="ex-grid" style={{ marginTop: 15 }}>
         <section className="ex-card">
@@ -424,10 +433,10 @@ export default function ExecutiveDashboardPage() {
             </h3>
             <select className="ex-control" value={topic}
               onChange={(e) => setTopic(e.target.value as Topic)}>
-              <option value="applications">Applications</option>
-              <option value="payments">Payments</option>
-              <option value="grievances">Grievances</option>
-              <option value="training">Training</option>
+              <option value="applications">{ui(lang, "Applications")}</option>
+              <option value="payments">{ui(lang, "Payments")}</option>
+              <option value="grievances">{ui(lang, "Grievances")}</option>
+              <option value="training">{ui(lang, "Training")}</option>
             </select>
           </div>
           <div className="ex-chart">

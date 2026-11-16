@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
+import GlobalNumberLocalization from "../components/GlobalNumberLocalization";
 import {
   Bell, Search, HeartHandshake, FileText, UserRound, Wallet,
   GraduationCap, MessageSquareWarning, LayoutDashboard, Map, Bot,
@@ -17,6 +18,22 @@ import BeneficiariesPanel from "../components/BeneficiariesPanel";
 import PayrollPanel from "../components/PayrollPanel";
 import GrievancesPanel from "../components/GrievancesPanel";
 import TrainingPanel from "../components/TrainingPanel";
+import MultiSchemePanel from "../components/MultiSchemePanel";
+import GatewayPanel from "../components/GatewayPanel";
+import XRoadPanel from "../components/XRoadPanel";
+import ObservabilityPanel from "../components/ObservabilityPanel";
+import CICDPanel from "../components/CICDPanel";
+import SecurityCenterPanel from "../components/SecurityCenterPanel";
+import BackupDRPanel from "../components/BackupDRPanel";
+import DataGovernancePanel from "../components/DataGovernancePanel";
+import PayrollMonitorPanel from "../components/PayrollMonitorPanel";
+import AIGovernancePanel from "../components/AIGovernancePanel";
+import GISGovernancePanel from "../components/GISGovernancePanel";
+import CapacityPanel from "../components/CapacityPanel";
+import ReleaseManagementPanel from "../components/ReleaseManagementPanel";
+import PerformanceTestPanel from "../components/PerformanceTestPanel";
+import NavbarSearch from "../components/NavbarSearch";
+import SelfServiceMISPanel from "../components/SelfServiceMISPanel";
 
 import { useDemoStore } from "../lib/demo-store";
 import { useBeneficiaryStore } from "../lib/beneficiary-store";
@@ -52,7 +69,7 @@ const sections: NavSection[] = [
       ["/dashboard", "Executive dashboard", "নির্বাহী ড্যাশবোর্ড", LayoutDashboard],
       ["/gis", "GIS intelligence", "জিআইএস ইন্টেলিজেন্স", Map],
       ["/ai", "AI assistant & agents", "এআই সহকারী ও এজেন্ট", Bot],
-      ["/self-service", "Self-service MIS", "সেলফ-সার্ভিস এমআইএস", ChartColumn],
+      ["/self-service", "Self-service MIS", "সেলফ-সার্ভিস এমআইএস", BarChart3],
     ],
   },
   {
@@ -62,6 +79,7 @@ const sections: NavSection[] = [
       ["/data-hub", "Data Hub / API Bank", "ডেটা হাব / এপিআই ব্যাংক", Network],
       ["/helpdesk", "Helpdesk & referrals", "হেল্পডেস্ক ও রেফারেল", Headset],
       ["/schemes", "Module & scheme builder", "মডিউল ও স্কিম বিল্ডার", Blocks],
+      ["/multi-scheme", "Multi-scheme management", "মাল্টি-স্কিম ব্যবস্থাপনা", Layers3],
       ["/access", "Users & access", "ব্যবহারকারী ও অ্যাক্সেস", ShieldCheck],
     ],
   },
@@ -71,20 +89,20 @@ const sections: NavSection[] = [
     items: [
       ["/observability", "Observability", "অবজারভেবিলিটি", Activity],
       ["/capacity", "Capacity & autoscaling", "ক্যাপাসিটি ও অটোস্কেলিং", Gauge],
+      ["/release-management", "Release management", "রিলিজ ম্যানেজমেন্ট", ShieldCheck],
+      ["/performance-tests", "Load & performance tests", "লোড ও পারফরম্যান্স টেস্ট", ShieldCheck],
       ["/gateway", "API gateway", "এপিআই গেটওয়ে", PlugZap],
       ["/xroad", "X-Road exchange", "এক্স-রোড এক্সচেঞ্জ", Network],
       ["/cicd", "CI/CD pipelines", "সিআই/সিডি পাইপলাইন", GitBranch],
-      ["/releases", "Environments & releases", "এনভায়রনমেন্ট ও রিলিজ", Server],
+      ["/security-center", "Security Centre & SIEM", "নিরাপত্তা কেন্দ্র", ShieldCheck],
+      ["/backup-dr", "Backup & disaster recovery", "ব্যাকআপ ও দুর্যোগ পুনরুদ্ধার", ShieldCheck],
+      ["/data-governance", "Data governance", "ডেটা গভর্নেন্স", ShieldCheck],
     ],
   },
   {
     en: "ASSURANCE",
     bn: "অ্যাসিওরেন্স",
     items: [
-      ["/security", "Security centre", "সিকিউরিটি সেন্টার", LockKeyhole],
-      ["/backup", "Backup & DR", "ব্যাকআপ ও ডিআর", DatabaseBackup],
-      ["/datagov", "Data governance", "ডেটা গভর্নেন্স", Database],
-      ["/aigov", "AI governance", "এআই গভর্নেন্স", Layers3],
     ],
   },
   {
@@ -92,8 +110,8 @@ const sections: NavSection[] = [
     bn: "ওয়ার্কলোড",
     items: [
       ["/payroll-monitor", "Payroll batch monitor", "পেরোল ব্যাচ মনিটর", Wallet],
-      ["/gis-layers", "GIS layer catalogue", "জিআইএস লেয়ার ক্যাটালগ", Map],
-      ["/performance", "Performance tests", "পারফরম্যান্স টেস্ট", BarChart3],
+      ["/ai-governance", "AI governance", "এআই গভর্নেন্স", ShieldCheck],
+      ["/gis-governance", "GIS layer governance", "জিআইএস লেয়ার গভর্নেন্স", ShieldCheck],
     ],
   },
 ];
@@ -340,6 +358,163 @@ export default function Home() {
   }
 
   function navigate(next: string) {
+    // MCBP_SELF_SERVICE_MIS_23C_V1
+    if (next === "/self-service") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Self-service MIS requires a national demo role.");
+        return;
+      }
+      setPath("/self-service");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_PERFORMANCE_D22_V1
+    if (next === "/performance-tests") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Performance tests require a national demo role.");
+        return;
+      }
+      setPath("/performance-tests");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_RELEASE_D21_V1
+    if (next === "/release-management") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Release Management requires a national demo role.");
+        return;
+      }
+      setPath("/release-management");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_CAPACITY_D20_V1
+    if (next === "/capacity") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Capacity console requires a national demo role.");
+        return;
+      }
+      setPath("/capacity");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_GIS_GOVERNANCE_D19_V1
+    if (next === "/gis-governance") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("GIS Governance requires a national demo role.");
+        return;
+      }
+
+      setPath("/gis-governance");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_AI_GOVERNANCE_D18_V1
+    if (next === "/ai-governance") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("AI Governance requires a national demo role.");
+        return;
+      }
+      setPath("/ai-governance");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_PAYROLL_D17_UNIFIED_V1
+    if (next === "/payroll-monitor") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Payroll Monitor requires a national demo role.");
+        return;
+      }
+
+      setPath("/payroll-monitor");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_DATAGOV_D16_UNIFIED_V1
+    if (next === "/data-governance") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Data Governance requires a national demo role.");
+        return;
+      }
+      setPath("/data-governance");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_BACKUP_D15_UNIFIED_V1
+    if (next === "/backup-dr") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Backup & DR requires a national demo role.");
+        return;
+      }
+      setPath("/backup-dr");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_SECURITY_D14_UNIFIED_V1
+    if (next === "/security-center") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Security Centre requires a national demo role.");
+        return;
+      }
+
+      setPath("/security-center");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_CICD_UNIFIED_V1
+    if (next === "/cicd") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("CI/CD requires a national demo role.");
+        return;
+      }
+      setPath("/cicd");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_OBSERVABILITY_UNIFIED_V1
+    if (next === "/observability") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("Observability requires a national demo role.");
+        return;
+      }
+
+      setPath("/observability");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_XROAD_UNIFIED_V1
+    if (next === "/xroad") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("X-Road console requires a national demo role.");
+        return;
+      }
+      setPath("/xroad");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_GATEWAY_UNIFIED_V1
+    if (next === "/gateway") {
+      if (!["admin", "executive"].includes(roleId)) {
+        notify("API Gateway requires a national demo role.");
+        return;
+      }
+      setPath("/gateway");
+      setMobileOpen(false);
+      return;
+    }
+    // MCBP_SS14_UNIFIED_V1
+    if (next === "/multi-scheme") {
+      if (!["admin", "executive", "uwao"].includes(roleId)) {
+        notify("Multi-scheme management requires a configuration role.");
+        return;
+      }
+
+      localStorage.setItem("mcbp-role", roleId);
+      localStorage.setItem("mcbp-lang", lang);
+      setPath("/multi-scheme");
+      setMobileOpen(false);
+      return;
+    }
     const unifiedModules = [
       "/executive",
       "/data-hub",
@@ -564,6 +739,8 @@ export default function Home() {
 
   return (
     <div className={lang === "bn" ? "app bn" : "app"}>
+      {/* MCBP_GLOBAL_NUMBER_LOCALIZATION_V1 */}
+      <GlobalNumberLocalization lang={lang} />
       <header className="top">
         <button
           className="btn mobile-menu"
@@ -573,8 +750,28 @@ export default function Home() {
           <Menu size={19} />
         </button>
 
-        <div className="logo">
-          <HeartHandshake size={22} />
+        <div
+          className="logo"
+          style={{
+            width: 46,
+            height: 46,
+            background: "transparent",
+            borderRadius: 0,
+            overflow: "visible",
+            flexShrink: 0,
+          }}
+        >
+          <img
+            src="/images/mcbp-logo.png"
+            alt="MCBP logo"
+            width={46}
+            height={46}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
+          />
         </div>
 
         <div className="brand">
@@ -587,17 +784,20 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="search">
-          <Search size={17} />
-          <span>
-            {t(
-              "Search beneficiary ID, NID or mobile number…",
-              "উপকারভোগী আইডি, এনআইডি বা মোবাইল নম্বর খুঁজুন…"
-            )}
-          </span>
-        </div>
-
-        <div className="lang">
+        {/* MCBP_NAVBAR_SEARCH_V1 */}
+        <NavbarSearch
+          lang={lang}
+          items={visibleSections.flatMap((section) =>
+            section.items.map(([href, en, bn]) => ({
+              href,
+              en,
+              bn,
+              section: t(section.en, section.bn),
+            }))
+          )}
+          onNavigate={navigate}
+        />
+<div className="lang">
           <button
             className={lang === "en" ? "on" : ""}
             onClick={() => updateLanguage("en")}
@@ -615,12 +815,60 @@ export default function Home() {
 
         <Bell size={20} />
 
-        <div className="av">{role.initials}</div>
+        {/* MCBP_FIXED_SHELL_V2 */}
+          <details className="mcbp-profile-menu">
+            <summary
+              className="mcbp-profile-trigger"
+              aria-label="Switch demo role"
+            >
+              <div className="av">{role.initials}</div>
+              <div className="who">
+                <b>{t(role.en, role.bn)}</b>
+                <span>{role.geo}</span>
+              </div>
+              <span
+                className="mcbp-profile-arrow"
+                aria-hidden="true"
+              />
+            </summary>
 
-        <div className="who">
-          <b>{t(role.en, role.bn)}</b>
-          <span>{role.geo}</span>
-        </div>
+            <div className="mcbp-role-list">
+              <div className="mcbp-role-title">
+                {t("Switch demo role", "Role selection")}
+              </div>
+
+              {roles.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={
+                    roleId === item.id
+                      ? "mcbp-role-item selected"
+                      : "mcbp-role-item"
+                  }
+                  onClick={(event) => {
+                    updateRole(item.id);
+                    event.currentTarget
+                      .closest("details")
+                      ?.removeAttribute("open");
+                  }}
+                >
+                  <span className="mcbp-role-avatar">
+                    {item.initials}
+                  </span>
+                  <span className="mcbp-role-description">
+                    <strong>{t(item.en, item.bn)}</strong>
+                    <small>{item.geo}</small>
+                  </span>
+                  {roleId === item.id && (
+                    <span className="mcbp-role-check">
+                      &#10003;
+                    </span>
+                  )}
+                </button>
+              ))}
+            </div>
+          </details>
       </header>
 
       <div className="main">
@@ -694,6 +942,21 @@ export default function Home() {
             "/access",
             "/helpdesk",
             "/schemes",
+            "/multi-scheme",
+            "/gateway",
+            "/xroad",
+            "/observability",
+            "/cicd",
+            "/security-center",
+            "/backup-dr",
+            "/data-governance",
+            "/payroll-monitor",
+            "/ai-governance",
+            "/gis-governance",
+            "/capacity",
+            "/release-management",
+            "/performance-tests",
+            "/self-service",
           ].includes(path) ? (
             <div
               key={`${path}-${roleId}-${lang}`}
@@ -745,8 +1008,38 @@ export default function Home() {
                 <UnifiedAccess />
               ) : path === "/helpdesk" ? (
                 <UnifiedHelpdesk />
-              ) : (
+              ) : path === "/schemes" ? (
                 <UnifiedBuilder />
+              ) : path === "/multi-scheme" ? (
+                <MultiSchemePanel lang={lang} roleId={roleId} />
+              ) : path === "/gateway" ? (
+                <GatewayPanel lang={lang} roleId={roleId} />
+              ) : path === "/xroad" ? (
+                <XRoadPanel lang={lang} roleId={roleId} />
+              ) : path === "/observability" ? (
+                <ObservabilityPanel lang={lang} roleId={roleId} />
+              ) : path === "/cicd" ? (
+                <CICDPanel lang={lang} roleId={roleId} />
+              ) : path === "/security-center" ? (
+                <SecurityCenterPanel lang={lang} roleId={roleId} />
+              ) : path === "/backup-dr" ? (
+                <BackupDRPanel lang={lang} roleId={roleId} />
+              ) : path === "/data-governance" ? (
+                <DataGovernancePanel lang={lang} roleId={roleId} />
+              ) : path === "/payroll-monitor" ? (
+                <PayrollMonitorPanel lang={lang} roleId={roleId} />
+              ) : path === "/ai-governance" ? (
+                <AIGovernancePanel lang={lang} roleId={roleId} />
+              ) : path === "/gis-governance" ? (
+                <GISGovernancePanel lang={lang} roleId={roleId} />
+              ) : path === "/capacity" ? (
+                <CapacityPanel lang={lang} roleId={roleId} />
+              ) : path === "/release-management" ? (
+                <ReleaseManagementPanel lang={lang} roleId={roleId} />
+              ) : path === "/performance-tests" ? (
+                <PerformanceTestPanel lang={lang} roleId={roleId} />
+              ) : (
+                <SelfServiceMISPanel lang={lang} roleId={roleId} />
               )}
             </div>
           ) : path === "/applications" ? (

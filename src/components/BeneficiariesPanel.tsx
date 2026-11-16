@@ -502,7 +502,7 @@ export default function BeneficiariesPanel({ lang, roleId }: Props) {
                         <tr key={e.id}>
                           <td>{e.action.replaceAll("_", " ")}</td>
                           <td>{restricted ? "••••" : e.actor}</td>
-                          <td>{new Date(e.date).toLocaleString()}</td>
+                          <td>{new Date(e.date).toLocaleString((typeof lang !== "undefined" && lang === "bn") ? "bn-BD" : "en-GB")}</td>
                         </tr>
                       ))}
                     </tbody>

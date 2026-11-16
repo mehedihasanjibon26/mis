@@ -1,12 +1,20 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import DataHubPanel from "../../components/DataHubPanel";
 
 export default function DataHubPage() {
   const [lang, setLang] = useState<"en" | "bn">("en");
+  // MCBP_SHELL_LANGUAGE_SYNC_V1
+  useEffect(() => {
+    const saved = window.localStorage.getItem("mcbp-lang");
+    if (saved === "en" || saved === "bn") {
+      setLang(saved);
+    }
+  }, []);
+
   const [roleId, setRoleId] = useState("admin");
 
   const roles = [

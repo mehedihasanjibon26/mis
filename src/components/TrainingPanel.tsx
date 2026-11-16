@@ -1,5 +1,6 @@
 
 "use client";
+import { ui } from "../lib/ui-l10n";
 
 import { useState } from "react";
 import {
@@ -156,7 +157,7 @@ export default function TrainingPanel({ lang, roleId }: Props) {
       x.replaceAll("&", "&amp;").replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;").replaceAll('"', "&quot;");
     popup.document.write(`<!doctype html><html lang="bn"><head><meta charset="utf-8"/>
-      <title>Demo Training Certificate</title>
+      <title>${safe(ui(lang, "Demo Training Certificate"))}</title>
       <style>body{font-family:serif;text-align:center;padding:65px;border:12px solid #006A4E}
       h1{color:#006A4E;font-size:36px}h2{font-size:26px}.sub{color:#777}
       @media print{button{display:none}}</style></head><body>
@@ -169,8 +170,8 @@ export default function TrainingPanel({ lang, roleId }: Props) {
       <h2>${safe(s.title)}</h2>
       <p>তারিখ: ${safe(s.date)} · স্থান: ${safe(s.venue)}</p>
       <p>Certificate: ${safe(p.certificateId)}</p>
-      <p class="sub">DEMO ONLY · Not an official certificate</p>
-      <button onclick="window.print()">Print / Save as PDF</button>
+      <p class="sub">${safe(ui(lang, "DEMO ONLY · Not an official certificate"))}</p>
+      <button onclick="window.print()">${safe(ui(lang, "Print / Save as PDF"))}</button>
       </body></html>`);
     popup.document.close();
   }
@@ -473,7 +474,7 @@ export default function TrainingPanel({ lang, roleId }: Props) {
               {logs.slice().reverse().map((log) => <tr key={log.id}>
                 <td>{log.action.replaceAll("_", " ")}</td>
                 <td>{log.sessionId}</td><td>{log.actor}</td>
-                <td>{new Date(log.date).toLocaleString()}</td>
+                <td>{new Date(log.date).toLocaleString((lang === "bn") ? "bn-BD" : "en-GB")}</td>
               </tr>)}
               {!logs.length && <tr><td colSpan={4}>
                 {t("No new activities. Seed sessions are available.", "নতুন কার্যক্রম নেই। নমুনা সেশন রয়েছে।")}

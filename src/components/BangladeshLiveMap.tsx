@@ -1,0 +1,237 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import "leaflet/dist/leaflet.css";
+import type { Feature, FeatureCollection, Geometry } from "geojson";
+
+type Lang = "en" | "bn";
+export type DivisionId = "Rangpur" | "Rajshahi" | "Mymensingh" | "Sylhet" | "Dhaka" | "Khulna" | "Barishal" | "Chattogram";
+type Layer = "coverage" | "applications" | "payments" | "grievances" | "facilities" | "underserved" | "field";
+type Division = { id: DivisionId; en: string; bn: string; coverage: number };
+type Props = {
+  lang: Lang;
+  layer: Layer;
+  query: string;
+  selected: string;
+  zoom: number;
+  allowAllDivisions: boolean;
+  showPins: boolean;
+  selectionMode: "none" | "radius" | "polygon";
+  onPinSelect: (label: string) => void;
+  onSelect: (division: string) => void;
+};
+
+const divisions: Division[] = [
+  { id: "Rangpur", en: "Rangpur", bn: "রংপুর", coverage: 82 },
+  { id: "Rajshahi", en: "Rajshahi", bn: "রাজশাহী", coverage: 79 },
+  { id: "Mymensingh", en: "Mymensingh", bn: "ময়মনসিংহ", coverage: 74 },
+  { id: "Sylhet", en: "Sylhet", bn: "সিলেট", coverage: 61 },
+  { id: "Dhaka", en: "Dhaka", bn: "ঢাকা", coverage: 88 },
+  { id: "Khulna", en: "Khulna", bn: "খুলনা", coverage: 77 },
+  { id: "Barishal", en: "Barishal", bn: "বরিশাল", coverage: 71 },
+  { id: "Chattogram", en: "Chattogram", bn: "চট্টগ্রাম", coverage: 84 },
+];
+const normalize = (value: string) => value.toLowerCase().replace(/[^a-z]/g, "");
+/* MCBP_RAJSHahi_CLICK_FIX_V1 */
+function findDivision(raw: string): Division | undefined {
+  const normalized = normalize(raw)
+    .replace(/division|bibhag|region|administrative/g, "")
+    .replace(/^barisal$/, "barishal")
+    .replace(/^chittagong$|^chattagram$|^chittagram$/, "chattogram")
+    .replace(/^mymensing$/, "mymensingh");
+
+  const aliases: Record<string, DivisionId> = {
+    rajshahi: "Rajshahi",
+    rajsahi: "Rajshahi",
+    rajshai: "Rajshahi",
+    rangpur: "Rangpur",
+    dhaka: "Dhaka",
+    khulna: "Khulna",
+    sylhet: "Sylhet",
+    barishal: "Barishal",
+    mymensingh: "Mymensingh",
+    chattogram: "Chattogram",
+  };
+
+  const matched = aliases[normalized];
+
+  if (matched) {
+    return divisions.find((d) => d.id === matched);
+  }
+
+  // Handle variations such as "Rajshahi Division".
+  return divisions.find((d) => {
+    const name = normalize(d.id);
+    return normalized === name ||
+      normalized.startsWith(name) ||
+      normalized.endsWith(name);
+  });
+}
+function colorFor(d: Division, layer: Layer): string {
+  if (layer === "underserved") return d.coverage < 75 ? "#e7a45d" : "#a3cec0";
+  if (layer === "grievances") return d.id === "Rangpur" ? "#d97aa1" : "#dcc1cf";
+  if (layer === "facilities") return "#78b5c5";
+  if (layer === "field") return "#9a91cd";
+  if (layer === "applications") return "#74b5a1";
+  if (layer === "payments") return "#73a7c5";
+  return d.coverage >= 85 ? "#167f61" : d.coverage >= 80 ? "#349e7f" : d.coverage >= 75 ? "#68b89b" : d.coverage >= 70 ? "#a8d2c2" : "#d7e8de";
+}
+function numerals(n: number, lang: Lang) {
+  return new Intl.NumberFormat(lang === "bn" ? "bn-BD" : "en-BD").format(n);
+}
+
+export default function BangladeshLiveMap({ lang, layer, query, selected, zoom, allowAllDivisions, showPins, selectionMode, onPinSelect, onSelect }: Props) {
+  const holder = useRef<HTMLDivElement>(null);
+  const callback = useRef(onSelect);
+  const pinCallback = useRef(onPinSelect);
+  const demoLayersRef = useRef<import("leaflet").LayerGroup | null>(null);
+  const mapRef = useRef<import("leaflet").Map | null>(null);
+  const outlinesRef = useRef<import("leaflet").GeoJSON | null>(null);
+  const featuresRef = useRef<FeatureCollection | null>(null);
+  const [error, setError] = useState("");
+  const [ready, setReady] = useState(false);
+  callback.current = onSelect;
+  pinCallback.current = onPinSelect;
+
+  useEffect(() => {
+    let cancelled = false;
+    let map: import("leaflet").Map | null = null;
+    async function initialize() {
+      try {
+        const [L, response] = await Promise.all([
+          import("leaflet"),
+          fetch("/maps/bangladesh-divisions.geojson"),
+        ]);
+        if (!response.ok) throw new Error("Division boundary GeoJSON not found");
+        const data = (await response.json()) as FeatureCollection;
+        if (!Array.isArray(data.features) || data.features.length !== 8) {
+          throw new Error("Division boundary file must have exactly 8 features");
+        }
+        if (cancelled || !holder.current) return;
+        featuresRef.current = data;
+        map = L.map(holder.current, { zoomControl: false, scrollWheelZoom: false, attributionControl: true })
+          .setView([23.75, 90.4], 7);
+        mapRef.current = map;
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 17,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
+        const overlay = L.geoJSON(data as GeoJSON.GeoJsonObject, {
+          style: () => ({ color: "#ffffff", weight: 1.5, fillOpacity: 0.7, fillColor: "#68b89b" }),
+          onEachFeature: (feature: Feature<Geometry>, polygon: import("leaflet").Layer) => {
+            const props = feature.properties ?? {};
+            const name = String(props.shapeName ?? props.name ?? props.NAME_1 ?? props.ADM1_EN ?? "");
+            const division = findDivision(name);
+            if (!division) return;
+            const path = polygon as import("leaflet").Path;
+            path.on("click", () => callback.current(division.id));
+            path.bindTooltip(division.en, { sticky: true, direction: "top" });
+          },
+        }).addTo(map);
+        outlinesRef.current = overlay;
+        demoLayersRef.current = L.layerGroup().addTo(map);
+        setReady(true);
+        map.fitBounds(overlay.getBounds().pad(0.07), { animate: false });
+        window.setTimeout(() => { if (!cancelled) map?.invalidateSize(); }, 180);
+      } catch (cause) {
+        if (!cancelled) setError(cause instanceof Error ? cause.message : "Unable to load map");
+      }
+    }
+    void initialize();
+    return () => {
+      cancelled = true;
+      outlinesRef.current = null;
+      demoLayersRef.current = null;
+      mapRef.current = null;
+      map?.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    const overlay = outlinesRef.current;
+    if (!map || !overlay) return;
+    overlay.eachLayer((polygon) => {
+      const entry = polygon as import("leaflet").Layer & { feature?: Feature; setStyle?: (options: import("leaflet").PathOptions) => void; setTooltipContent?: (content: string) => void };
+      const props = entry.feature?.properties ?? {};
+      const d = findDivision(String(props.shapeName ?? props.name ?? props.NAME_1 ?? props.ADM1_EN ?? ""));
+      if (!d) return;
+      const matches = !query || d.en.toLowerCase().includes(query.toLowerCase()) || d.bn.includes(query);
+      entry.setStyle?.({
+        fillColor: colorFor(d, layer), fillOpacity: matches ? (d.id === selected ? 0.87 : 0.64) : 0.13,
+        color: d.id === selected ? "#004b36" : "#ffffff", weight: d.id === selected ? 4 : 1.8,
+      });
+      entry.setTooltipContent?.(`${lang === "bn" ? d.bn : d.en} · ${numerals(d.coverage, lang)}%`);
+      const path = entry as import("leaflet").Path;
+      if (!allowAllDivisions && d.id !== "Rangpur") {
+        path.off("click");
+        path.on("click", () => callback.current(d.id)); // parent enforces role permissions
+      }
+    });
+    if (selected) {
+      overlay.eachLayer((polygon) => {
+        const entry = polygon as import("leaflet").Layer & { feature?: Feature };
+        const props = entry.feature?.properties ?? {};
+        if (findDivision(String(props.shapeName ?? props.name ?? props.NAME_1 ?? ""))?.id === selected) {
+          const poly = polygon as import("leaflet").Polygon;
+          map.fitBounds(poly.getBounds().pad(0.35), { maxZoom: 10, animate: true });
+        }
+      });
+    } else {
+      map.fitBounds(overlay.getBounds().pad(0.07), { animate: true });
+    }
+  }, [lang, layer, query, selected, allowAllDivisions, ready]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const target = Math.max(6, Math.min(11, 7 + Math.round((zoom - 1) * 5)));
+    map.setZoom(target, { animate: true });
+  }, [zoom, selected]);
+
+
+  useEffect(() => {
+    const group = demoLayersRef.current;
+    if (!group || !mapRef.current) return;
+    group.clearLayers();
+    let live = true;
+    void import("leaflet").then((L) => {
+      if (!live || !demoLayersRef.current) return;
+      if (showPins && ["field", "facilities", "grievances"].includes(layer)) {
+        const samples: { name: string; coords: [number, number] }[] = [
+          { name: "Kaunia - demo point", coords: [25.77, 89.42] },
+          { name: "Dhaka - demo point", coords: [23.71, 90.4] },
+          { name: "Chattogram - demo point", coords: [22.36, 91.8] },
+        ];
+        samples.forEach((sample) => {
+          L.circleMarker(sample.coords, { radius: 7, color: "#ffffff", weight: 2, fillColor: "#c72d70", fillOpacity: 1 })
+            .bindTooltip(sample.name)
+            .on("click", () => pinCallback.current(sample.name))
+            .addTo(group);
+        });
+      }
+      if (selectionMode === "radius") {
+        L.circle([25.77, 89.42], { radius: 30000, color: "#c72d70", weight: 2, fillOpacity: 0.12, dashArray: "6 4" }).addTo(group);
+      }
+      if (selectionMode === "polygon") {
+        L.polygon([[25.9,89.1],[25.98,89.52],[25.55,89.65],[25.45,89.15]],
+          { color: "#006a4e", weight: 2, fillOpacity: 0.10, dashArray: "6 4" }).addTo(group);
+      }
+    });
+    return () => { live = false; };
+  }, [ready, layer, showPins, selectionMode]);
+
+  return (
+    <div style={{ position: "relative", height: 490, borderRadius: 14, overflow: "hidden", background: "#edf5f0" }}>
+      <div ref={holder} style={{ width: "100%", height: "100%" }} aria-label={lang === "bn" ? "বাংলাদেশের আট বিভাগের ইন্টারঅ্যাকটিভ মানচিত্র" : "Interactive map of eight Bangladesh divisions"} />
+      {error && (
+        <div role="alert" style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", textAlign: "center", padding: 20, background: "#f3f9f5", color: "#8c3c39", zIndex: 700 }}>
+          {lang === "bn" ? "মানচিত্র লোড করা যায়নি: " : "Could not load map: "}{error}
+        </div>
+      )}
+      <div style={{ position: "absolute", bottom: 23, left: 10, zIndex: 550, fontSize: 10, padding: "5px 8px", background: "#fffffff0", borderRadius: 6, color: "#405c50", pointerEvents: "none" }}>
+        {lang === "bn" ? "বাস্তব বিভাগ সীমানা · কভারেজ তথ্য ডেমো" : "Real division boundaries · fictional coverage data"}
+      </div>
+    </div>
+  );
+}

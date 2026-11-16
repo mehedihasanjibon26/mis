@@ -1,0 +1,621 @@
+﻿===== src/app/page.tsx : 218 =====
+  206: 
+  207:   const grievanceCases = useGrievanceStore((s) => s.cases);
+  208:   const resetGrievances = useGrievanceStore((s) => s.resetGrievances);
+  209: 
+  210:   const trainingParticipants = useTrainingStore((s) => s.participants);
+  211:   const resetTraining = useTrainingStore((s) => s.resetTraining);
+  212: 
+  213:   useEffect(() => {
+  214:     const savedRole = localStorage.getItem("mcbp-role");
+  215:     const savedLang = localStorage.getItem("mcbp-lang");
+  216: 
+  217:     if (savedRole && roles.some((r) => r.id === savedRole)) {
+  218:       setRoleId(savedRole);
+  219:     }
+  220: 
+  221:     if (savedLang === "en" || savedLang === "bn") {
+  222:       setLang(savedLang);
+  223:     }
+  224:   }, []);
+  225: 
+  226:   const t = (en: string, bn: string) =>
+  227:     lang === "bn" ? bn : en;
+  228: 
+  229:   const role = roles.find((r) => r.id === roleId) ?? roles[0];
+  230:   const isNationalRole = nationalRoles.includes(roleId);
+
+===== src/app/access/page.tsx : 211 =====
+  199:   const [message, setMessage] = useState("");
+  200:   const [securityCount, setSecurityCount] = useState(2);
+  201: 
+  202:   const t = (en: string, bn: string) => lang === "bn" ? bn : en;
+  203: 
+  204:   useEffect(() => {
+  205:     try {
+  206:       const savedLang = localStorage.getItem("mcbp-lang");
+  207:       const savedRole = localStorage.getItem("mcbp-role");
+  208:       const savedUsers = localStorage.getItem("mcbp-access-users");
+  209:       const savedEvents = localStorage.getItem("mcbp-access-events");
+  210: 
+  211:       if (savedLang === "bn") setLang("bn");
+  212:       if (savedRole && roles.includes(savedRole as Role)) {
+  213:         setActor(savedRole as Role);
+  214:       }
+  215:       if (savedUsers) {
+  216:         const data: unknown = JSON.parse(savedUsers);
+  217:         if (Array.isArray(data)) setUsers(data as DemoUser[]);
+  218:       }
+  219:       if (savedEvents) {
+  220:         const data: unknown = JSON.parse(savedEvents);
+  221:         if (Array.isArray(data)) setEvents(data as Event[]);
+  222:       }
+  223:     } catch {
+
+===== src/app/ai/page.tsx : 191 =====
+  179: 
+  180:   const applications = useDemoStore((s) => s.applications);
+  181:   const payroll = usePayrollStore((s) => s.payments);
+  182:   const grievances = useGrievanceStore((s) => s.cases);
+  183:   const participants = useTrainingStore((s) => s.participants);
+  184: 
+  185:   useEffect(() => {
+  186:     try {
+  187:       const roleValue = localStorage.getItem("mcbp-role");
+  188:       const langValue = localStorage.getItem("mcbp-lang");
+  189:       const stored = localStorage.getItem("mcbp-ai-proposals");
+  190: 
+  191:       if (roleValue) setRole(roleValue);
+  192:       if (langValue === "en" || langValue === "bn") setLang(langValue);
+  193:       if (stored) {
+  194:         const parsed: unknown = JSON.parse(stored);
+  195:         if (Array.isArray(parsed)) setProposals(parsed as Proposal[]);
+  196:       }
+  197:     } catch {
+  198:       // Demo may start with empty browser storage.
+  199:     }
+  200:     setReady(true);
+  201:   }, []);
+  202: 
+  203:   useEffect(() => {
+
+===== src/app/ai/page.tsx : 330 =====
+  318:     }
+  319: 
+  320:     const label = agentInfo.find((a) => a.id === agent)?.title ?? agent;
+  321: 
+  322:     const details: Record<Agent, string> = {
+  323:       collection: `Proposed verification review: ${pending} identity-pending application(s). Sources: SS01 application workflow. No personal identifiers included.`,
+  324:       report: `Draft operations report: ${applications.length} applications, ${paid} successful payment(s), ${openCases} open programme grievances, ${certificates} training certificates. Human verification required.`,
+  325:       alert: `Draft alert: ${bounced} bounced payment(s), ${pending} pending identity check(s), ${openCases} open grievance(s). Suggested notification only; nothing has been sent.`,
+  326:       calculation: `Deterministic arithmetic: ${paid} paid/repaid + ${bounced} bounced = ${paid + bounced} matching payment records. Other payment states: ${payroll.length - paid - bounced}. This calculation does not authorise any financial action.`,
+  327:     };
+  328: 
+  329:     const item: Proposal = {
+  330:       id: `AI-${Date.now()}`,
+  331:       agent,
+  332:       title: label,
+  333:       output: details[agent],
+  334:       status: "pending",
+  335:       reviewer: "",
+  336:       createdAt: now(),
+  337:       source: agent === "calculation"
+  338:         ? "SS03 Â· Deterministic rules"
+  339:         : "SS01 / SS03 / SS04 / SS05 Â· Demo stores",
+  340:     };
+  341: 
+  342:     setProposals((old) => [item, ...old]);
+
+===== src/app/helpdesk/page.tsx : 223 =====
+  211:   const [feedback, setFeedback] = useState("");
+  212:   const [kbSearch, setKbSearch] = useState("");
+  213:   const [ready, setReady] = useState(false);
+  214: 
+  215:   const t = (en: string, bn: string) => language === "bn" ? bn : en;
+  216: 
+  217:   useEffect(() => {
+  218:     try {
+  219:       const lang = localStorage.getItem("mcbp-lang");
+  220:       const savedRole = localStorage.getItem("mcbp-role");
+  221:       const savedCases = localStorage.getItem("mcbp-helpdesk-cases");
+  222:       const savedReferrals = localStorage.getItem("mcbp-helpdesk-referrals");
+  223:       if (lang === "bn") setLanguage("bn");
+  224:       if (savedRole) setRole(savedRole);
+  225:       if (savedCases) {
+  226:         const data: unknown = JSON.parse(savedCases);
+  227:         if (Array.isArray(data)) setCases(data as Case[]);
+  228:       }
+  229:       if (savedReferrals) {
+  230:         const data: unknown = JSON.parse(savedReferrals);
+  231:         if (Array.isArray(data)) setReferrals(data as Referral[]);
+  232:       }
+  233:     } catch {
+  234:       // Use fictional starter data.
+  235:     }
+
+===== src/app/mobile/page.tsx : 89 =====
+   77:   const [hasPhoto, setHasPhoto] = useState(false);
+   78:   const [locationCaptured, setLocationCaptured] = useState(false);
+   79:   const [notification, setNotification] = useState("");
+   80: 
+   81:   const t = (en: string, bn: string) => lang === "bn" ? bn : en;
+   82: 
+   83:   useEffect(() => {
+   84:     try {
+   85:       const savedLanguage = localStorage.getItem("mcbp-lang");
+   86:       const savedRole = localStorage.getItem("mcbp-role");
+   87:       const savedRecords = localStorage.getItem("mcbp-mobile-demo");
+   88: 
+   89:       if (savedLanguage === "bn") setLang("bn");
+   90:       if (savedRole) setRole(savedRole);
+   91: 
+   92:       if (savedRecords) {
+   93:         const parsed: unknown = JSON.parse(savedRecords);
+   94:         if (Array.isArray(parsed)) {
+   95:           setRecords(parsed as OfflineRecord[]);
+   96:         }
+   97:       }
+   98:     } catch {
+   99:       // A fresh fictional demo is available without stored browser data.
+  100:     }
+  101:     setLoaded(true);
+
+===== src/app/schemes/page.tsx : 155 =====
+  143:   const isMaker = role === "admin" || role === "uwao";
+  144:   const isChecker = role === "executive" || role === "admin";
+  145:   const label = (f: Item) => t(f.en, f.bn);
+  146: 
+  147:   useEffect(() => {
+  148:     try {
+  149:       const language = localStorage.getItem("mcbp-lang");
+  150:       const actor = localStorage.getItem("mcbp-role");
+  151:       const saved = localStorage.getItem("mcbp-ss13-config");
+  152:       const live = localStorage.getItem("mcbp-ss13-published");
+  153:       const imported = localStorage.getItem("mcbp-ss13-batch");
+  154:       const flow = localStorage.getItem("mcbp-ss13-workflow");
+  155:       if (language === "bn") setLang("bn");
+  156:       if (actor) setRole(actor);
+  157:       if (saved) setConfig(JSON.parse(saved) as Config);
+  158:       if (live) setPublished(JSON.parse(live) as Config);
+  159:       if (imported) setBatch(JSON.parse(imported) as Batch);
+  160:       if (flow) setWorkflow(JSON.parse(flow) as string[]);
+  161:     } catch {
+  162:       // Browser-local fictional demo starts with seeded configuration.
+  163:     }
+  164:     setReady(true);
+  165:   }, []);
+  166: 
+  167:   useEffect(() => {
+
+===== src/components/BackupDRPanel.tsx : 117 =====
+  105:   const t = (en: string, bn: string) => lang === "bn" ? bn : en;
+  106:   const canOperate = roleId === "admin";
+  107:   const selectedJob = jobs.find((j) => j.id === selected);
+  108:   const failedJobs = jobs.filter((j) => j.status === "failed").length;
+  109: 
+  110:   useEffect(() => {
+  111:     try {
+  112:       const storedJobs = localStorage.getItem("mcbp-dr-jobs");
+  113:       const storedDrills = localStorage.getItem("mcbp-dr-drills");
+  114:       const storedEvents = localStorage.getItem("mcbp-dr-events");
+  115:       if (storedJobs) {
+  116:         const parsed: unknown = JSON.parse(storedJobs);
+  117:         if (Array.isArray(parsed)) setJobs(parsed as Job[]);
+  118:       }
+  119:       if (storedDrills) {
+  120:         const parsed: unknown = JSON.parse(storedDrills);
+  121:         if (Array.isArray(parsed)) setDrills(parsed as Drill[]);
+  122:       }
+  123:       if (storedEvents) {
+  124:         const parsed: unknown = JSON.parse(storedEvents);
+  125:         if (Array.isArray(parsed)) setEvents(parsed as Event[]);
+  126:       }
+  127:     } catch {
+  128:       // Fall back to fictional seed data.
+  129:     }
+
+===== src/components/CICDPanel.tsx : 152 =====
+  140:   const failed = runs.filter((r) => r.status === "failed").length;
+  141:   const passed = runs.filter((r) =>
+  142:     ["passed", "approved", "deployed"].includes(r.status)
+  143:   ).length;
+  144: 
+  145:   useEffect(() => {
+  146:     try {
+  147:       const stored = localStorage.getItem("mcbp-cicd-runs");
+  148:       if (stored) {
+  149:         const parsed: unknown = JSON.parse(stored);
+  150:         if (Array.isArray(parsed)) {
+  151:           const restored = parsed as Run[];
+  152:           setRuns(restored);
+  153:           if (restored.length) setSelected(restored[0].id);
+  154:         }
+  155:       }
+  156:     } catch {
+  157:       // Use fictional baseline.
+  158:     }
+  159:     setReady(true);
+  160:   }, []);
+  161: 
+  162:   useEffect(() => {
+  163:     if (!ready) return;
+  164:     localStorage.setItem("mcbp-cicd-runs", JSON.stringify(runs));
+
+===== src/components/DataHubPanel.tsx : 524 =====
+  512:               "Partner / API",
+  513:               "Protocol",
+  514:               "Lifecycle",
+  515:               "Security",
+  516:               "Details",
+  517:             ]}
+  518:             rows={shown.map((p) => [
+  519:               <>
+  520:                 <b>{p.name}</b>
+  521:                 <div>{p.purpose}</div>
+  522:               </>,
+  523:               `${p.method} Â· ${p.format}`,
+  524:               <Badge value="Published (demo)" />,
+  525:               p.auth,
+  526:               <button
+  527:                 style={button}
+  528:                 onClick={() =>
+  529:                   setDetails(details === p.id ? null : p.id)
+  530:                 }
+  531:               >
+  532:                 {t("Inspect", "à¦¬à¦¿à¦¸à§à¦¤à¦¾à¦°à¦¿à¦¤")}
+  533:               </button>,
+  534:             ])}
+  535:           />
+  536: 
+
+===== src/components/DataHubPanel.tsx : 526 =====
+  514:               "Lifecycle",
+  515:               "Security",
+  516:               "Details",
+  517:             ]}
+  518:             rows={shown.map((p) => [
+  519:               <>
+  520:                 <b>{p.name}</b>
+  521:                 <div>{p.purpose}</div>
+  522:               </>,
+  523:               `${p.method} Â· ${p.format}`,
+  524:               <Badge value="Published (demo)" />,
+  525:               p.auth,
+  526:               <button
+  527:                 style={button}
+  528:                 onClick={() =>
+  529:                   setDetails(details === p.id ? null : p.id)
+  530:                 }
+  531:               >
+  532:                 {t("Inspect", "à¦¬à¦¿à¦¸à§à¦¤à¦¾à¦°à¦¿à¦¤")}
+  533:               </button>,
+  534:             ])}
+  535:           />
+  536: 
+  537:           {details && (() => {
+  538:             const p = partners.find(
+
+===== src/components/DataHubPanel.tsx : 804 =====
+  792:               "Queue / partner",
+  793:               "Attempts",
+  794:               "State",
+  795:               "Application",
+  796:               "Actions",
+  797:             ]}
+  798:             rows={queue.map((q) => [
+  799:               <>
+  800:                 <b>{q.id}</b>
+  801:                 <div>{q.partner} Â· {q.reason}</div>
+  802:               </>,
+  803:               `${q.tries}/3`,
+  804:               <Badge value={q.state} />,
+  805:               q.applicationId || "â€”",
+  806:               <div style={{
+  807:                 display: "flex",
+  808:                 flexWrap: "wrap",
+  809:                 gap: 6,
+  810:               }}>
+  811:                 <button
+  812:                   style={button}
+  813:                   disabled={
+  814:                     !authorized || q.state === "resolved"
+  815:                   }
+  816:                   onClick={() =>
+
+===== src/components/DataHubPanel.tsx : 806 =====
+  794:               "State",
+  795:               "Application",
+  796:               "Actions",
+  797:             ]}
+  798:             rows={queue.map((q) => [
+  799:               <>
+  800:                 <b>{q.id}</b>
+  801:                 <div>{q.partner} Â· {q.reason}</div>
+  802:               </>,
+  803:               `${q.tries}/3`,
+  804:               <Badge value={q.state} />,
+  805:               q.applicationId || "â€”",
+  806:               <div style={{
+  807:                 display: "flex",
+  808:                 flexWrap: "wrap",
+  809:                 gap: 6,
+  810:               }}>
+  811:                 <button
+  812:                   style={button}
+  813:                   disabled={
+  814:                     !authorized || q.state === "resolved"
+  815:                   }
+  816:                   onClick={() =>
+  817:                     notice(retry(q.id, roleId))
+  818:                   }
+
+===== src/components/DataHubPanel.tsx : 937 =====
+  925: 
+  926:             <DataTable
+  927:               headers={[
+  928:                 "Consumer",
+  929:                 "Member / service",
+  930:                 "Scope",
+  931:                 "Onboarding",
+  932:               ]}
+  933:               rows={consumers.map((c) => [
+  934:                 c.name,
+  935:                 c.partner,
+  936:                 c.scope,
+  937:                 <Badge value={c.status} />,
+  938:               ])}
+  939:             />
+  940:           </section>
+  941:         </div>
+  942:       )}
+  943: 
+  944:       {tab === "bulk" && (
+  945:         <section style={card}>
+  946:           <h3>
+  947:             <FileUp size={19} /> {t(
+  948:               "Governed bulk exchange",
+  949:               "à¦¨à¦¿à¦¯à¦¼à¦¨à§à¦¤à§à¦°à¦¿à¦¤ à¦¬à¦¾à¦²à§à¦• à¦à¦•à§à¦¸à¦šà§‡à¦žà§à¦œ"
+
+===== src/components/DataHubPanel.tsx : 1026 =====
+ 1014:               "Batch",
+ 1015:               "Validation",
+ 1016:               "Errors",
+ 1017:               "State",
+ 1018:               "Approval",
+ 1019:             ]}
+ 1020:             rows={batches.map((batch) => [
+ 1021:               batch.filename,
+ 1022:               `${batch.valid}/${batch.rows} valid`,
+ 1023:               batch.errors.length
+ 1024:                 ? batch.errors.join("; ")
+ 1025:                 : "None",
+ 1026:               <Badge value={batch.status} />,
+ 1027:               <button
+ 1028:                 style={button}
+ 1029:                 disabled={
+ 1030:                   roleId !== "admin" ||
+ 1031:                   batch.status !== "validated"
+ 1032:                 }
+ 1033:                 onClick={() =>
+ 1034:                   notice(approveBatch(batch.id, roleId))
+ 1035:                 }
+ 1036:               >
+ 1037:                 Admin approve
+ 1038:               </button>,
+
+===== src/components/DataHubPanel.tsx : 1027 =====
+ 1015:               "Validation",
+ 1016:               "Errors",
+ 1017:               "State",
+ 1018:               "Approval",
+ 1019:             ]}
+ 1020:             rows={batches.map((batch) => [
+ 1021:               batch.filename,
+ 1022:               `${batch.valid}/${batch.rows} valid`,
+ 1023:               batch.errors.length
+ 1024:                 ? batch.errors.join("; ")
+ 1025:                 : "None",
+ 1026:               <Badge value={batch.status} />,
+ 1027:               <button
+ 1028:                 style={button}
+ 1029:                 disabled={
+ 1030:                   roleId !== "admin" ||
+ 1031:                   batch.status !== "validated"
+ 1032:                 }
+ 1033:                 onClick={() =>
+ 1034:                   notice(approveBatch(batch.id, roleId))
+ 1035:                 }
+ 1036:               >
+ 1037:                 Admin approve
+ 1038:               </button>,
+ 1039:             ])}
+
+===== src/components/DataHubPanel.tsx : 1119 =====
+ 1107: 
+ 1108:             <DataTable
+ 1109:               headers={[
+ 1110:                 "Partner",
+ 1111:                 "Service owner",
+ 1112:                 "Test cycles",
+ 1113:                 "Evidence status",
+ 1114:               ]}
+ 1115:               rows={partners.map((p) => [
+ 1116:                 p.id,
+ 1117:                 p.owner,
+ 1118:                 "Cycle 1 / 2 pending",
+ 1119:                 <Badge value="Not signed" />,
+ 1120:               ])}
+ 1121:             />
+ 1122: 
+ 1123:             <p style={{ fontSize: 11 }}>
+ 1124:               No signed integration approvals,
+ 1125:               production MoUs or real certifications.
+ 1126:             </p>
+ 1127:           </section>
+ 1128:         </div>
+ 1129:       )}
+ 1130: 
+ 1131:       <div style={{
+
+===== src/components/GatewayPanel.tsx : 102 =====
+   90:   const [notice, setNotice] = useState("");
+   91: 
+   92:   const t = (en: string, bn: string) => lang === "bn" ? bn : en;
+   93:   const canManage = roleId === "admin";
+   94:   const chosen = routes.find((route) => route.id === selected) ?? routes[0];
+   95: 
+   96:   useEffect(() => {
+   97:     try {
+   98:       const savedRoutes = localStorage.getItem("mcbp-gateway-routes");
+   99:       const savedTrials = localStorage.getItem("mcbp-gateway-trials");
+  100:       if (savedRoutes) {
+  101:         const parsed: unknown = JSON.parse(savedRoutes);
+  102:         if (Array.isArray(parsed)) setRoutes(parsed as Route[]);
+  103:       }
+  104:       if (savedTrials) {
+  105:         const parsed: unknown = JSON.parse(savedTrials);
+  106:         if (Array.isArray(parsed)) setTrials(parsed as Trial[]);
+  107:       }
+  108:     } catch {
+  109:       // Fresh demo starts with illustrative routes.
+  110:     }
+  111:     setReady(true);
+  112:   }, []);
+  113: 
+  114:   useEffect(() => {
+
+===== src/components/MultiSchemePanel.tsx : 173 =====
+  161:   const editable = scheme.id !== "MCBP" && scheme.stage === "draft" && maker;
+  162: 
+  163:   useEffect(() => {
+  164:     try {
+  165:       const stored = localStorage.getItem("mcbp-scheme-catalogue");
+  166:       const active = localStorage.getItem("mcbp-active-scheme");
+  167:       if (stored) {
+  168:         const data: unknown = JSON.parse(stored);
+  169:         if (Array.isArray(data)) {
+  170:           const custom = (data as Scheme[]).filter(
+  171:             (s) => s.id !== "MCBP"
+  172:           );
+  173:           setSchemes([core, ...custom]);
+  174:         }
+  175:       }
+  176:       if (active) setActiveScheme(active);
+  177:     } catch {
+  178:       // Start with the protected MCBP scheme.
+  179:     }
+  180:     setLoaded(true);
+  181:   }, []);
+  182: 
+  183:   useEffect(() => {
+  184:     if (!loaded) return;
+  185:     localStorage.setItem("mcbp-scheme-catalogue", JSON.stringify(schemes));
+
+===== src/components/ObservabilityPanel.tsx : 159 =====
+  147:   const canOperate = roleId === "admin";
+  148:   const current = services.find((s) => s.name === selected);
+  149:   const openAlerts = incidents.filter((i) => i.status !== "resolved").length;
+  150:   const healthyServices = services.filter((s) => s.status === "healthy").length;
+  151: 
+  152:   useEffect(() => {
+  153:     try {
+  154:       const savedServices = localStorage.getItem("mcbp-observe-services");
+  155:       const savedIncidents = localStorage.getItem("mcbp-observe-incidents");
+  156: 
+  157:       if (savedServices) {
+  158:         const parsed: unknown = JSON.parse(savedServices);
+  159:         if (Array.isArray(parsed)) setServices(parsed as Service[]);
+  160:       }
+  161:       if (savedIncidents) {
+  162:         const parsed: unknown = JSON.parse(savedIncidents);
+  163:         if (Array.isArray(parsed)) setIncidents(parsed as Incident[]);
+  164:       }
+  165:     } catch {
+  166:       // Fictional baseline remains available.
+  167:     }
+  168:     setLoaded(true);
+  169:   }, []);
+  170: 
+  171:   useEffect(() => {
+
+===== src/components/SecurityCenterPanel.tsx : 120 =====
+  108:   const t = (en: string, bn: string) => lang === "bn" ? bn : en;
+  109:   const canInvestigate = roleId === "admin";
+  110:   const selected = alerts.find((a) => a.id === selectedId);
+  111:   const openCount = alerts.filter((a) => a.status !== "closed").length;
+  112: 
+  113:   useEffect(() => {
+  114:     try {
+  115:       const a = localStorage.getItem("mcbp-security-alerts");
+  116:       const e = localStorage.getItem("mcbp-security-events");
+  117:       const r = localStorage.getItem("mcbp-security-access-review");
+  118:       if (a) {
+  119:         const parsed: unknown = JSON.parse(a);
+  120:         if (Array.isArray(parsed)) setAlerts(parsed as Alert[]);
+  121:       }
+  122:       if (e) {
+  123:         const parsed: unknown = JSON.parse(e);
+  124:         if (Array.isArray(parsed)) setEvents(parsed as Event[]);
+  125:       }
+  126:       if (r === "complete") setReviewComplete(true);
+  127:     } catch {
+  128:       // Fictional seed records remain available.
+  129:     }
+  130:     setReady(true);
+  131:   }, []);
+  132: 
+
+===== src/components/XRoadPanel.tsx : 148 =====
+  136:     .filter((q) => q.state === "pending" || q.state === "processing")
+  137:     .reduce((total, q) => total + q.count, 0);
+  138:   const healthyCount = partners.filter((p) => p.status === "healthy").length;
+  139: 
+  140:   useEffect(() => {
+  141:     try {
+  142:       const savedPartners = localStorage.getItem("mcbp-xroad-partners");
+  143:       const savedQueue = localStorage.getItem("mcbp-xroad-queue");
+  144:       const savedLogs = localStorage.getItem("mcbp-xroad-logs");
+  145: 
+  146:       if (savedPartners) {
+  147:         const data: unknown = JSON.parse(savedPartners);
+  148:         if (Array.isArray(data)) setPartners(data as Partner[]);
+  149:       }
+  150:       if (savedQueue) {
+  151:         const data: unknown = JSON.parse(savedQueue);
+  152:         if (Array.isArray(data)) setQueue(data as QueueItem[]);
+  153:       }
+  154:       if (savedLogs) {
+  155:         const data: unknown = JSON.parse(savedLogs);
+  156:         if (Array.isArray(data)) setLogs(data as LogItem[]);
+  157:       }
+  158:     } catch {
+  159:       // Use seeded fictional exchange status.
+  160:     }
+
+===== src/components/XRoadPanel.tsx : 173 =====
+  161:     setReady(true);
+  162:   }, []);
+  163: 
+  164:   useEffect(() => {
+  165:     if (!ready) return;
+  166:     localStorage.setItem("mcbp-xroad-partners", JSON.stringify(partners));
+  167:     localStorage.setItem("mcbp-xroad-queue", JSON.stringify(queue));
+  168:     localStorage.setItem("mcbp-xroad-logs", JSON.stringify(logs));
+  169:   }, [partners, queue, logs, ready]);
+  170: 
+  171:   function addLog(partner: string, event: string, status: string) {
+  172:     const item: LogItem = {
+  173:       id: `MSG-${Date.now()}`,
+  174:       timestamp: new Date().toISOString(),
+  175:       partner, event, status, actor: roleId,
+  176:     };
+  177:     setLogs((current) => [item, ...current]);
+  178:   }
+  179: 
+  180:   function failPartner() {
+  181:     if (!canOperate) {
+  182:       setNotice("System Administrator role required.");
+  183:       return;
+  184:     }
+  185:     setPartners((all) => all.map((p) =>
+

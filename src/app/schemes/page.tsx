@@ -1,5 +1,6 @@
 
 "use client";
+import { ui } from "../../lib/ui-l10n";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -330,7 +331,7 @@ export default function ModuleBuilderPage() {
           </span>
           <div>
             <b style={{ fontSize: 18 }}>MCBP-MIS</b>
-            <div style={small}>DYNAMIC CONFIGURATION & GOVERNED EXCHANGE</div>
+            <div style={small}>{ui(lang, "DYNAMIC CONFIGURATION & GOVERNED EXCHANGE")}</div>
           </div>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -373,7 +374,7 @@ export default function ModuleBuilderPage() {
               <span style={small}>{name}</span><Icon size={18} color="#006a4e" />
             </div>
             <div style={{ fontSize: 24, fontWeight: 850, margin: "13px 0 5px" }}>{value}</div>
-            <div style={small}>Fictional configuration register</div>
+            <div style={small}>{ui(lang, "Fictional configuration register")}</div>
           </section>
         ))}
       </div>
@@ -382,19 +383,19 @@ export default function ModuleBuilderPage() {
         ...card, display: "flex", alignItems: "center",
         flexWrap: "wrap", gap: 10, marginBottom: 15,
       }}>
-        <span style={small}>Acting demo role</span>
+        <span style={small}>{ui(lang, "Acting demo role")}</span>
         <select style={{ ...inputStyle, width: "auto" }} value={role}
           onChange={(e) => {
             setRole(e.target.value);
             localStorage.setItem("mcbp-role", e.target.value);
           }}>
-          <option value="admin">System Administrator</option>
+          <option value="admin">{ui(lang, "System Administrator")}</option>
           <option value="uwao">UWAO · Form Maker</option>
           <option value="executive">Programme Executive · Checker</option>
           <option value="field">Field Officer · Read only</option>
         </select>
         <span className="s13-tag">{isMaker ? "MAKER AVAILABLE" : isChecker ? "CHECKER AVAILABLE" : "VIEW ONLY"}</span>
-        <span style={small}>Environment: Demo production</span>
+        <span style={small}>{ui(lang, "Environment: Demo production")}</span>
       </section>
 
       <div className="s13-tabs">
@@ -485,11 +486,11 @@ export default function ModuleBuilderPage() {
 
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 18 }}>
               <button style={primary} disabled={!isMaker || config.status !== "draft"}
-                onClick={submitConfig}><Save size={14} /> Submit for review</button>
+                onClick={submitConfig}><Save size={14} /> {ui(lang, "Submit for review")}</button>
               <button style={btn} disabled={!isChecker || config.status !== "submitted"}
-                onClick={approveConfig}><CheckCircle2 size={14} /> Checker approve</button>
+                onClick={approveConfig}><CheckCircle2 size={14} /> {ui(lang, "Checker approve")}</button>
               <button style={btn} disabled={!isChecker || config.status !== "approved"}
-                onClick={publishConfig}>Publish to demo <ArrowRight size={14} /></button>
+                onClick={publishConfig}>{ui(lang, "Publish to demo")} <ArrowRight size={14} /></button>
             </div>
           </section>
 
@@ -506,7 +507,7 @@ export default function ModuleBuilderPage() {
                   {f.type === "select" || f.type === "checklist" ? (
                     <select style={inputStyle} value={preview[f.id] ?? ""}
                       onChange={(e) => setPreview((s) => ({ ...s, [f.id]: e.target.value }))}>
-                      <option value="">Select...</option>
+                      <option value="">{ui(lang, "Select...")}</option>
                       {f.options.split(",").map((opt) =>
                         <option key={opt} value={opt}>{opt}</option>)}
                     </select>
@@ -533,8 +534,8 @@ export default function ModuleBuilderPage() {
       {tab === "workflow" && (
         <div className="s13-grid">
           <section style={card}>
-            <h3>Approval Workflow Visualisation</h3>
-            <p style={small}>Illustrative stage-wise workflow with editable sequence.</p>
+            <h3>{ui(lang, "Approval Workflow Visualisation")}</h3>
+            <p style={small}>{ui(lang, "Illustrative stage-wise workflow with editable sequence.")}</p>
             <div className="s13-steps">
               {workflow.map((step, i) => (
                 <div key={`${i}-${step}`} className="s13-node">
@@ -551,16 +552,16 @@ export default function ModuleBuilderPage() {
               onClick={() => setWorkflow((s) => [...s, `Officer review ${s.length}`])}>
               <Plus size={14} /> Add review stage
             </button>
-            <p style={small}>Actual BPMN engine execution is not part of this demo.</p>
+            <p style={small}>{ui(lang, "Actual BPMN engine execution is not part of this demo.")}</p>
           </section>
           <section style={card}>
-            <h3>Configuration Registry</h3>
+            <h3>{ui(lang, "Configuration Registry")}</h3>
             {["Forms & fields", "Workflow definitions", "Decision/rule tables",
               "KPIs & reporting", "GIS layers", "API mappings", "Bulk templates"]
               .map((item) => (
                 <div key={item} className="s13-line">
                   <span style={{ fontSize: 12 }}>{item}</span>
-                  <span className="s13-tag">Governed (demo)</span>
+                  <span className="s13-tag">{ui(lang, "Governed (demo)")}</span>
                 </div>
               ))}
           </section>
@@ -570,12 +571,12 @@ export default function ModuleBuilderPage() {
       {tab === "bulk" && (
         <div className="s13-grid">
           <section style={card}>
-            <h3><FileSpreadsheet size={19} style={{ verticalAlign: "middle" }} /> Governed Bulk Exchange</h3>
+            <h3><FileSpreadsheet size={19} style={{ verticalAlign: "middle" }} /> {ui(lang, "Governed Bulk Exchange")}</h3>
             <p style={small}>CSV demo: beneficiary_id,union,action. Allowed unions: Kaunia Sadar, Haragach, Balarhat.</p>
             <button style={btn} onClick={() =>
               download("mcbp-bulk-template.csv",
                 "beneficiary_id,union,action\nBEN-2605-00113,Kaunia Sadar,verify\nBEN-2603-00138,Haragach,review")
-            }><Download size={14} /> Download template</button>
+            }><Download size={14} /> {ui(lang, "Download template")}</button>
             <label style={{ ...small, display: "block", margin: "14px 0" }}>
               Upload CSV
               <input type="file" accept=".csv,text/csv" style={{ display: "block", marginTop: 7 }}
@@ -588,17 +589,17 @@ export default function ModuleBuilderPage() {
               style={{ ...inputStyle, minHeight: 135, fontFamily: "monospace" }} />
             <div style={{ marginTop: 12 }}>
               <button style={primary} disabled={!isMaker}
-                onClick={validateBatch}><Upload size={14} /> Validate CSV</button>
+                onClick={validateBatch}><Upload size={14} /> {ui(lang, "Validate CSV")}</button>
             </div>
             {batch && (
               <>
-                <div className="s13-line"><span>Batch ID</span><b>{batch.id}</b></div>
-                <div className="s13-line"><span>Rows</span><b>{batch.rows.length}</b></div>
-                <div className="s13-line"><span>Accepted</span><b>{batch.accepted}</b></div>
-                <div className="s13-line"><span>State</span><b>{batch.state}</b></div>
+                <div className="s13-line"><span>{ui(lang, "Batch ID")}</span><b>{batch.id}</b></div>
+                <div className="s13-line"><span>{ui(lang, "Rows")}</span><b>{batch.rows.length}</b></div>
+                <div className="s13-line"><span>{ui(lang, "Accepted")}</span><b>{batch.accepted}</b></div>
+                <div className="s13-line"><span>{ui(lang, "State")}</span><b>{batch.state}</b></div>
                 {batch.errors.length > 0 && (
                   <div style={{ marginTop: 13, background: "#fff3e5", padding: 12, borderRadius: 9 }}>
-                    <b style={{ fontSize: 12 }}>Validation exceptions</b>
+                    <b style={{ fontSize: 12 }}>{ui(lang, "Validation exceptions")}</b>
                     {batch.errors.map((error, i) => (
                       <div key={i} style={{ ...small, color: "#9b5e13", marginTop: 5 }}>{error}</div>
                     ))}
@@ -611,30 +612,30 @@ export default function ModuleBuilderPage() {
                 )}
                 <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginTop: 15 }}>
                   <button style={primary} disabled={!isMaker || batch.state !== "validated" || batch.errors.length > 0}
-                    onClick={submitBatch}>Maker submit</button>
+                    onClick={submitBatch}>{ui(lang, "Maker submit")}</button>
                   <button style={btn} disabled={!isChecker || batch.state !== "submitted"}
-                    onClick={approveBatch}>Checker approve</button>
+                    onClick={approveBatch}>{ui(lang, "Checker approve")}</button>
                   <button style={btn} disabled={!isChecker || batch.state !== "approved"}
-                    onClick={commitBatch}>Demo commit</button>
+                    onClick={commitBatch}>{ui(lang, "Demo commit")}</button>
                   <button style={btn} disabled={!isChecker || batch.state !== "committed"}
-                    onClick={reverseBatch}><RotateCcw size={14} /> Reverse commit</button>
+                    onClick={reverseBatch}><RotateCcw size={14} /> {ui(lang, "Reverse commit")}</button>
                 </div>
               </>
             )}
           </section>
           <section style={card}>
-            <h3>Reconciliation Preview</h3>
-            <p style={small}>Only approved, error-free fictional batches may reach simulated commit.</p>
+            <h3>{ui(lang, "Reconciliation Preview")}</h3>
+            <p style={small}>{ui(lang, "Only approved, error-free fictional batches may reach simulated commit.")}</p>
             {batch ? (
               <div style={{ overflowX: "auto" }}>
                 <table className="s13-table">
-                  <thead><tr><th>Beneficiary</th><th>Union</th><th>Action</th></tr></thead>
+                  <thead><tr><th>{ui(lang, "Beneficiary")}</th><th>{ui(lang, "Union")}</th><th>{ui(lang, "Action")}</th></tr></thead>
                   <tbody>{batch.rows.map((row, i) => (
                     <tr key={i}>{row.map((v, j) => <td key={j}>{v}</td>)}</tr>
                   ))}</tbody>
                 </table>
               </div>
-            ) : <p style={small}>Validate a batch to inspect mapped rows.</p>}
+            ) : <p style={small}>{ui(lang, "Validate a batch to inspect mapped rows.")}</p>}
             <p style={{ ...small, marginTop: 14 }}>
               A simulated commit updates this SS13 register only.
               Real beneficiary, payroll and application stores are untouched.
@@ -646,16 +647,16 @@ export default function ModuleBuilderPage() {
       {tab === "registry" && (
         <div className="s13-grid">
           <section style={card}>
-            <h3><GitBranch size={19} style={{ verticalAlign: "middle" }} /> Version & Release History</h3>
-            <div className="s13-line"><span>Published version</span><b>v{published.version}</b></div>
-            <div className="s13-line"><span>Working version</span><b>v{config.version}</b></div>
-            <div className="s13-line"><span>State</span><b>{config.status}</b></div>
-            <div className="s13-line"><span>Maker</span><b>{config.maker}</b></div>
-            <div className="s13-line"><span>Checker</span><b>{config.checker || "Pending"}</b></div>
+            <h3><GitBranch size={19} style={{ verticalAlign: "middle" }} /> {ui(lang, "Version & Release History")}</h3>
+            <div className="s13-line"><span>{ui(lang, "Published version")}</span><b>v{published.version}</b></div>
+            <div className="s13-line"><span>{ui(lang, "Working version")}</span><b>v{config.version}</b></div>
+            <div className="s13-line"><span>{ui(lang, "State")}</span><b>{config.status}</b></div>
+            <div className="s13-line"><span>{ui(lang, "Maker")}</span><b>{config.maker}</b></div>
+            <div className="s13-line"><span>{ui(lang, "Checker")}</span><b>{config.checker || "Pending"}</b></div>
             <button style={{ ...btn, marginTop: 15 }}
               disabled={!isChecker || config.status !== "published"}
               onClick={rollback}><RotateCcw size={14} /> Roll back to seed form</button>
-            <h4>Audit timeline</h4>
+            <h4>{ui(lang, "Audit timeline")}</h4>
             {config.history.map((event, i) => (
               <div key={i} className="s13-line" style={{ fontSize: 12 }}>
                 <span>{event}</span>
@@ -663,7 +664,7 @@ export default function ModuleBuilderPage() {
             ))}
           </section>
           <section style={card}>
-            <h3>Change Governance</h3>
+            <h3>{ui(lang, "Change Governance")}</h3>
             {[
               ["Maker–checker", "Independent role needed"],
               ["Form validation", "EN/BN labels and duplicates"],

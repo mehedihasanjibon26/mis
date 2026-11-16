@@ -1,5 +1,6 @@
 
 "use client";
+import { ui } from "../../lib/ui-l10n";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -480,7 +481,7 @@ export default function HelpdeskPage() {
               <div style={{ fontSize: 28, fontWeight: 850, margin: "13px 0 4px" }}>
                 {value as number}
               </div>
-              <div style={muted}>Fictional support register</div>
+              <div style={muted}>{ui(language, "Fictional support register")}</div>
             </section>
           );
         })}
@@ -528,10 +529,10 @@ export default function HelpdeskPage() {
             setRole(e.target.value);
             localStorage.setItem("mcbp-role", e.target.value);
           }}>
-          <option value="admin">System Administrator</option>
-          <option value="uwao">UWAO</option>
-          <option value="grm">Grievance Officer</option>
-          <option value="executive">Programme Executive</option>
+          <option value="admin">{ui(language, "System Administrator")}</option>
+          <option value="uwao">{ui(language, "UWAO")}</option>
+          <option value="grm">{ui(language, "Grievance Officer")}</option>
+          <option value="executive">{ui(language, "Programme Executive")}</option>
           <option value="field">Field Verifier · view only</option>
         </select>
         <span className="hd-pill">
@@ -664,9 +665,9 @@ export default function HelpdeskPage() {
                 Severity
                 <select style={field} value={severity}
                   onChange={(e) => setSeverity(e.target.value as Severity)}>
-                  <option value="normal">Normal</option>
-                  <option value="high">High</option>
-                  <option value="critical">Critical</option>
+                  <option value="normal">{ui(language, "Normal")}</option>
+                  <option value="high">{ui(language, "High")}</option>
+                  <option value="critical">{ui(language, "Critical")}</option>
                 </select>
               </label>
 
@@ -745,7 +746,7 @@ export default function HelpdeskPage() {
           <section style={box}>
             {currentCase ? (
               <>
-                <h2 className="hd-title">Ticket Detail & SLA</h2>
+                <h2 className="hd-title">{ui(language, "Ticket Detail & SLA")}</h2>
                 <h3 style={{ fontSize: 16 }}>{currentCase.subject}</h3>
                 <p style={muted}>
                   {currentCase.id} · {currentCase.callerId}
@@ -788,14 +789,14 @@ export default function HelpdeskPage() {
                   ))}
                 </div>
 
-                <h3 className="hd-title">Referral Hand-off</h3>
+                <h3 className="hd-title">{ui(language, "Referral Hand-off")}</h3>
                 <label style={muted}>
                   Service
                   <select style={field} value={service}
                     onChange={(e) => setService(e.target.value)}>
-                    <option>Maternal health consultation</option>
-                    <option>Nutrition counselling</option>
-                    <option>Family planning support</option>
+                    <option value="Maternal health consultation">{ui(language, "Maternal health consultation")}</option>
+                    <option value="Nutrition counselling">{ui(language, "Nutrition counselling")}</option>
+                    <option value="Family planning support">{ui(language, "Family planning support")}</option>
                   </select>
                 </label>
 
@@ -816,13 +817,13 @@ export default function HelpdeskPage() {
                   Related referrals: {linkedReferrals.length}
                 </p>
 
-                <h3 className="hd-title">Activity Timeline</h3>
+                <h3 className="hd-title">{ui(language, "Activity Timeline")}</h3>
                 {currentCase.history.map((step, i) => (
                   <div key={i} className="hd-step">{step}</div>
                 ))}
               </>
             ) : (
-              <p>Select a ticket to inspect.</p>
+              <p>{ui(language, "Select a ticket to inspect.")}</p>
             )}
           </section>
         </div>
@@ -865,10 +866,10 @@ export default function HelpdeskPage() {
                   fontSize: 11, color: "#6b8072",
                   marginTop: 14,
                 }}>
-                  <span>Sent</span><ChevronRight size={13} />
-                  <span>Accepted</span><ChevronRight size={13} />
-                  <span>Service delivered</span><ChevronRight size={13} />
-                  <span>Closed</span>
+                  <span>{ui(language, "Sent")}</span><ChevronRight size={13} />
+                  <span>{ui(language, "Accepted")}</span><ChevronRight size={13} />
+                  <span>{ui(language, "Service delivered")}</span><ChevronRight size={13} />
+                  <span>{ui(language, "Closed")}</span>
                 </div>
 
                 {r.outcome && <p style={muted}>{r.outcome}</p>}

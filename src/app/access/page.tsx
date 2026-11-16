@@ -1,5 +1,6 @@
 
 "use client";
+import { ui,digits } from "../../lib/ui-l10n";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -480,7 +481,7 @@ export default function AccessPage() {
                 <Symbol size={18} />
               </div>
               <div className="access-number">{value as number}</div>
-              <div className="access-label">Fictional demo records</div>
+              <div className="access-label">{ui(lang, "Fictional demo records")}</div>
             </section>
           );
         })}
@@ -569,10 +570,10 @@ export default function AccessPage() {
               <table className="access-table">
                 <thead>
                   <tr>
-                    <th>Name / ID</th>
-                    <th>Role</th>
-                    <th>Jurisdiction</th>
-                    <th>Status</th>
+                    <th>{ui(lang, "Name / ID")}</th>
+                    <th>{ui(lang, "Role")}</th>
+                    <th>{ui(lang, "Jurisdiction")}</th>
+                    <th>{ui(lang, "Status")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -689,7 +690,7 @@ export default function AccessPage() {
                   </div>
                 </>
               ) : (
-                <p className="access-label">Select an officer.</p>
+                <p className="access-label">{ui(lang, "Select an officer.")}</p>
               )}
             </section>
 
@@ -707,7 +708,7 @@ export default function AccessPage() {
                 />
                 <p className="access-label">
                   Uses the selected role, area, device and expiry above.
-                  Demo MFA code: <b>123456</b>
+                  Demo MFA code: <b>{digits(lang, "123456")}</b>
                 </p>
                 <button style={primary} onClick={createUser}>
                   <Plus size={14} style={{ verticalAlign: "middle" }} />
@@ -733,7 +734,7 @@ export default function AccessPage() {
             <table className="access-table">
               <thead>
                 <tr>
-                  <th>Permission</th>
+                  <th>{ui(lang, "Permission")}</th>
                   {roles.map((r) => (
                     <th key={r}>{r.replaceAll("_", " ")}</th>
                   ))}
@@ -762,7 +763,7 @@ export default function AccessPage() {
             background: "#F0F7F2",
             fontSize: 12,
           }}>
-            <b>Separation of duties:</b> Finance Maker prepares
+            <b>{ui(lang, "Separation of duties:")}</b> Finance Maker prepares
             a payroll batch; Finance Checker reviews it.
             No single role should perform both actions.
           </div>

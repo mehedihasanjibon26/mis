@@ -1,5 +1,6 @@
 
 "use client";
+import { ui } from "../../lib/ui-l10n";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -475,7 +476,7 @@ export default function AIConsole() {
               <item.icon size={17} color="#006A4E" />
             </div>
             <div style={{ fontSize: 28, fontWeight: 850, marginTop: 13 }}>{item.value}</div>
-            <div style={small}>Connected fictional records</div>
+            <div style={small}>{ui(lang, "Connected fictional records")}</div>
           </div>
         ))}
       </div>
@@ -571,7 +572,7 @@ export default function AIConsole() {
               marginTop: 18, background: "#F6FAF7",
               borderRadius: 12, padding: 15,
             }}>
-              <b style={{ fontSize: 12 }}>Why human review matters</b>
+              <b style={{ fontSize: 12 }}>{ui(lang, "Why human review matters")}</b>
               <p style={small}>
                 Every assistant answer is advisory. The assistant
                 does not control eligibility, enrolment, payroll,
@@ -635,7 +636,7 @@ export default function AIConsole() {
           {!proposals.length && (
             <div style={{ textAlign: "center", padding: 45, color: "#809285" }}>
               <Clock3 size={32} />
-              <p>No proposals yet. Run one of the four agents first.</p>
+              <p>{ui(lang, "No proposals yet. Run one of the four agents first.")}</p>
               <button style={primary} onClick={() => setTab("agents")}>
                 Go to Agents <ArrowRight size={14} />
               </button>
@@ -698,7 +699,7 @@ export default function AIConsole() {
               <ShieldCheck size={19} style={{ verticalAlign: "middle", marginRight: 7 }} />
               Agent execution & decision audit
             </h3>
-            {!proposals.length && <p style={small}>No agent runs recorded yet.</p>}
+            {!proposals.length && <p style={small}>{ui(lang, "No agent runs recorded yet.")}</p>}
             {proposals.map((p) => (
               <div className="ai-item" key={p.id}>
                 <div style={{

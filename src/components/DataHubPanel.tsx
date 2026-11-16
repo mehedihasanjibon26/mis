@@ -1,5 +1,6 @@
 
 "use client";
+import { ui } from "../lib/ui-l10n";
 
 import { useState, type ReactNode } from "react";
 import {
@@ -669,7 +670,7 @@ export default function DataHubPanel({ lang, roleId }: Props) {
                     setApplicationId(e.target.value)
                   }
                 >
-                  <option value="">No application linked</option>
+                  <option value="">{ui(lang, "No application linked")}</option>
                   {applications
                     .filter((a) =>
                       ["submitted", "identity_pending"].includes(
@@ -714,7 +715,7 @@ Content-Type: ${
           </section>
 
           <section style={card}>
-            <h3>Response & correlation</h3>
+            <h3>{ui(lang, "Response & correlation")}</h3>
             {lastSimulation ? (
               <>
                 <div style={{
@@ -752,7 +753,7 @@ Content-Type: ${
                 borderRadius: 9,
                 fontSize: 11,
               }}>
-                <b>Identity verification pending signals</b>
+                <b>{ui(lang, "Identity verification pending signals")}</b>
                 {Object.keys(signals).map((application) => (
                   <div key={application}>
                     {application}: {signals[application]}
@@ -842,7 +843,7 @@ Content-Type: ${
       {tab === "xroad" && (
         <div style={{ display: "grid", gap: 15 }}>
           <section style={card}>
-            <h3>X-Road compatible exchange (visual only)</h3>
+            <h3>{ui(lang, "X-Road compatible exchange (visual only)")}</h3>
             <div style={{
               display: "grid",
               gridTemplateColumns:

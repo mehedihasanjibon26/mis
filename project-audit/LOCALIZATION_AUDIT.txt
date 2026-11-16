@@ -1,0 +1,1358 @@
+MCBP-MIS FULL PLATFORM LOCALIZATION AUDIT
+========================================
+Source files scanned: 39
+Potential issues: 447
+
+CATEGORY COUNTS
+ENGLISH_LOCALE_API: 2
+ENGLISH_NUMBER_FORMAT: 5
+FIXED_NUMERIC_DISPLAY: 5
+POSSIBLE_ENGLISH_JSX: 307
+POSSIBLE_ENGLISH_OPTION: 61
+POSSIBLE_ENGLISH_PLACEHOLDER: 32
+UNCONTROLLED_NUMBER_FORMAT: 35
+
+FILES WITHOUT DETECTED LANGUAGE HANDLING
+
+DETAILED FINDINGS
+app\page.tsx:744 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Toggle menu"
+
+app\page.tsx:755 [POSSIBLE_ENGLISH_JSX]
+<b>MCBP-MIS</b>
+
+app\page.tsx:799 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Switch demo role"
+
+app\page.tsx:1145 [POSSIBLE_ENGLISH_JSX]
+<span className="muted">FY 2026</span>
+
+app\page.tsx:1346 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Demo role"
+
+app\access\page.tsx:412 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 18 }}>MCBP-MIS</b>
+
+app\access\page.tsx:483 [POSSIBLE_ENGLISH_JSX]
+<div className="access-label">Fictional demo records</div>
+
+app\access\page.tsx:564 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Search users..."
+
+app\access\page.tsx:572 [POSSIBLE_ENGLISH_JSX]
+<th>Name / ID</th>
+
+app\access\page.tsx:573 [POSSIBLE_ENGLISH_JSX]
+<th>Role</th>
+
+app\access\page.tsx:574 [POSSIBLE_ENGLISH_JSX]
+<th>Jurisdiction</th>
+
+app\access\page.tsx:575 [POSSIBLE_ENGLISH_JSX]
+<th>Status</th>
+
+app\access\page.tsx:671 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Enter 123456"
+
+app\access\page.tsx:692 [POSSIBLE_ENGLISH_JSX]
+<p className="access-label">Select an officer.</p>
+
+app\access\page.tsx:705 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="New officer name"
+
+app\access\page.tsx:710 [FIXED_NUMERIC_DISPLAY]
+Demo MFA code: <b>123456</b>
+
+app\access\page.tsx:736 [POSSIBLE_ENGLISH_JSX]
+<th>Permission</th>
+
+app\access\page.tsx:765 [POSSIBLE_ENGLISH_JSX]
+<b>Separation of duties:</b> Finance Maker prepares
+
+app\access\page.tsx:894 [UNCONTROLLED_NUMBER_FORMAT]
+{new Date(e.time).toLocaleString()}
+
+app\ai\page.tsx:430 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 18 }}>MCBP-MIS</b>
+
+app\ai\page.tsx:478 [POSSIBLE_ENGLISH_JSX]
+<div style={small}>Connected fictional records</div>
+
+app\ai\page.tsx:529 [UNCONTROLLED_NUMBER_FORMAT]
+{" "}· Checked: {new Date().toLocaleDateString()}
+
+app\ai\page.tsx:574 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 12 }}>Why human review matters</b>
+
+app\ai\page.tsx:600 [POSSIBLE_ENGLISH_JSX]
+<span className="ai-tag">HUMAN-IN-THE-LOOP</span>
+
+app\ai\page.tsx:634 [POSSIBLE_ENGLISH_JSX]
+<p style={small}>Reviewing only creates an approved demo draft. No external action or payment is performed.</p>
+
+app\ai\page.tsx:638 [POSSIBLE_ENGLISH_JSX]
+<p>No proposals yet. Run one of the four agents first.</p>
+
+app\ai\page.tsx:654 [UNCONTROLLED_NUMBER_FORMAT]
+{p.id} · {new Date(p.createdAt).toLocaleString()}
+
+app\ai\page.tsx:701 [POSSIBLE_ENGLISH_JSX]
+{!proposals.length && <p style={small}>No agent runs recorded yet.</p>}
+
+app\data-hub\page.tsx:65 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Demo integration role"
+
+app\executive\page.tsx:26 [ENGLISH_LOCALE_API]
+new Intl.NumberFormat("en-BD").format(value);
+
+app\executive\page.tsx:294 [POSSIBLE_ENGLISH_JSX]
+<div style={{ fontSize: 17, fontWeight: 850 }}>MCBP-MIS</div>
+
+app\executive\page.tsx:301 [POSSIBLE_ENGLISH_JSX]
+<Link href="/" className="ex-btn"><ArrowLeft size={14} /> Dashboard</Link>
+
+app\executive\page.tsx:402 [POSSIBLE_ENGLISH_JSX]
+<button className="ex-btn" onClick={() => setShowBaseline(false)}>Hide <ChevronDown size={14} /></button>
+
+app\executive\page.tsx:406 [POSSIBLE_ENGLISH_JSX]
+<div className="ex-small">ELIGIBLE BASELINE</div>
+
+app\executive\page.tsx:407 [FIXED_NUMERIC_DISPLAY]
+<strong style={{ fontSize: 24 }}>1,895,010</strong>
+
+app\executive\page.tsx:410 [POSSIBLE_ENGLISH_JSX]
+<div className="ex-small">PROCESSED BASELINE</div>
+
+app\executive\page.tsx:411 [FIXED_NUMERIC_DISPLAY]
+<strong style={{ fontSize: 24 }}>1,777,870</strong>
+
+app\executive\page.tsx:417 [POSSIBLE_ENGLISH_JSX]
+onClick={() => setShowBaseline(true)}>Show national reference baseline</button>}
+
+app\executive\page.tsx:427 [POSSIBLE_ENGLISH_JSX]
+<option value="applications">Applications</option>
+
+app\executive\page.tsx:427 [POSSIBLE_ENGLISH_OPTION]
+<option value="applications">Applications</option>
+
+app\executive\page.tsx:428 [POSSIBLE_ENGLISH_JSX]
+<option value="payments">Payments</option>
+
+app\executive\page.tsx:428 [POSSIBLE_ENGLISH_OPTION]
+<option value="payments">Payments</option>
+
+app\executive\page.tsx:429 [POSSIBLE_ENGLISH_JSX]
+<option value="grievances">Grievances</option>
+
+app\executive\page.tsx:429 [POSSIBLE_ENGLISH_OPTION]
+<option value="grievances">Grievances</option>
+
+app\executive\page.tsx:430 [POSSIBLE_ENGLISH_JSX]
+<option value="training">Training</option>
+
+app\executive\page.tsx:430 [POSSIBLE_ENGLISH_OPTION]
+<option value="training">Training</option>
+
+app\gis\page.tsx:272 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 18 }}>MCBP-MIS</b>
+
+app\gis\page.tsx:287 [POSSIBLE_ENGLISH_JSX]
+<option value="executive">Programme Executive / PD</option>
+
+app\gis\page.tsx:287 [POSSIBLE_ENGLISH_OPTION]
+<option value="executive">Programme Executive / PD</option>
+
+app\gis\page.tsx:288 [POSSIBLE_ENGLISH_JSX]
+<option value="admin">System Administrator</option>
+
+app\gis\page.tsx:288 [POSSIBLE_ENGLISH_OPTION]
+<option value="admin">System Administrator</option>
+
+app\gis\page.tsx:289 [POSSIBLE_ENGLISH_OPTION]
+<option value="uwao">UWAO — Kaunia</option>
+
+app\gis\page.tsx:375 [POSSIBLE_ENGLISH_PLACEHOLDER]
+<button style={action} title="Zoom in"
+
+app\gis\page.tsx:379 [POSSIBLE_ENGLISH_PLACEHOLDER]
+<button style={action} title="Zoom out"
+
+app\gis\page.tsx:383 [POSSIBLE_ENGLISH_PLACEHOLDER]
+<button style={action} title="Reset selection" onClick={resetSelection}>
+
+app\gis\page.tsx:414 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Schematic interactive Bangladesh division coverage map"
+
+app\gis\page.tsx:567 [POSSIBLE_ENGLISH_JSX]
+<button style={action} onClick={resetSelection}>Bangladesh</button>
+
+app\gis\page.tsx:598 [POSSIBLE_ENGLISH_JSX]
+<option value="Rangpur">Rangpur</option>
+
+app\gis\page.tsx:598 [POSSIBLE_ENGLISH_OPTION]
+<option value="Rangpur">Rangpur</option>
+
+app\gis\page.tsx:612 [POSSIBLE_ENGLISH_JSX]
+<option value="Kaunia">Kaunia</option>
+
+app\gis\page.tsx:612 [POSSIBLE_ENGLISH_OPTION]
+<option value="Kaunia">Kaunia</option>
+
+app\gis\page.tsx:746 [POSSIBLE_ENGLISH_JSX]
+<span>{t("Version", "ভার্সন")}</span><b>Demo v1.0</b>
+
+app\helpdesk\page.tsx:316 [UNCONTROLLED_NUMBER_FORMAT]
+`${new Date().toLocaleString()}: ${next} by ${role}`,
+
+app\helpdesk\page.tsx:414 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 18 }}>MCBP-MIS</b>
+
+app\helpdesk\page.tsx:483 [POSSIBLE_ENGLISH_JSX]
+<div style={muted}>Fictional support register</div>
+
+app\helpdesk\page.tsx:531 [POSSIBLE_ENGLISH_JSX]
+<option value="admin">System Administrator</option>
+
+app\helpdesk\page.tsx:531 [POSSIBLE_ENGLISH_OPTION]
+<option value="admin">System Administrator</option>
+
+app\helpdesk\page.tsx:532 [POSSIBLE_ENGLISH_JSX]
+<option value="uwao">UWAO</option>
+
+app\helpdesk\page.tsx:532 [POSSIBLE_ENGLISH_OPTION]
+<option value="uwao">UWAO</option>
+
+app\helpdesk\page.tsx:533 [POSSIBLE_ENGLISH_JSX]
+<option value="grm">Grievance Officer</option>
+
+app\helpdesk\page.tsx:533 [POSSIBLE_ENGLISH_OPTION]
+<option value="grm">Grievance Officer</option>
+
+app\helpdesk\page.tsx:534 [POSSIBLE_ENGLISH_JSX]
+<option value="executive">Programme Executive</option>
+
+app\helpdesk\page.tsx:534 [POSSIBLE_ENGLISH_OPTION]
+<option value="executive">Programme Executive</option>
+
+app\helpdesk\page.tsx:535 [POSSIBLE_ENGLISH_OPTION]
+<option value="field">Field Verifier · view only</option>
+
+app\helpdesk\page.tsx:667 [POSSIBLE_ENGLISH_JSX]
+<option value="normal">Normal</option>
+
+app\helpdesk\page.tsx:667 [POSSIBLE_ENGLISH_OPTION]
+<option value="normal">Normal</option>
+
+app\helpdesk\page.tsx:668 [POSSIBLE_ENGLISH_JSX]
+<option value="high">High</option>
+
+app\helpdesk\page.tsx:668 [POSSIBLE_ENGLISH_OPTION]
+<option value="high">High</option>
+
+app\helpdesk\page.tsx:669 [POSSIBLE_ENGLISH_JSX]
+<option value="critical">Critical</option>
+
+app\helpdesk\page.tsx:669 [POSSIBLE_ENGLISH_OPTION]
+<option value="critical">Critical</option>
+
+app\helpdesk\page.tsx:678 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Conversation summary, requested action..." />
+
+app\helpdesk\page.tsx:736 [UNCONTROLLED_NUMBER_FORMAT]
+{new Date(c.created).toLocaleString()}
+
+app\helpdesk\page.tsx:748 [POSSIBLE_ENGLISH_JSX]
+<h2 className="hd-title">Ticket Detail & SLA</h2>
+
+app\helpdesk\page.tsx:791 [POSSIBLE_ENGLISH_JSX]
+<h3 className="hd-title">Referral Hand-off</h3>
+
+app\helpdesk\page.tsx:796 [POSSIBLE_ENGLISH_JSX]
+<option>Maternal health consultation</option>
+
+app\helpdesk\page.tsx:796 [POSSIBLE_ENGLISH_OPTION]
+<option>Maternal health consultation</option>
+
+app\helpdesk\page.tsx:797 [POSSIBLE_ENGLISH_JSX]
+<option>Nutrition counselling</option>
+
+app\helpdesk\page.tsx:797 [POSSIBLE_ENGLISH_OPTION]
+<option>Nutrition counselling</option>
+
+app\helpdesk\page.tsx:798 [POSSIBLE_ENGLISH_JSX]
+<option>Family planning support</option>
+
+app\helpdesk\page.tsx:798 [POSSIBLE_ENGLISH_OPTION]
+<option>Family planning support</option>
+
+app\helpdesk\page.tsx:819 [POSSIBLE_ENGLISH_JSX]
+<h3 className="hd-title">Activity Timeline</h3>
+
+app\helpdesk\page.tsx:825 [POSSIBLE_ENGLISH_JSX]
+<p>Select a ticket to inspect.</p>
+
+app\helpdesk\page.tsx:868 [POSSIBLE_ENGLISH_JSX]
+<span>Sent</span><ChevronRight size={13} />
+
+app\helpdesk\page.tsx:869 [POSSIBLE_ENGLISH_JSX]
+<span>Accepted</span><ChevronRight size={13} />
+
+app\helpdesk\page.tsx:870 [POSSIBLE_ENGLISH_JSX]
+<span>Service delivered</span><ChevronRight size={13} />
+
+app\helpdesk\page.tsx:871 [POSSIBLE_ENGLISH_JSX]
+<span>Closed</span>
+
+app\helpdesk\page.tsx:901 [POSSIBLE_ENGLISH_PLACEHOLDER]
+<input style={field} placeholder="Search articles"
+
+app\mobile\page.tsx:298 [POSSIBLE_ENGLISH_JSX]
+<div style={{ fontSize: 19, fontWeight: 850 }}>MCBP-MIS</div>
+
+app\mobile\page.tsx:841 [POSSIBLE_ENGLISH_JSX]
+<span className="mobile-status">Local queue</span>
+
+app\mobile\page.tsx:842 [POSSIBLE_ENGLISH_JSX]
+<span className="mobile-status">EN / BN</span>
+
+app\mobile\page.tsx:864 [POSSIBLE_ENGLISH_JSX]
+<option value="field">Field Verifier</option>
+
+app\mobile\page.tsx:864 [POSSIBLE_ENGLISH_OPTION]
+<option value="field">Field Verifier</option>
+
+app\mobile\page.tsx:865 [POSSIBLE_ENGLISH_JSX]
+<option value="uwao">UWAO</option>
+
+app\mobile\page.tsx:865 [POSSIBLE_ENGLISH_OPTION]
+<option value="uwao">UWAO</option>
+
+app\mobile\page.tsx:866 [POSSIBLE_ENGLISH_JSX]
+<option value="executive">Supervisor / Programme Executive</option>
+
+app\mobile\page.tsx:866 [POSSIBLE_ENGLISH_OPTION]
+<option value="executive">Supervisor / Programme Executive</option>
+
+app\mobile\page.tsx:867 [POSSIBLE_ENGLISH_JSX]
+<option value="admin">System Administrator</option>
+
+app\mobile\page.tsx:867 [POSSIBLE_ENGLISH_OPTION]
+<option value="admin">System Administrator</option>
+
+app\schemes\page.tsx:332 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 18 }}>MCBP-MIS</b>
+
+app\schemes\page.tsx:333 [POSSIBLE_ENGLISH_JSX]
+<div style={small}>DYNAMIC CONFIGURATION & GOVERNED EXCHANGE</div>
+
+app\schemes\page.tsx:376 [POSSIBLE_ENGLISH_JSX]
+<div style={small}>Fictional configuration register</div>
+
+app\schemes\page.tsx:385 [POSSIBLE_ENGLISH_JSX]
+<span style={small}>Acting demo role</span>
+
+app\schemes\page.tsx:391 [POSSIBLE_ENGLISH_JSX]
+<option value="admin">System Administrator</option>
+
+app\schemes\page.tsx:391 [POSSIBLE_ENGLISH_OPTION]
+<option value="admin">System Administrator</option>
+
+app\schemes\page.tsx:392 [POSSIBLE_ENGLISH_OPTION]
+<option value="uwao">UWAO · Form Maker</option>
+
+app\schemes\page.tsx:393 [POSSIBLE_ENGLISH_OPTION]
+<option value="executive">Programme Executive · Checker</option>
+
+app\schemes\page.tsx:394 [POSSIBLE_ENGLISH_OPTION]
+<option value="field">Field Officer · Read only</option>
+
+app\schemes\page.tsx:397 [POSSIBLE_ENGLISH_JSX]
+<span style={small}>Environment: Demo production</span>
+
+app\schemes\page.tsx:436 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Household visit confirmed" />
+
+app\schemes\page.tsx:488 [POSSIBLE_ENGLISH_JSX]
+onClick={submitConfig}><Save size={14} /> Submit for review</button>
+
+app\schemes\page.tsx:490 [POSSIBLE_ENGLISH_JSX]
+onClick={approveConfig}><CheckCircle2 size={14} /> Checker approve</button>
+
+app\schemes\page.tsx:492 [POSSIBLE_ENGLISH_JSX]
+onClick={publishConfig}>Publish to demo <ArrowRight size={14} /></button>
+
+app\schemes\page.tsx:509 [POSSIBLE_ENGLISH_JSX]
+<option value="">Select...</option>
+
+app\schemes\page.tsx:509 [POSSIBLE_ENGLISH_OPTION]
+<option value="">Select...</option>
+
+app\schemes\page.tsx:536 [POSSIBLE_ENGLISH_JSX]
+<h3>Approval Workflow Visualisation</h3>
+
+app\schemes\page.tsx:537 [POSSIBLE_ENGLISH_JSX]
+<p style={small}>Illustrative stage-wise workflow with editable sequence.</p>
+
+app\schemes\page.tsx:554 [POSSIBLE_ENGLISH_JSX]
+<p style={small}>Actual BPMN engine execution is not part of this demo.</p>
+
+app\schemes\page.tsx:557 [POSSIBLE_ENGLISH_JSX]
+<h3>Configuration Registry</h3>
+
+app\schemes\page.tsx:563 [POSSIBLE_ENGLISH_JSX]
+<span className="s13-tag">Governed (demo)</span>
+
+app\schemes\page.tsx:573 [POSSIBLE_ENGLISH_JSX]
+<h3><FileSpreadsheet size={19} style={{ verticalAlign: "middle" }} /> Governed Bulk Exchange</h3>
+
+app\schemes\page.tsx:578 [POSSIBLE_ENGLISH_JSX]
+}><Download size={14} /> Download template</button>
+
+app\schemes\page.tsx:591 [POSSIBLE_ENGLISH_JSX]
+onClick={validateBatch}><Upload size={14} /> Validate CSV</button>
+
+app\schemes\page.tsx:595 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>Batch ID</span><b>{batch.id}</b></div>
+
+app\schemes\page.tsx:596 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>Rows</span><b>{batch.rows.length}</b></div>
+
+app\schemes\page.tsx:597 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>Accepted</span><b>{batch.accepted}</b></div>
+
+app\schemes\page.tsx:598 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>State</span><b>{batch.state}</b></div>
+
+app\schemes\page.tsx:601 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 12 }}>Validation exceptions</b>
+
+app\schemes\page.tsx:614 [POSSIBLE_ENGLISH_JSX]
+onClick={submitBatch}>Maker submit</button>
+
+app\schemes\page.tsx:616 [POSSIBLE_ENGLISH_JSX]
+onClick={approveBatch}>Checker approve</button>
+
+app\schemes\page.tsx:618 [POSSIBLE_ENGLISH_JSX]
+onClick={commitBatch}>Demo commit</button>
+
+app\schemes\page.tsx:620 [POSSIBLE_ENGLISH_JSX]
+onClick={reverseBatch}><RotateCcw size={14} /> Reverse commit</button>
+
+app\schemes\page.tsx:626 [POSSIBLE_ENGLISH_JSX]
+<h3>Reconciliation Preview</h3>
+
+app\schemes\page.tsx:627 [POSSIBLE_ENGLISH_JSX]
+<p style={small}>Only approved, error-free fictional batches may reach simulated commit.</p>
+
+app\schemes\page.tsx:631 [POSSIBLE_ENGLISH_JSX]
+<thead><tr><th>Beneficiary</th><th>Union</th><th>Action</th></tr></thead>
+
+app\schemes\page.tsx:637 [POSSIBLE_ENGLISH_JSX]
+) : <p style={small}>Validate a batch to inspect mapped rows.</p>}
+
+app\schemes\page.tsx:649 [POSSIBLE_ENGLISH_JSX]
+<h3><GitBranch size={19} style={{ verticalAlign: "middle" }} /> Version & Release History</h3>
+
+app\schemes\page.tsx:650 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>Published version</span><b>v{published.version}</b></div>
+
+app\schemes\page.tsx:651 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>Working version</span><b>v{config.version}</b></div>
+
+app\schemes\page.tsx:652 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>State</span><b>{config.status}</b></div>
+
+app\schemes\page.tsx:653 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>Maker</span><b>{config.maker}</b></div>
+
+app\schemes\page.tsx:654 [POSSIBLE_ENGLISH_JSX]
+<div className="s13-line"><span>Checker</span><b>{config.checker || "Pending"}</b></div>
+
+app\schemes\page.tsx:657 [POSSIBLE_ENGLISH_JSX]
+onClick={rollback}><RotateCcw size={14} /> Roll back to seed form</button>
+
+app\schemes\page.tsx:658 [POSSIBLE_ENGLISH_JSX]
+<h4>Audit timeline</h4>
+
+app\schemes\page.tsx:666 [POSSIBLE_ENGLISH_JSX]
+<h3>Change Governance</h3>
+
+components\AIGovernancePanel.tsx:268 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>AI Safety & Quality</h3>
+
+components\AIGovernancePanel.tsx:286 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>AI Decision Boundary</h3>
+
+components\AIGovernancePanel.tsx:307 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Agent Runs Awaiting Human Review</h3>
+
+components\AIGovernancePanel.tsx:328 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Human Review Workspace</h3>
+
+components\AIGovernancePanel.tsx:353 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Document evidence, concerns or reason for decision"
+
+components\AIGovernancePanel.tsx:377 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Governed Model Registry</h3>
+
+components\AIGovernancePanel.tsx:381 [POSSIBLE_ENGLISH_JSX]
+<thead><tr><th>Model</th><th>Role</th><th>Version</th><th>Status</th></tr></thead>
+
+components\AIGovernancePanel.tsx:397 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Guardrail Event Register</h3>
+
+components\AIGovernancePanel.tsx:406 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Safety Restrictions</h3>
+
+components\AIGovernancePanel.tsx:429 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: 0 }}>Human Decision Audit</h3>
+
+components\AIGovernancePanel.tsx:433 [POSSIBLE_ENGLISH_JSX]
+])}><Download size={14} style={{ verticalAlign: "middle" }} /> Export CSV</button>
+
+components\AIGovernancePanel.tsx:435 [POSSIBLE_ENGLISH_JSX]
+{!store.audit.length && <p style={muted}>No interactive review decisions yet.</p>}
+
+components\AIGovernancePanel.tsx:440 [UNCONTROLLED_NUMBER_FORMAT]
+<div style={muted}>{a.run} · {a.actor} · {new Date(a.time).toLocaleString()}</div>
+
+components\AIGovernancePanel.tsx:447 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Governance Controls</h3>
+
+components\BackupDRPanel.tsx:157 [UNCONTROLLED_NUMBER_FORMAT]
+lastRun: new Date().toLocaleString(),
+
+components\BackupDRPanel.tsx:172 [UNCONTROLLED_NUMBER_FORMAT]
+? { ...j, status: "success", lastRun: new Date().toLocaleString() }
+
+components\BackupDRPanel.tsx:303 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Reference architecture with fictional operating status.</p>
+
+components\BackupDRPanel.tsx:305 [POSSIBLE_ENGLISH_JSX]
+<div className="dr15-node">Primary Region<div style={muted}>Active workloads</div></div>
+
+components\BackupDRPanel.tsx:309 [POSSIBLE_ENGLISH_JSX]
+<div className="dr15-node">DR Region<div style={muted}>Warm standby</div></div>
+
+components\BackupDRPanel.tsx:341 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 12 }}>Recovery decision</b>
+
+components\BackupDRPanel.tsx:355 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>Backup Schedule & Job History</h3>
+
+components\BackupDRPanel.tsx:360 [POSSIBLE_ENGLISH_JSX]
+<th>Job</th><th>Schedule</th><th>Size</th><th>Encrypted</th><th>Status</th>
+
+components\BackupDRPanel.tsx:383 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>Backup Job Simulator</h3>
+
+components\BackupDRPanel.tsx:393 [POSSIBLE_ENGLISH_JSX]
+<option value="healthy">Success scenario</option>
+
+components\BackupDRPanel.tsx:393 [POSSIBLE_ENGLISH_OPTION]
+<option value="healthy">Success scenario</option>
+
+components\BackupDRPanel.tsx:394 [POSSIBLE_ENGLISH_JSX]
+<option value="failure">Failure scenario</option>
+
+components\BackupDRPanel.tsx:394 [POSSIBLE_ENGLISH_OPTION]
+<option value="failure">Failure scenario</option>
+
+components\BackupDRPanel.tsx:402 [POSSIBLE_ENGLISH_JSX]
+onClick={restoreJob}>Recover job</button>
+
+components\BackupDRPanel.tsx:414 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>Restore & Failover Drill</h3>
+
+components\BackupDRPanel.tsx:444 [UNCONTROLLED_NUMBER_FORMAT]
+<div style={muted}>{d.actor} · {new Date(d.time).toLocaleString()}</div>
+
+components\BackupDRPanel.tsx:451 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>Recovery Workflow</h3>
+
+components\BackupDRPanel.tsx:501 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: 0 }}>Demo Audit Log</h3>
+
+components\BackupDRPanel.tsx:506 [POSSIBLE_ENGLISH_JSX]
+{!events.length && <p style={muted}>Run a backup or recovery drill to record an event.</p>}
+
+components\BackupDRPanel.tsx:509 [UNCONTROLLED_NUMBER_FORMAT]
+<div><b>{e.action}</b><div style={muted}>{e.actor} · {new Date(e.time).toLocaleString()}</div></div>
+
+components\BeneficiariesPanel.tsx:226 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Search beneficiary"
+
+components\BeneficiariesPanel.tsx:505 [UNCONTROLLED_NUMBER_FORMAT]
+<td>{new Date(e.date).toLocaleString()}</td>
+
+components\BeneficiariesPanel.tsx:579 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="OTP: 123456"
+
+components\CapacityPanel.tsx:304 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Production Capacity</h3>
+
+components\CapacityPanel.tsx:325 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Platform Readiness</h3>
+
+components\CapacityPanel.tsx:343 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Compute Node Pools</h3>
+
+components\CapacityPanel.tsx:358 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Specialised Infrastructure</h3>
+
+components\CapacityPanel.tsx:379 [POSSIBLE_ENGLISH_JSX]
+<span>HPA enabled</span>
+
+components\CapacityPanel.tsx:391 [POSSIBLE_ENGLISH_JSX]
+<option value="application-svc">Application service</option>
+
+components\CapacityPanel.tsx:391 [POSSIBLE_ENGLISH_OPTION]
+<option value="application-svc">Application service</option>
+
+components\CapacityPanel.tsx:392 [POSSIBLE_ENGLISH_JSX]
+<option value="payroll-worker">Payroll worker</option>
+
+components\CapacityPanel.tsx:392 [POSSIBLE_ENGLISH_OPTION]
+<option value="payroll-worker">Payroll worker</option>
+
+components\CapacityPanel.tsx:393 [POSSIBLE_ENGLISH_JSX]
+<option value="notification-worker">Notification worker</option>
+
+components\CapacityPanel.tsx:393 [POSSIBLE_ENGLISH_OPTION]
+<option value="notification-worker">Notification worker</option>
+
+components\CapacityPanel.tsx:394 [POSSIBLE_ENGLISH_JSX]
+<option value="geoserver">Geoserver</option>
+
+components\CapacityPanel.tsx:394 [POSSIBLE_ENGLISH_OPTION]
+<option value="geoserver">Geoserver</option>
+
+components\CapacityPanel.tsx:402 [POSSIBLE_ENGLISH_OPTION]
+<option value="normal">Normal · CPU 51%</option>
+
+components\CapacityPanel.tsx:403 [POSSIBLE_ENGLISH_OPTION]
+<option value="spike">Traffic spike · CPU 83%</option>
+
+components\CapacityPanel.tsx:411 [POSSIBLE_ENGLISH_JSX]
+onClick={scale}>Run demo scale-up</button>
+
+components\CapacityPanel.tsx:419 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Scaling History</h3>
+
+components\CapacityPanel.tsx:425 [UNCONTROLLED_NUMBER_FORMAT]
+<div style={muted}>{e.time==="Reference"?e.time:new Date(e.time).toLocaleString()}</div>
+
+components\CapacityPanel.tsx:434 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Storage Capacity Register</h3>
+
+components\CapacityPanel.tsx:443 [POSSIBLE_ENGLISH_JSX]
+<tr><th>Volume</th><th>Used</th><th>Capacity</th><th>Forecast full</th><th>Purpose</th></tr>
+
+components\CapacityPanel.tsx:449 [POSSIBLE_ENGLISH_JSX]
+<td>Not provided</td>
+
+components\CapacityPanel.tsx:450 [POSSIBLE_ENGLISH_JSX]
+<td>Not provided</td>
+
+components\CapacityPanel.tsx:451 [POSSIBLE_ENGLISH_JSX]
+<td>Not provided</td>
+
+components\CapacityPanel.tsx:463 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,margin:0}}>Capacity Action Log</h3>
+
+components\CapacityPanel.tsx:468 [POSSIBLE_ENGLISH_JSX]
+{!state.audit.length&&<p style={muted}>No simulation actions recorded yet.</p>}
+
+components\CapacityPanel.tsx:472 [UNCONTROLLED_NUMBER_FORMAT]
+<div style={muted}>{e.actor} · {new Date(e.time).toLocaleString()}</div>
+
+components\CapacityPanel.tsx:479 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Simulator Controls</h3>
+
+components\CICDPanel.tsx:380 [POSSIBLE_ENGLISH_OPTION]
+<option value="pass">Successful pipeline · all gates pass</option>
+
+components\CICDPanel.tsx:381 [POSSIBLE_ENGLISH_OPTION]
+<option value="fail">Failure pipeline · coverage/security blocked</option>
+
+components\CICDPanel.tsx:429 [UNCONTROLLED_NUMBER_FORMAT]
+{run.id} · {run.version} · {new Date(run.createdAt).toLocaleString()}
+
+components\DataGovernancePanel.tsx:257 [POSSIBLE_ENGLISH_JSX]
+<h3>Data Quality Dimensions</h3>
+
+components\DataGovernancePanel.tsx:270 [POSSIBLE_ENGLISH_JSX]
+<h3>Privacy Governance</h3>
+
+components\DataGovernancePanel.tsx:288 [POSSIBLE_ENGLISH_JSX]
+<h3>Aggregation Reconciliation</h3>
+
+components\DataGovernancePanel.tsx:289 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Illustrative Tier-1 to Tier-2 dataset processing.</p>
+
+components\DataGovernancePanel.tsx:292 [POSSIBLE_ENGLISH_JSX]
+<thead><tr><th>Batch</th><th>Dataset</th><th>Rows in</th><th>Cells out</th><th>Suppressed</th><th>Status</th></tr></thead>
+
+components\DataGovernancePanel.tsx:308 [POSSIBLE_ENGLISH_JSX]
+<h3>Data Validation Exceptions</h3>
+
+components\DataGovernancePanel.tsx:327 [POSSIBLE_ENGLISH_JSX]
+<h3>Erasure & Retention Request Queue</h3>
+
+components\DataGovernancePanel.tsx:348 [POSSIBLE_ENGLISH_JSX]
+<h3>Privacy Review Workspace</h3>
+
+components\DataGovernancePanel.tsx:350 [POSSIBLE_ENGLISH_JSX]
+<div className="d16-row"><span>Request</span><b>{chosen.id}</b></div>
+
+components\DataGovernancePanel.tsx:351 [POSSIBLE_ENGLISH_JSX]
+<div className="d16-row"><span>Maker</span><b>{chosen.maker}</b></div>
+
+components\DataGovernancePanel.tsx:352 [POSSIBLE_ENGLISH_JSX]
+<div className="d16-row"><span>Checker</span><b>{chosen.checker||"Pending"}</b></div>
+
+components\DataGovernancePanel.tsx:353 [POSSIBLE_ENGLISH_JSX]
+<div className="d16-row"><span>Status</span><b>{chosen.status}</b></div>
+
+components\DataGovernancePanel.tsx:375 [POSSIBLE_ENGLISH_JSX]
+<h3>Tiered Access & Privacy</h3>
+
+components\DataGovernancePanel.tsx:401 [POSSIBLE_ENGLISH_JSX]
+<h3>Governance Audit</h3>
+
+components\DataGovernancePanel.tsx:407 [POSSIBLE_ENGLISH_JSX]
+{!audit.length&&<p style={muted}>Approve or reject a privacy request to create an audit entry.</p>}
+
+components\DataGovernancePanel.tsx:413 [UNCONTROLLED_NUMBER_FORMAT]
+{item.actor} · {new Date(item.time).toLocaleString()}
+
+components\DataHubPanel.tsx:358 [UNCONTROLLED_NUMBER_FORMAT]
+{value.toLocaleString()}
+
+components\DataHubPanel.tsx:503 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Search APIs..."
+
+components\DataHubPanel.tsx:672 [POSSIBLE_ENGLISH_JSX]
+<option value="">No application linked</option>
+
+components\DataHubPanel.tsx:672 [POSSIBLE_ENGLISH_OPTION]
+<option value="">No application linked</option>
+
+components\DataHubPanel.tsx:717 [POSSIBLE_ENGLISH_JSX]
+<h3>Response & correlation</h3>
+
+components\DataHubPanel.tsx:755 [POSSIBLE_ENGLISH_JSX]
+<b>Identity verification pending signals</b>
+
+components\DataHubPanel.tsx:845 [POSSIBLE_ENGLISH_JSX]
+<h3>X-Road compatible exchange (visual only)</h3>
+
+components\DataHubPanel.tsx:898 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Consumer name"
+
+components\DataHubPanel.tsx:906 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Purpose-bound scope"
+
+components\DataHubPanel.tsx:1088 [UNCONTROLLED_NUMBER_FORMAT]
+new Date(e.time).toLocaleString(),
+
+components\GatewayPanel.tsx:301 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Illustrative requests-per-minute shape, not live monitoring.</p>
+
+components\GatewayPanel.tsx:306 [POSSIBLE_ENGLISH_JSX]
+<span>Earlier</span><span>Last minute</span>
+
+components\GatewayPanel.tsx:318 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 14px" }}>Consumer Quota Usage</h3>
+
+components\GatewayPanel.tsx:338 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: 0 }}>API Route Catalogue</h3>
+
+components\GatewayPanel.tsx:342 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Search routes" value={query}
+
+components\GatewayPanel.tsx:350 [POSSIBLE_ENGLISH_JSX]
+<th>Route / Upstream</th><th>Auth</th><th>Limit</th>
+
+components\GatewayPanel.tsx:351 [POSSIBLE_ENGLISH_JSX]
+<th>p95</th><th>Success</th><th>Status</th>
+
+components\GatewayPanel.tsx:377 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 6px" }}>Register Draft API</h3>
+
+components\GatewayPanel.tsx:378 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Local catalogue registration only. No gateway configuration changes.</p>
+
+components\GatewayPanel.tsx:385 [POSSIBLE_ENGLISH_PLACEHOLDER]
+<input style={input} placeholder="sample-service" value={newUpstream}
+
+components\GatewayPanel.tsx:391 [POSSIBLE_ENGLISH_JSX]
+<option>GET</option><option>POST</option>
+
+components\GatewayPanel.tsx:391 [POSSIBLE_ENGLISH_OPTION]
+<option>GET</option><option>POST</option>
+
+components\GatewayPanel.tsx:397 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Administrator-only demo action.</p>
+
+components\GatewayPanel.tsx:406 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>API Request Simulator</h3>
+
+components\GatewayPanel.tsx:446 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>Latest Response</h3>
+
+components\GatewayPanel.tsx:463 [POSSIBLE_ENGLISH_JSX]
+) : <p style={muted}>Select a route and click Try request.</p>}
+
+components\GatewayPanel.tsx:471 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: 0 }}>Gateway Event Audit</h3>
+
+components\GatewayPanel.tsx:476 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Browser-local simulated events only.</p>
+
+components\GatewayPanel.tsx:477 [POSSIBLE_ENGLISH_JSX]
+{!trials.length && <p style={muted}>No requests tested yet.</p>}
+
+components\GatewayPanel.tsx:483 [UNCONTROLLED_NUMBER_FORMAT]
+<div style={muted}>{trial.actor} · {new Date(trial.at).toLocaleString()}</div>
+
+components\GISGovernancePanel.tsx:344 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Spatial Governance Rules</h3>
+
+components\GISGovernancePanel.tsx:363 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>GIS Layer Catalogue</h3>
+
+components\GISGovernancePanel.tsx:372 [POSSIBLE_ENGLISH_JSX]
+<th>Layer</th><th>Type</th><th>Owner</th>
+
+components\GISGovernancePanel.tsx:373 [POSSIBLE_ENGLISH_JSX]
+<th>Version</th><th>Lowest level</th>
+
+components\GISGovernancePanel.tsx:374 [POSSIBLE_ENGLISH_JSX]
+<th>Tier</th><th>Status</th>
+
+components\GISGovernancePanel.tsx:407 [POSSIBLE_ENGLISH_JSX]
+<span>Geometry is valid</span>
+
+components\GISGovernancePanel.tsx:418 [POSSIBLE_ENGLISH_JSX]
+<span>Aggregation totals match (difference 0)</span>
+
+components\GISGovernancePanel.tsx:501 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: 0 }}>Spatial Change Audit</h3>
+
+components\GISGovernancePanel.tsx:508 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Submit a layer to generate demo audit events.</p>
+
+components\GISGovernancePanel.tsx:515 [UNCONTROLLED_NUMBER_FORMAT]
+{event.actor} · {new Date(event.at).toLocaleString()}
+
+components\GISGovernancePanel.tsx:523 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Access & Safety</h3>
+
+components\MultiSchemePanel.tsx:116 [ENGLISH_LOCALE_API]
+new Intl.NumberFormat("en-BD", {
+
+components\MultiSchemePanel.tsx:376 [POSSIBLE_ENGLISH_JSX]
+<div style={muted}>Scheme configuration demo</div>
+
+components\MultiSchemePanel.tsx:398 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 15, margin: 0 }}>Scheme Catalogue</h3>
+
+components\MultiSchemePanel.tsx:404 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>MCBP core is protected. New schemes remain independent.</p>
+
+components\MultiSchemePanel.tsx:448 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 14, margin: "0 0 11px" }}>Shared Core Services</h3>
+
+components\MultiSchemePanel.tsx:515 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Example: New Family Support Scheme" />
+
+components\MultiSchemePanel.tsx:532 [POSSIBLE_ENGLISH_JSX]
+<option>Vulnerable households</option>
+
+components\MultiSchemePanel.tsx:532 [POSSIBLE_ENGLISH_OPTION]
+<option>Vulnerable households</option>
+
+components\MultiSchemePanel.tsx:533 [POSSIBLE_ENGLISH_JSX]
+<option>Pregnant women and mothers</option>
+
+components\MultiSchemePanel.tsx:533 [POSSIBLE_ENGLISH_OPTION]
+<option>Pregnant women and mothers</option>
+
+components\MultiSchemePanel.tsx:534 [POSSIBLE_ENGLISH_JSX]
+<option>Adolescent girls</option>
+
+components\MultiSchemePanel.tsx:534 [POSSIBLE_ENGLISH_OPTION]
+<option>Adolescent girls</option>
+
+components\MultiSchemePanel.tsx:535 [POSSIBLE_ENGLISH_JSX]
+<option>Low-income families</option>
+
+components\MultiSchemePanel.tsx:535 [POSSIBLE_ENGLISH_OPTION]
+<option>Low-income families</option>
+
+components\MultiSchemePanel.tsx:536 [POSSIBLE_ENGLISH_JSX]
+<option>Persons requiring social assistance</option>
+
+components\MultiSchemePanel.tsx:536 [POSSIBLE_ENGLISH_OPTION]
+<option>Persons requiring social assistance</option>
+
+components\MultiSchemePanel.tsx:577 [POSSIBLE_ENGLISH_JSX]
+<option value="monthly">Monthly</option>
+
+components\MultiSchemePanel.tsx:577 [POSSIBLE_ENGLISH_OPTION]
+<option value="monthly">Monthly</option>
+
+components\MultiSchemePanel.tsx:578 [POSSIBLE_ENGLISH_JSX]
+<option value="quarterly">Quarterly</option>
+
+components\MultiSchemePanel.tsx:578 [POSSIBLE_ENGLISH_OPTION]
+<option value="quarterly">Quarterly</option>
+
+components\MultiSchemePanel.tsx:579 [POSSIBLE_ENGLISH_JSX]
+<option value="once">One-time</option>
+
+components\MultiSchemePanel.tsx:579 [POSSIBLE_ENGLISH_OPTION]
+<option value="once">One-time</option>
+
+components\MultiSchemePanel.tsx:593 [POSSIBLE_ENGLISH_JSX]
+<div style={muted}>Enable reusable forms</div>
+
+components\MultiSchemePanel.tsx:625 [POSSIBLE_ENGLISH_JSX]
+<option>MFS / Bank (simulation)</option>
+
+components\MultiSchemePanel.tsx:625 [POSSIBLE_ENGLISH_OPTION]
+<option>MFS / Bank (simulation)</option>
+
+components\MultiSchemePanel.tsx:626 [POSSIBLE_ENGLISH_JSX]
+<option>Approved MFS provider (simulation)</option>
+
+components\MultiSchemePanel.tsx:626 [POSSIBLE_ENGLISH_OPTION]
+<option>Approved MFS provider (simulation)</option>
+
+components\MultiSchemePanel.tsx:627 [POSSIBLE_ENGLISH_JSX]
+<option>Approved bank account (simulation)</option>
+
+components\MultiSchemePanel.tsx:627 [POSSIBLE_ENGLISH_OPTION]
+<option>Approved bank account (simulation)</option>
+
+components\MultiSchemePanel.tsx:628 [POSSIBLE_ENGLISH_JSX]
+<option>Manual disbursement coordination (simulation)</option>
+
+components\MultiSchemePanel.tsx:628 [POSSIBLE_ENGLISH_OPTION]
+<option>Manual disbursement coordination (simulation)</option>
+
+components\MultiSchemePanel.tsx:629 [POSSIBLE_ENGLISH_JSX]
+<option>Approved financial partner</option>
+
+components\MultiSchemePanel.tsx:629 [POSSIBLE_ENGLISH_OPTION]
+<option>Approved financial partner</option>
+
+components\MultiSchemePanel.tsx:644 [POSSIBLE_ENGLISH_JSX]
+<div style={muted}>Scheme roles and permissions</div>
+
+components\MultiSchemePanel.tsx:701 [POSSIBLE_ENGLISH_JSX]
+<div style={{ fontSize: 11 }}>Deterministic projected sample cost</div>
+
+components\MultiSchemePanel.tsx:773 [POSSIBLE_ENGLISH_JSX]
+<span style={muted}>End of 8-step configuration</span>
+
+components\NavbarSearch.tsx:190 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Search modules"
+
+components\NavbarSearch.tsx:228 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Clear search"
+
+components\NavbarSearch.tsx:236 [POSSIBLE_ENGLISH_JSX]
+<span className="nav-search-key">Ctrl K</span>
+
+components\ObservabilityPanel.tsx:216 [UNCONTROLLED_NUMBER_FORMAT]
+`Investigation started by ${roleId} · ${new Date().toLocaleString()}`,
+
+components\ObservabilityPanel.tsx:237 [UNCONTROLLED_NUMBER_FORMAT]
+`Resolved in demo by ${roleId} · ${new Date().toLocaleString()}`,
+
+components\ObservabilityPanel.tsx:398 [POSSIBLE_ENGLISH_JSX]
+<span>Earlier reference period</span>
+
+components\ObservabilityPanel.tsx:399 [POSSIBLE_ENGLISH_JSX]
+<span>Latest sample</span>
+
+components\ObservabilityPanel.tsx:462 [POSSIBLE_ENGLISH_JSX]
+<th>Service</th><th>Replicas</th>
+
+components\ObservabilityPanel.tsx:463 [POSSIBLE_ENGLISH_JSX]
+<th>CPU</th><th>Memory</th>
+
+components\ObservabilityPanel.tsx:464 [POSSIBLE_ENGLISH_JSX]
+<th>p95</th><th>Status</th>
+
+components\ObservabilityPanel.tsx:501 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Fictional monitoring sample</p>
+
+components\ObservabilityPanel.tsx:555 [POSSIBLE_ENGLISH_JSX]
+<th>Scenario</th>
+
+components\ObservabilityPanel.tsx:556 [POSSIBLE_ENGLISH_JSX]
+<th>Service</th>
+
+components\ObservabilityPanel.tsx:557 [POSSIBLE_ENGLISH_JSX]
+<th>Result</th>
+
+components\ObservabilityPanel.tsx:558 [POSSIBLE_ENGLISH_JSX]
+<th>Reference timing</th>
+
+components\ObservabilityPanel.tsx:583 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 12 }}>Monitoring reference targets</b>
+
+components\ObservabilityPanel.tsx:613 [UNCONTROLLED_NUMBER_FORMAT]
+{new Date(i.created).toLocaleString()}
+
+components\PayrollMonitorPanel.tsx:87 [ENGLISH_NUMBER_FORMAT]
+const count = (n: number) => n.toLocaleString("en-US");
+
+components\PayrollMonitorPanel.tsx:275 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 17, margin: "0 0 4px" }}>November 2026 Payroll Cycle</h3>
+
+components\PayrollMonitorPanel.tsx:372 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 6px" }}>Division-wise Processing Partitions</h3>
+
+components\PayrollMonitorPanel.tsx:380 [POSSIBLE_ENGLISH_JSX]
+<tr><th>Division</th><th>Reference records</th><th>Reference state</th><th>Operations</th></tr>
+
+components\PayrollMonitorPanel.tsx:419 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>Exception Handling</h3>
+
+components\PayrollMonitorPanel.tsx:447 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: 0 }}>Batch Activity & Decisions</h3>
+
+components\PayrollMonitorPanel.tsx:453 [POSSIBLE_ENGLISH_JSX]
+{!batch.logs.length && <p style={muted}>No interactive actions recorded yet.</p>}
+
+components\PayrollMonitorPanel.tsx:459 [UNCONTROLLED_NUMBER_FORMAT]
+{event.actor} · {new Date(event.time).toLocaleString()}
+
+components\PayrollMonitorPanel.tsx:468 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>Demo Reset</h3>
+
+components\PayrollPanel.tsx:208 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Payroll month"
+
+components\PayrollPanel.tsx:292 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Demo OTP 123456"
+
+components\PayrollPanel.tsx:508 [UNCONTROLLED_NUMBER_FORMAT]
+<td>{new Date(l.time).toLocaleString()}</td>
+
+components\PayrollPanel.tsx:531 [FIXED_NUMERIC_DISPLAY]
+<strong>1,895,010</strong>
+
+components\PayrollPanel.tsx:535 [FIXED_NUMERIC_DISPLAY]
+<strong>1,777,870</strong>
+
+components\PerformanceTestPanel.tsx:157 [ENGLISH_NUMBER_FORMAT]
+const comma = (n: number) => n.toLocaleString("en-US");
+
+components\PerformanceTestPanel.tsx:188 [ENGLISH_NUMBER_FORMAT]
+<b>{value.toLocaleString("en-US")} {unit}</b>
+
+components\PerformanceTestPanel.tsx:200 [ENGLISH_NUMBER_FORMAT]
+<div style={muted}>Reference budget: {maximum.toLocaleString("en-US")} {unit}</div>
+
+components\PerformanceTestPanel.tsx:378 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Performance Benchmarks</h3>
+
+components\PerformanceTestPanel.tsx:400 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Test Report Summary</h3>
+
+components\PerformanceTestPanel.tsx:422 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Scenario Results</h3>
+
+components\PerformanceTestPanel.tsx:447 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Scenario Inspector</h3>
+
+components\PerformanceTestPanel.tsx:466 [POSSIBLE_ENGLISH_JSX]
+<option value="pass">Reference pass</option>
+
+components\PerformanceTestPanel.tsx:466 [POSSIBLE_ENGLISH_OPTION]
+<option value="pass">Reference pass</option>
+
+components\PerformanceTestPanel.tsx:467 [POSSIBLE_ENGLISH_JSX]
+<option value="degraded">Simulated degradation</option>
+
+components\PerformanceTestPanel.tsx:467 [POSSIBLE_ENGLISH_OPTION]
+<option value="degraded">Simulated degradation</option>
+
+components\PerformanceTestPanel.tsx:486 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Acceptance Thresholds</h3>
+
+components\PerformanceTestPanel.tsx:505 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Test Environment & Caveats</h3>
+
+components\PerformanceTestPanel.tsx:523 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Simulation Audit Trail</h3>
+
+components\PerformanceTestPanel.tsx:532 [UNCONTROLLED_NUMBER_FORMAT]
+{e.actor} · {new Date(e.at).toLocaleString()}
+
+components\PerformanceTestPanel.tsx:540 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, marginTop: 0 }}>Report & Demo Controls</h3>
+
+components\PerformanceTestPanel.tsx:571 [POSSIBLE_ENGLISH_JSX]
+<tr><th>Scenario</th><th>Target</th><th>Result</th></tr>
+
+components\ReleaseManagementPanel.tsx:321 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Environment Registry</h3>
+
+components\ReleaseManagementPanel.tsx:328 [POSSIBLE_ENGLISH_JSX]
+<thead><tr><th>Environment</th><th>Release</th><th>Data</th><th>Health</th><th>Drift</th><th>Next</th></tr></thead>
+
+components\ReleaseManagementPanel.tsx:333 [POSSIBLE_ENGLISH_JSX]
+<td>{kind}</td><td><span className="rel21-pill">Healthy</span></td>
+
+components\ReleaseManagementPanel.tsx:334 [POSSIBLE_ENGLISH_JSX]
+<td>None</td><td>{next}</td>
+
+components\ReleaseManagementPanel.tsx:342 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Release Summary</h3>
+
+components\ReleaseManagementPanel.tsx:360 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Release Evidence Gate</h3>
+
+components\ReleaseManagementPanel.tsx:371 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Change Approval</h3>
+
+components\ReleaseManagementPanel.tsx:377 [POSSIBLE_ENGLISH_JSX]
+<span>Approval state</span>
+
+components\ReleaseManagementPanel.tsx:400 [POSSIBLE_ENGLISH_JSX]
+<span>Release stage</span>
+
+components\ReleaseManagementPanel.tsx:404 [POSSIBLE_ENGLISH_JSX]
+<span>Window</span><b>22 Nov 2026 · 22:00–23:00</b>
+
+components\ReleaseManagementPanel.tsx:407 [POSSIBLE_ENGLISH_JSX]
+<span>Canary traffic</span><b>10% for 15 minutes</b>
+
+components\ReleaseManagementPanel.tsx:410 [POSSIBLE_ENGLISH_JSX]
+<span>Rollback if error rate</span><b>Greater than 0.5%</b>
+
+components\ReleaseManagementPanel.tsx:413 [POSSIBLE_ENGLISH_JSX]
+<span>Rollback if API p95</span><b>Greater than 1.5 seconds</b>
+
+components\ReleaseManagementPanel.tsx:442 [POSSIBLE_ENGLISH_JSX]
+onClick={beginCanary}>Start 10% canary</button>
+
+components\ReleaseManagementPanel.tsx:445 [POSSIBLE_ENGLISH_JSX]
+onClick={assessCanary}>Check health gates</button>
+
+components\ReleaseManagementPanel.tsx:448 [POSSIBLE_ENGLISH_JSX]
+onClick={fullRollout}>Complete full rollout</button>
+
+components\ReleaseManagementPanel.tsx:451 [POSSIBLE_ENGLISH_JSX]
+onClick={rollback}>Simulate rollback</button>
+
+components\ReleaseManagementPanel.tsx:455 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Deployment Decision</h3>
+
+components\ReleaseManagementPanel.tsx:489 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Business Configuration Queue</h3>
+
+components\ReleaseManagementPanel.tsx:505 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Promotion Approval</h3>
+
+components\ReleaseManagementPanel.tsx:522 [POSSIBLE_ENGLISH_JSX]
+onClick={submitConfig}>Submit</button>
+
+components\ReleaseManagementPanel.tsx:525 [POSSIBLE_ENGLISH_JSX]
+onClick={()=>reviewConfig(true)}>Approve</button>
+
+components\ReleaseManagementPanel.tsx:528 [POSSIBLE_ENGLISH_JSX]
+onClick={()=>reviewConfig(false)}>Reject</button>
+
+components\ReleaseManagementPanel.tsx:541 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,margin:0}}>Release Action Audit</h3>
+
+components\ReleaseManagementPanel.tsx:546 [POSSIBLE_ENGLISH_JSX]
+{!data.audit.length&&<p style={muted}>No demo release actions recorded yet.</p>}
+
+components\ReleaseManagementPanel.tsx:550 [UNCONTROLLED_NUMBER_FORMAT]
+<div style={muted}>{e.actor} · {new Date(e.at).toLocaleString()}</div>
+
+components\ReleaseManagementPanel.tsx:557 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Demo Management</h3>
+
+components\SecurityCenterPanel.tsx:176 [UNCONTROLLED_NUMBER_FORMAT]
+`${new Date().toLocaleString()}: ${next} by ${roleId}`,
+
+components\SecurityCenterPanel.tsx:328 [POSSIBLE_ENGLISH_JSX]
+<b style={{ fontSize: 12 }}>Audit-chain status: Verified (reference)</b>
+
+components\SecurityCenterPanel.tsx:336 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: "0 0 12px" }}>Security Control Summary</h3>
+
+components\SecurityCenterPanel.tsx:370 [POSSIBLE_ENGLISH_PLACEHOLDER]
+placeholder="Search rule / source"
+
+components\SecurityCenterPanel.tsx:389 [UNCONTROLLED_NUMBER_FORMAT]
+<div style={muted}>{new Date(a.time).toLocaleString()}</div>
+
+components\SecurityCenterPanel.tsx:404 [POSSIBLE_ENGLISH_JSX]
+<span>Severity</span>
+
+components\SecurityCenterPanel.tsx:410 [POSSIBLE_ENGLISH_JSX]
+<span>Status</span>
+
+components\SecurityCenterPanel.tsx:432 [POSSIBLE_ENGLISH_JSX]
+<h4 style={{ fontSize: 13, marginTop: 22 }}>Investigation Timeline</h4>
+
+components\SecurityCenterPanel.tsx:440 [POSSIBLE_ENGLISH_JSX]
+) : <p style={muted}>Select an alert.</p>}
+
+components\SecurityCenterPanel.tsx:511 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{ fontSize: 16, margin: 0 }}>Security Activity Audit</h3>
+
+components\SecurityCenterPanel.tsx:520 [POSSIBLE_ENGLISH_JSX]
+<p style={muted}>Browser-local investigation events only.</p>
+
+components\SecurityCenterPanel.tsx:521 [POSSIBLE_ENGLISH_JSX]
+{!events.length && <p style={muted}>No interactive events recorded yet.</p>}
+
+components\SecurityCenterPanel.tsx:527 [UNCONTROLLED_NUMBER_FORMAT]
+{e.target} · {e.actor} · {new Date(e.time).toLocaleString()}
+
+components\SelfServiceMISPanel.tsx:304 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>No-code Dashboard Builder</h3>
+
+components\SelfServiceMISPanel.tsx:305 [POSSIBLE_ENGLISH_JSX]
+<label style={small}>Dashboard title</label>
+
+components\SelfServiceMISPanel.tsx:332 [POSSIBLE_ENGLISH_PLACEHOLDER]
+onClick={()=>moveWidget(i,-1)} aria-label="Move up">
+
+components\SelfServiceMISPanel.tsx:337 [POSSIBLE_ENGLISH_PLACEHOLDER]
+onClick={()=>moveWidget(i,1)} aria-label="Move down">
+
+components\SelfServiceMISPanel.tsx:346 [POSSIBLE_ENGLISH_PLACEHOLDER]
+aria-label="Remove widget"><Trash2 size={14}/></button>
+
+components\SelfServiceMISPanel.tsx:353 [POSSIBLE_ENGLISH_JSX]
+<span>Publication status</span>
+
+components\SelfServiceMISPanel.tsx:358 [POSSIBLE_ENGLISH_JSX]
+onClick={submit}>Submit for approval</button>
+
+components\SelfServiceMISPanel.tsx:361 [POSSIBLE_ENGLISH_JSX]
+onClick={()=>review(true)}>Approve & publish</button>
+
+components\SelfServiceMISPanel.tsx:364 [POSSIBLE_ENGLISH_JSX]
+onClick={()=>review(false)}>Reject</button>
+
+components\SelfServiceMISPanel.tsx:369 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Live Demo Preview</h3>
+
+components\SelfServiceMISPanel.tsx:375 [POSSIBLE_ENGLISH_JSX]
+<option>All divisions</option>
+
+components\SelfServiceMISPanel.tsx:375 [POSSIBLE_ENGLISH_OPTION]
+<option>All divisions</option>
+
+components\SelfServiceMISPanel.tsx:381 [POSSIBLE_ENGLISH_JSX]
+<option>Current cycle</option>
+
+components\SelfServiceMISPanel.tsx:381 [POSSIBLE_ENGLISH_OPTION]
+<option>Current cycle</option>
+
+components\SelfServiceMISPanel.tsx:382 [POSSIBLE_ENGLISH_JSX]
+<option>Previous cycle</option>
+
+components\SelfServiceMISPanel.tsx:382 [POSSIBLE_ENGLISH_OPTION]
+<option>Previous cycle</option>
+
+components\SelfServiceMISPanel.tsx:383 [POSSIBLE_ENGLISH_JSX]
+<option>Year to date</option>
+
+components\SelfServiceMISPanel.tsx:383 [POSSIBLE_ENGLISH_OPTION]
+<option>Year to date</option>
+
+components\SelfServiceMISPanel.tsx:388 [POSSIBLE_ENGLISH_JSX]
+<option>MCBP</option>
+
+components\SelfServiceMISPanel.tsx:388 [POSSIBLE_ENGLISH_OPTION]
+<option>MCBP</option>
+
+components\SelfServiceMISPanel.tsx:402 [ENGLISH_NUMBER_FORMAT]
+{metricValue(w.metric).toLocaleString("en-US")}
+
+components\SelfServiceMISPanel.tsx:445 [POSSIBLE_ENGLISH_JSX]
+<th>Division</th><th>Applications</th><th>Approved</th>
+
+components\SelfServiceMISPanel.tsx:446 [POSSIBLE_ENGLISH_JSX]
+<th>Payments</th><th>Pending</th><th>Grievances</th><th>Training</th>
+
+components\SelfServiceMISPanel.tsx:509 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Campaign Governance</h3>
+
+components\SelfServiceMISPanel.tsx:528 [POSSIBLE_ENGLISH_JSX]
+}}>Approve</button>
+
+components\SelfServiceMISPanel.tsx:536 [POSSIBLE_ENGLISH_JSX]
+}}>Reject</button>
+
+components\SelfServiceMISPanel.tsx:545 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Dashboard Audit Trail</h3>
+
+components\SelfServiceMISPanel.tsx:546 [POSSIBLE_ENGLISH_JSX]
+{!data.logs.length&&<p style={small}>No actions recorded yet.</p>}
+
+components\SelfServiceMISPanel.tsx:552 [UNCONTROLLED_NUMBER_FORMAT]
+{log.actor} · {new Date(log.time).toLocaleString()}
+
+components\SelfServiceMISPanel.tsx:560 [POSSIBLE_ENGLISH_JSX]
+<h3 style={{fontSize:16,marginTop:0}}>Governance Controls</h3>
+
+components\TrainingPanel.tsx:159 [POSSIBLE_ENGLISH_JSX]
+<title>Demo Training Certificate</title>
+
+components\TrainingPanel.tsx:173 [POSSIBLE_ENGLISH_JSX]
+<button onclick="window.print()">Print / Save as PDF</button>
+
+components\TrainingPanel.tsx:327 [POSSIBLE_ENGLISH_PLACEHOLDER]
+<input style={field} placeholder="BEN-2605-00113"
+
+components\TrainingPanel.tsx:476 [UNCONTROLLED_NUMBER_FORMAT]
+<td>{new Date(log.date).toLocaleString()}</td>
+
+components\XRoadPanel.tsx:327 [UNCONTROLLED_NUMBER_FORMAT]
+["BRN retry backlog", pendingCount.toLocaleString(), Clock3, "Dynamic demo queue"],
+
+components\XRoadPanel.tsx:394 [POSSIBLE_ENGLISH_JSX]
+<div style={muted}>Client subsystem</div>
+
+components\XRoadPanel.tsx:413 [POSSIBLE_ENGLISH_JSX]
+<div style={muted}>Approved services</div>
+
+components\XRoadPanel.tsx:466 [POSSIBLE_ENGLISH_JSX]
+<th>Partner</th>
+
+components\XRoadPanel.tsx:467 [POSSIBLE_ENGLISH_JSX]
+<th>Mode</th>
+
+components\XRoadPanel.tsx:468 [POSSIBLE_ENGLISH_JSX]
+<th>Latency</th>
+
+components\XRoadPanel.tsx:469 [POSSIBLE_ENGLISH_JSX]
+<th>Status</th>
+
+components\XRoadPanel.tsx:510 [UNCONTROLLED_NUMBER_FORMAT]
+["Demo calls", selected.calls.toLocaleString()],
+
+components\XRoadPanel.tsx:587 [POSSIBLE_ENGLISH_JSX]
+<div style={muted}>Outstanding demo records</div>
+
+components\XRoadPanel.tsx:589 [UNCONTROLLED_NUMBER_FORMAT]
+{q.count.toLocaleString()}
+
+components\XRoadPanel.tsx:682 [UNCONTROLLED_NUMBER_FORMAT]
+{l.partner} · {l.actor} · {new Date(l.timestamp).toLocaleString()}
+
